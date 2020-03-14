@@ -4,11 +4,66 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "public",
+    "predeploy": [
+      "cd ./frontend && yarn build"
+    ],
+    "public": "./frontend/build/",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ]
+    ],
+    "cleanUrls": true,
+    "trailingSlash": true,
+
+
+
+    "rewrites": [ {
+      // Directs a request to Cloud Functions
+      "source": "/graphql/**",
+      "function": "graphql"
+    }, /*{
+      // Directs a request to a Cloud Run containerized app
+      "source": "/helloworld",
+      "run": {
+        "serviceId": "helloworld",
+        "region": "us-central1"
+      }
+    },*/ {
+      // Shows the same content for multiple URLs
+      "source": "**",
+      "destination": "/index.html"
+    }],
+
+
+
+    "headers": [
+      {"source": "/service-worker.js", "headers": [{"key": "Cache-Control", "value": "no-cache"}]},
+    {
+    // Specifies a CORS header for all font files
+    "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
+    "headers": [ {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    } ]
+  }, {
+    // Overrides the default 1 hour browser cache with a 2 hour cache for all image files
+    "source": "**/*.@(jpg|jpeg|gif|png)",
+    "headers": [ {
+      "key": "Cache-Control",
+      "value": "max-age=7200"
+    } ]
+  }, {
+    // Sets the cache header for 404 pages to cache for 5 minutes
+    "source": "404.html",
+    "headers": [ {
+      "key": "Cache-Control",
+      "value": "max-age=300"
+    } ]
+  } ]
+
+  },
+  "functions": {
+    "source": "functions"
   }
 }

@@ -62,7 +62,7 @@ function gqlServer() {
 				mongodb: await getMongoDbContext(),
 			}
 		},
-	}).applyMiddleware({app, path:'/v1', cors: true})
+	}).applyMiddleware({app, path:'/graphql/v1', cors: true})
 
 	return app
 }
