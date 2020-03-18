@@ -1,6 +1,6 @@
-const places = require('./_places.js')
+// const places = require('./_places.js')
 
-function getPlace(placeID, resolve){
+/*function getPlace(placeID, resolve){
 	let foundPlace = null
 	for (const place of places) {
 		if (place.name == placeID) {
@@ -27,7 +27,7 @@ function getPlace(placeID, resolve){
 	}
 
 	resolve(foundPlace)
-}
+}*/
 
 module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
@@ -35,7 +35,11 @@ module.exports = async (parent, args, context, info) => {
 	return new Promise((resolve,reject)=>{
 		// getPlace(args._id, resolve)
 
-		if (args._id && mongodb.ObjectID.isValid(args._id)) {
+		if (!args._id) {
+			reject('No _id value')
+		}else if (!mongodb.ObjectID.isValid(args._id)) {
+			reject('_id is not a correct ObjectID')
+		}else{
 			mongodb.collection.findOne({
 				_id: new mongodb.ObjectID(args._id),
 				'properties.__typename': 'Place',
@@ -43,8 +47,6 @@ module.exports = async (parent, args, context, info) => {
 				console.log('result', result)
 				resolve(result)
 			}).catch(reject)
-		}else{
-			reject()
 		}
 	})
 }
