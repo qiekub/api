@@ -3,7 +3,11 @@ import './index.css'
 
 import {navigate/*,Router,Link*/} from '@reach/router'
 import {gql} from 'apollo-boost'
-import {loadDoc as query_loadDoc} from '../queries.js'
+import {loadPoi as query_loadPoi} from '../queries.js'
+
+// import categories from '../data/dist/categories.json'
+// import presets from '../data/dist/presets.json'
+// import {getPreset} from '../functions.js'
 
 import {
 	Typography,
@@ -42,6 +46,16 @@ import {
 
 // import reptile from './contemplative-reptile.jpg'
 
+// console.log('categories', categories)
+// console.log('presets', presets)
+//
+// const tags = {
+//     "amenity": "bar",
+//     "lgbtq": "primary",
+// }
+// console.log('The place is of type:', getPreset(tags,presets))
+
+
 const ListItemLink = props => <ListItem button component="a" {...props} />
 
 const tag_suggestions = ['youthcenter','cafe','bar','education','community-center','youthgroup','group','mediaprojects']
@@ -57,8 +71,6 @@ export default class Sidebar extends React.Component {
 			stage: 'viewing', // viewing editing submitting
 			whichSnackbarIsOpen: null,
 		}
-
-		// this.loadDoc = this.loadDoc.bind(this)
 
 		this.edit = this.edit.bind(this)
 		this.addComment = this.addComment.bind(this)
@@ -113,6 +125,9 @@ export default class Sidebar extends React.Component {
 	}
 	setDoc(newDoc) {
 		if (newDoc !== null && newDoc._id !== null) {
+			// console.log('newDoc', newDoc)
+			// console.log('The place is of type:', getPreset(newDoc.properties.tags,presets))
+
 			this.setState({
 				doc: newDoc,
 				changedProperties: {},
@@ -234,7 +249,7 @@ export default class Sidebar extends React.Component {
 				refetchQueries: (
 					this.state.doc._id
 					? [{
-						query: query_loadDoc,
+						query: query_loadPoi,
 						variables: {_id:this.state.doc._id},
 					}]
 					: undefined
@@ -345,20 +360,25 @@ export default class Sidebar extends React.Component {
 	}
 	renderView(){
 		const doc = this.state.doc
-		const properties = {...doc.properties}
-		// const properties = {
-		// 	...this.state.doc.properties,
-		// 	...this.state.changedProperties,
-		// }
 
-		if (!(!!properties.name) || properties.name === '') {
-			return ''
+		if (!(
+			!!doc &&
+			!!doc._id &&
+			!!doc.properties &&
+			!!doc.properties.tags
+		)) {
+			return null
 		}
 
-		const name = (properties.name ? properties.name : '')
+		const properties = doc.properties
+		const tags = properties.tags
 
-		const age_range_text = this.getAgeRangeText(properties.min_age,properties.max_age)
+		const name = properties.name
 
+		const age_range_text = this.getAgeRangeText(tags.min_age, tags.max_age)
+
+		// https://wiki.openstreetmap.org/wiki/Key:contact
+		//
 		// properties.links = `
 		// 	https://www.anyway-koeln.de/
 		// 	https://www.instagram.com/anyway_koeln/
@@ -369,7 +389,14 @@ export default class Sidebar extends React.Component {
 		// 	mailto:kjqhgr@sadf.asdf
 		// `
 
-		const links = this.parseLinks(properties.links && properties.links.length > 0 ? properties.links : [])
+		// const links = this.parseLinks(properties.links && properties.links.length > 0 ? properties.links : [])
+		const links = (tags.website ? [
+			{
+				type: 'website',
+				href: tags.website,
+				text: tags.website,
+			}
+		] : [])
 
 		const linkIcons = {
 			phonenumber: (<PhoneIcon style={{color:'black'}} />),
@@ -402,14 +429,14 @@ export default class Sidebar extends React.Component {
 					{age_range_text === '' ? null : <Typography variant="body2" component="p" color="textSecondary">{age_range_text}</Typography>}
 				
 				</CardContent>
-				<CardContent style={{
+				{/*<CardContent style={{
 					padding: '0 32px 16px 32px',
 					display: 'flex',
 					justifyContent: 'flex-start',
 					flexWrap: 'wrap',
 				}}>
 					{(properties.tags || []).map(tag => <Chip key={tag} label={tag} style={{margin:'4px'}}/>)}
-				</CardContent>
+				</CardContent>*/}
 				<Divider />
 				<CardContent>
 					<List dense>

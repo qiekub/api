@@ -90,7 +90,7 @@ function addChangeset(mongodb, changeset, resolve, reject){
 			__typename: 'Metadata',
 		},
 	}).then(result => {
-		// calc new place doc
+		// calc new Place doc
 		resolve(result.insertedId || null)
 			
 		// parseChangeset(changeset, resolve, reject)

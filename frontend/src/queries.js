@@ -1,27 +1,49 @@
 import {gql} from 'apollo-boost'
 
-export const loadDoc = gql`
+export const loadPoi = gql`
 	query($_id: String=""){
 		getPlace(_id: $_id){
 			_id
 			properties {
 				... on Place {
 					name
-					address
-					min_age
-					max_age
-					links
-					this_is_a_place_for
-					tags
-					location {
-						lng
-						lat
+					geometry {
+						location {
+							lng
+							lat
+						}
 					}
+					osmID
+					tags
+					permanently_closed
 				}
 			}
 		}
 	}
 `
+
+export const loadPois = gql`
+	query{
+		getPlaces{
+			_id
+			properties {
+				... on Place {
+					name
+					geometry {
+						location {
+							lng
+							lat
+						}
+					}
+					osmID
+					tags
+					permanently_closed
+				}
+			}
+		}
+	}
+`
+
 export const search = gql`
 	query($query: String=""){
 		search(query: $query){	
@@ -40,5 +62,3 @@ export const search = gql`
 		}
 	}
 `
-
-export default {loadDoc}

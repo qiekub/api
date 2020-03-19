@@ -3,8 +3,8 @@ const {GraphQLScalarType} = require('graphql')
 const {Kind} = require('graphql/language')
 
 const getPlace = require('./resolvers/getPlace.js')
+const getPlaces = require('./resolvers/getPlaces.js')
 const search = require('./resolvers/search.js')
-const getAllPlaces = require('./resolvers/getAllPlaces.js')
 const addChangeset = require('./resolvers/addChangeset.js')
 
 module.exports = {
@@ -38,10 +38,11 @@ module.exports = {
 
 	Query: {
 		// hello: (parent, args, context, info) => 'world',
+		// "lgbtq:welcomes": (parent, args, context, info) => 'All are welcome!',
 
 		search: search,
 		getPlace: getPlace,
-		getAllPlaces: getAllPlaces,
+		getPlaces: getPlaces,
 	},
 	Mutation: {
 		addChangeset: addChangeset,

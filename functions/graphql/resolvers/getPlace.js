@@ -1,4 +1,4 @@
-// const places = require('./_places.js')
+// const places = require('./data/_places.js')
 
 /*function getPlace(placeID, resolve){
 	let foundPlace = null

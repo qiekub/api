@@ -6,8 +6,10 @@ const schema = gql`
 	scalar Timestamp
 
 	type Query {
+		lgbtq_3A_welcomes: String
+
 		getPlace(_id: String): Doc
-		getAllPlaces: [Doc]
+		getPlaces: [Doc]
 		search(query: String): GeoSearchResult
 	}
 
@@ -28,6 +30,7 @@ const schema = gql`
 	type GeoData {
 		location: GeoCoordinate
 		boundingbox: Boundingbox
+		_viewport: Boundingbox
 	}
 
 	type GeoSearchResult {
@@ -35,17 +38,24 @@ const schema = gql`
 		licence: String
 	}
 
+	"""
+	lgbtq:welcomes = undecided;friends;family;trans;inter;gay;hetero;bi;lesbian;woman;man
+	lgbtq_58_welcomes: String
+	"""
 	type Place {
 		name: String
-		
-		location: GeoCoordinate
-		address: String
 
-		min_age: Int
-		max_age: Int
-		links: String
-		this_is_a_place_for: [String]
-		tags: [String]
+		geometry: GeoData
+
+		"node/0123456789"
+		osmID: ID
+
+		tags: JSON
+		permanently_closed: Boolean
+
+		formatted_address: String
+		formatted_phone_number: String
+		international_phone_number: String
 	}
 
 	type Changeset {
