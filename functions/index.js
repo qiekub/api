@@ -6,6 +6,8 @@ require('dotenv').config()
 const functions = require('firebase-functions')
 const gqlServer = require('./graphql/server')
 
+const loadOsmData = require('./osm/loadData.js')
+
 
 
 const mongodb = require('mongodb')
@@ -33,7 +35,7 @@ function getMongoDbContext(){
 					ObjectID: ObjectID,
 
 					collection: mongodb_client.db('Graph').collection('QueerCenters'),
-					osm_collection: mongodb_client.db('Graph').collection('OsmCache'),
+					OsmCache_collection: mongodb_client.db('Graph').collection('OsmCache'),
 				}
 
 				resolve(_ContextChache_.mongodb)
@@ -48,6 +50,18 @@ const server = gqlServer({
 	getMongoDbContext: getMongoDbContext,
 })
 
-// Graphql api
-// https://us-central1-<project-name>.cloudfunctions.net/api/
+// graphql api
 exports.graphql = functions.https.onRequest(server)
+
+// TODO this should be timed
+exports.loadOsmData = functions.https.onRequest(async (req, res) => {
+	const mongodb = await getMongoDbContext()
+
+	loadOsmData(mongodb, ()=>{
+		res.send(JSON.stringify(Object.keys(mongodb),null,4))
+	})
+})
+
+
+
+
