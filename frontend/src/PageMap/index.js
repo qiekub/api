@@ -2,7 +2,10 @@ import React from 'react'
 import {Map, TileLayer, Marker, Tooltip} from 'react-leaflet'
 
 import {navigate} from '@reach/router'
-import {loadPois as query_loadPois} from '../queries.js'
+import {
+	// loadPois as query_loadPois,
+	loadMarkers as query_loadMarkers,
+} from '../queries.js'
 
 import './index.css'
 // import '../conic-gradient-polyfill.js'
@@ -11,8 +14,7 @@ import './index.css'
 import presets from '../data/dist/presets.json'
 import colors from '../data/dist/colors.json'
 import colorsByPreset from '../data/dist/colorsByPreset.json'
-import {getPreset,getColorByPreset} from '../functions.js'
-
+import {getPreset, getColorByPreset, getWantedTagsList} from '../functions.js'
 
 // import {
 // 	Icon,
@@ -36,6 +38,8 @@ import 'react-leaflet-markercluster/dist/styles.min.css'
 // 	iconAnchor: [12.5, 32],
 // 	popupAnchor: [0, -32],
 // })
+
+
 
 export default class PageMap extends React.Component {
 	constructor(props) {
@@ -91,49 +95,30 @@ export default class PageMap extends React.Component {
 		// }, 500)
 	}
 
-
 	loadMarkers(){
-		window.graphql.query({query: query_loadPois}).then(result => {
-
-			const docs = result.data.getPlaces.map(doc=>{
-				doc.___preset = getPreset(doc.properties.tags || {}, presets)
+		window.graphql.query({
+			query: query_loadMarkers,
+			variables: {
+				wantedTags: getWantedTagsList(presets), // this gets us about 11% reduction in size
+			},
+		}).then(result => {
+			const docs = result.data.getMarkers.map(doc=>{
+				doc.___preset = getPreset(doc.tags || {}, presets)
 				doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
 				return doc
 			})
-
 			this.setState({docs: docs})
 
-			// for (const doc of result.data.getPlaces) {
-			// 	break
-			//
-			// 	const changeset = {
-			// 		forDoc: null,
-			// 		properties: doc.properties,
-			// 		sources: 'https://thomasrosen.github.io/queer-centers/',
-			// 		comment: '',
-			// 		fromBot: true,
-			// 		created_by: 'queer.qiekub.com',
-			// 		created_at: new Date()*1,
-			// 	}
-			//
-			// 	let changeset_json = JSON.stringify(changeset)
-			// 	changeset_json = changeset_json.replace(/"(\w+)"\s*:/g, '$1:')
-			//
-			// 	window.graphql.mutate({mutation: gql`mutation {
-			// 		addChangeset(changeset:${changeset_json}) {
-			// 			_id
-			// 			properties {
-			// 				... on Changeset {
-			// 					forDoc
-			// 				}
-			// 			}
-			// 		}
-			// 	}`}).then(result => {
-			// 		console.info('mutate-result', result)
-			// 	}).catch(error=>{
-			// 		console.error('mutate-error', error)
-			// 	})
-			// }
+
+			// const docs = result.data.getPlaces.map(doc=>{
+			// 	doc.___preset = getPreset(doc.properties.tags || {}, presets)
+			// 	doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
+			// 	return doc
+			// })
+
+			// 679779
+			// 1556529
+			// 1756241
 
 		}).catch(error=>{
 			console.error(error)
@@ -269,22 +254,33 @@ export default class PageMap extends React.Component {
 				/>*/}
 
 
-		<MarkerClusterGroup
-			maxClusterRadius={(zoomLevel)=>{
-				if (zoomLevel<10) {
-					return 80
-				} else if (zoomLevel<11) {
-					return 50
-				} else if (zoomLevel<22) {
-					return 30
-				}
-
-				return 80
-			}}
-            spiderfyDistanceMultiplier={1.5}
-            showCoverageOnHover={false}
-            iconCreateFunction={this.createClusterCustomIcon}
-          >
+				<MarkerClusterGroup
+					maxClusterRadius={(zoomLevel)=>{
+						if (zoomLevel<5) {
+							return 80
+						} else if (zoomLevel<6) {
+							return 120
+						}  else if (zoomLevel<9) {
+							return 100
+						} else if (zoomLevel<11) {
+							return 80
+						} else if (zoomLevel<16) {
+							return 60
+						} else if (zoomLevel<22) {
+							return 20
+						}
+		
+						return 80
+					}}
+					spiderfyDistanceMultiplier={1.5}
+					showCoverageOnHover={false}
+					iconCreateFunction={this.createClusterCustomIcon}
+		
+					zoomToBoundsOnClick={false}
+					onClusterclick={event=>{
+						event.layer.zoomToBounds({padding:[128,128]})
+					}}
+				>
 					{this.state.docs.map(doc=>{
 						// icon={markerIcon}
 
@@ -293,12 +289,13 @@ export default class PageMap extends React.Component {
 						}
 
 						const thisMarkerRef = React.createRef()
-						const location = (doc.properties.geometry || {}).location || {}
+						// const location = (doc.properties.geometry || {}).location || {}
+						// const location = {lng:doc.lng, lat.doc.lat}
 
-						if (location.lng && location.lat) {
+						if (doc.lng && doc.lat) {
 							return (<Marker
 								key={doc._id}
-								position={[location.lat,location.lng]} 
+								position={[doc.lat,doc.lng]} 
 								icon={this.createCustomIcon(
 									(!!doc.___preset.icon ? doc.___preset.icon : ''),
 									doc.___color.bg,
@@ -308,15 +305,16 @@ export default class PageMap extends React.Component {
 								onClick={()=>this.showPlace(doc,thisMarkerRef)}
 								properties={doc}
 							>
-								<Tooltip
+								{(!!doc.name && doc.name.length > 0 ? (<Tooltip
 									sticky={true}
 									interactive={false}
 									opacity={1}
 									permanent={false}
 								>
-									{doc.properties.name} - {doc.___preset.key}
-								</Tooltip>
+									{doc.name}
+								</Tooltip>) : null)}
 							</Marker>)
+							// {doc.name} - {doc.___preset.key}
 						}
 						return null
 					})}

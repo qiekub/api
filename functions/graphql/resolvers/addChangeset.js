@@ -1,15 +1,18 @@
-const flatten = require('flat')
+const {upsertOne} = require('../../functions.js')
+
+// const flatten = require('flat')
 // also look at https://jsperf.com/flatten-un-flatten/16
 // and at https://stackoverflow.com/questions/19098797/fastest-way-to-flatten-un-flatten-nested-json-objects
 
-function upsertOne(mongodb,doc,callack){
+/*
+function upsertOne(collection,doc,callack){
 	if (doc.properties.__typename) {
-		mongodb.collection.findOne({
+		collection.findOne({
 			_id: doc._id,
 			'properties.__typename': doc.properties.__typename,
 		}).then(result => {
 			if (result === null) {
-				mongodb.collection.insertOne({
+				collection.insertOne({
 					...doc,
 					metadata: {
 						created: new Date,
@@ -48,7 +51,7 @@ function upsertOne(mongodb,doc,callack){
 					operations.$unset = Object.fromEntries(toUnset)
 				}
 
-				mongodb.collection.updateOne({
+				collection.updateOne({
 					_id: doc._id,
 					'properties.__typename': doc.properties.__typename,
 				}, operations).then(result => {
@@ -63,7 +66,7 @@ function upsertOne(mongodb,doc,callack){
 			callack(null)
 		})
 
-		// mongodb.collection.updateOne({
+		// collection.updateOne({
 		// 	_id: doc._id || undefined,
 		// 	'properties.__typename': doc.properties.__typename,
 		// }, operations, {upsert:true}).then(result => {
@@ -76,9 +79,10 @@ function upsertOne(mongodb,doc,callack){
 		callack(null)
 	}
 }
+*/
 
-function addChangeset(mongodb, changeset, resolve, reject){
-	mongodb.collection.insertOne({
+function addChangeset(collection, changeset, resolve, reject){
+	collection.insertOne({
 		__typename: 'Doc',
 		properties: {
 			...changeset,
@@ -108,7 +112,7 @@ function parseChangeset(mongodb, changeset, resolve, reject){
 		properties: changeset.properties,
 	}
 		
-	upsertOne(mongodb,doc,itGotUpserted=>{
+	upsertOne(mongodb.collection,doc,itGotUpserted=>{
 		resolve(itGotUpserted || null)
 	})
 }
@@ -141,7 +145,7 @@ module.exports = async (parent, args, context, info) => {
 
 			changeset.forDoc = doc._id
 
-			addChangeset(mongodb, changeset, (changesetID)=>{
+			addChangeset(mongodb.collection, changeset, (changesetID)=>{
 				if (changesetID === null) {
 					resolve(null)
 				}else{

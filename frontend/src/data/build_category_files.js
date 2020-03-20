@@ -65,9 +65,13 @@ const colors = {
 	default: {
 		prideFlageMeaning: '',
 		prideFlageColorName: '',
-		bg: '#263238', // '#607D8B', // blue-grey
+		// bg: '#263238', // 900 blue-grey
+		bg: '#607D8B', // 500 blue-grey
 		fg: 'white',
-		presets: []
+		presets: [
+			'shop',
+			'amenity/ice_cream',
+		]
 	},
 	white: {
 		prideFlageMeaning: '',
@@ -89,18 +93,21 @@ const colors = {
 	pink: {
 		prideFlageMeaning: 'Sex',
 		prideFlageColorName: 'Hot pink',
-		bg: '#880E4F',
+		// bg: '#880E4F', // 900
+		bg: '#E91E63', // 500
 		fg: 'white',
 		presets: [
-			'shop',
 			'shop/erotic',
-			'amenity/ice_cream',
+			'amenity/swingerclub',
+			'leisure/sauna',
+			'amenity/brothel',
 		]
 	},
 	red: {
 		prideFlageMeaning: 'Life',
 		prideFlageColorName: 'Red',
-		bg: '#B71C1C',
+		// bg: '#B71C1C', // 900
+		bg: '#F44336', // 500
 		fg: 'white',
 		presets: [
 			'amenity/bar',
@@ -115,25 +122,27 @@ const colors = {
 	orange: {
 		prideFlageMeaning: 'Healing',
 		prideFlageColorName: 'Orange',
-		bg: '#E65100',
+		// bg: '#E65100', // 900
+		bg: '#FF9800', // 500
 		fg: 'white',
 		presets: [
 			'healthcare',
 			'leisure/fitness_centre',
-			'leisure/sauna',
 		]
 	},
 	yellow: {
 		prideFlageMeaning: 'Sunlight',
 		prideFlageColorName: 'Yellow',
-		bg: '#F57F17',
+		// bg: '#F57F17', // 900
+		bg: '#FFEB3B', // 500
 		fg: 'black',
 		presets: []
 	},
 	green: {
 		prideFlageMeaning: 'Nature',
 		prideFlageColorName: 'Green',
-		bg: '#1B5E20',
+		// bg: '#1B5E20', // 900
+		bg: '#43A047', // 600
 		fg: 'white',
 		presets: [
 			'natural',
@@ -142,7 +151,8 @@ const colors = {
 	cyan: {
 		prideFlageMeaning: 'Magic/Art',
 		prideFlageColorName: 'Turquoise',
-		bg: '#006064',
+		// bg: '#006064', // 900
+		bg: '#009688', // 500
 		fg: 'white',
 		presets: [
 			'tourism/museum',
@@ -156,14 +166,16 @@ const colors = {
 	indigo: {
 		prideFlageMeaning: 'Serenity',
 		prideFlageColorName: 'Indigo',
-		bg: '#1A237E',
+		// bg: '#1A237E', // 900
+		bg: '#3F51B5', // 500
 		fg: 'white',
 		presets: []
 	},
 	purple: {
 		prideFlageMeaning: 'Spirit',
 		prideFlageColorName: 'Violet',
-		bg: '#4A148C',
+		// bg: '#4A148C', // 900
+		bg: '#9C27B0', // 500
 		fg: 'white',
 		presets: [
 			'amenity/community_centre',
@@ -263,6 +275,8 @@ const preset_overwrites = {
 	'office': {
 		icon: 'business_center',
 	},
+
+	// amenity/cruising_area
 	
 	'club': {
 		icon: 'local_bar',
@@ -274,10 +288,36 @@ const preset_overwrites = {
 		icon: 'local_bar',
 	},
 	'amenity/nightclub': {
-		icon: 'local_bar', // 'star',
+		icon: 'star',
 	},
 	'leisure/dance': {
-		icon: 'local_bar', // 'star',
+		icon: 'star',
+	},
+	'amenity/swingerclub': {
+		icon: 'toys',
+		tags: {
+			'amenity': 'swingerclub',
+		},
+		name: {
+			"en": "Swingerclub",
+			"de": "Swingerclub",
+		},
+		terms: {
+			"en": "",
+		},
+	},
+	'amenity/brothel': {
+		icon: 'toys',
+		tags: {
+			'amenity': 'brothel',
+		},
+		name: {
+			"en": "Brothel",
+			"en": "Bordel",
+		},
+		terms: {
+			"en": "",
+		},
 	},
 
 	'amenity/community_centre': {
@@ -301,7 +341,7 @@ const preset_overwrites = {
 		icon: 'storefront',
 	},
 	'shop/erotic': {
-		icon: 'storefront', // 'toys',
+		icon: 'toys',
 	},
 	'amenity/ice_cream': {
 		icon: 'storefront',
@@ -414,15 +454,30 @@ for (const preset_key in id_presets) {
 		preset.geometry.includes('point') &&
 		!Object.keys(preset.tags).includes('brand:wikidata')
 	) {
+		const preset_translations = translations[preset_key] || {}
 		presets[preset_key] = {
-			tags: preset.tags,
+			tags: preset.tags || {},
 			// fields: preset.fields || [],
 			// moreFields: preset.moreFields || [],
 
-			name: translations[preset_key].name || {'en':preset.name},
-			terms: translations[preset_key].terms || preset.terms.join(' ') || '',
+			name: preset_translations.name || {'en':preset.name},
+			terms: preset_translations.terms || preset.terms.join(' ') || '',
 
 			...get_preset_overwrite(preset_key),
+		}
+	}
+}
+
+for (const preset_key in preset_overwrites) {
+	if (!presets[preset_key] && preset_overwrites[preset_key].tags) {
+		const preset_translations = translations[preset_key] || {}
+		presets[preset_key] = {
+			tags: {},
+			name: preset_translations.name || {en:''},
+			terms: preset_translations.terms || '',
+	
+			...presets[preset_key],
+			...preset_overwrites[preset_key],
 		}
 	}
 }

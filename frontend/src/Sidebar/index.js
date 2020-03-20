@@ -27,10 +27,12 @@ import {
 	TextField,
 } from '@material-ui/core'
 import {
+	Map as MapIcon,
+	Link as LinkIcon,
+
 	Phone as PhoneIcon,
 	Mail as MailIcon,
 
-	Link as LinkIcon,
 	Facebook as FacebookIcon,
 	Instagram as InstagramIcon,
 	Twitter as TwitterIcon,
@@ -306,7 +308,10 @@ export default class Sidebar extends React.Component {
 			max_age = null
 		}
 
-		if (!Number.isNaN(min_age) && !Number.isNaN(max_age)){
+		if (
+			!!min_age && !Number.isNaN(min_age) &&
+			!!max_age && !Number.isNaN(max_age)
+		){
 			const numbers = [min_age,max_age].sort((a,b)=>a-b)
 			min_age = numbers[0]
 			max_age = numbers[1]
@@ -358,6 +363,7 @@ export default class Sidebar extends React.Component {
 			return obj
 		})
 	}
+
 	renderView(){
 		const doc = this.state.doc
 
@@ -390,15 +396,22 @@ export default class Sidebar extends React.Component {
 		// `
 
 		// const links = this.parseLinks(properties.links && properties.links.length > 0 ? properties.links : [])
-		const links = (tags.website ? [
-			{
+		const links = [
+			(!!tags.website ? {
 				type: 'website',
 				href: tags.website,
 				text: tags.website,
-			}
-		] : [])
+			} : null),
+			(!!properties.osmID ? {
+				type: 'osm',
+				href: 'https://openstreetmap.org/'+properties.osmID,
+				text: 'View on OpenStreetMap',
+			} : null)
+		].filter(link=>link!==null)
 
 		const linkIcons = {
+			osm: (<MapIcon style={{color:'black'}} />),
+
 			phonenumber: (<PhoneIcon style={{color:'black'}} />),
 			mail: (<MailIcon style={{color:'black'}} />),
 
