@@ -38,14 +38,52 @@ module.exports = {
 
 	Query: {
 		// hello: (parent, args, context, info) => 'world',
-		// "lgbtq:welcomes": (parent, args, context, info) => 'All are welcome!',
 
 		search: search,
+
 		getPlace: getPlace,
 		getPlaces: getPlaces,
+		getMarkers: async (parent, args, context, info) => {
+			return (await getPlaces(parent, args, context, info)).map(doc=>{
+				_id: doc._id,
+				name: doc.properties.name,
+				lng: doc.properties.geometry.location.lng,
+				lat: doc.properties.geometry.location.lat,
+				tags: doc.properties.tags,
+			})
+		},
 	},
 	Mutation: {
 		addChangeset: addChangeset,
 	},
+
+	Place: {
+		tags: (parent, args, context, info) => {
+			if (!!args.keys && args.keys.length > 0) {
+				const keys = args.keys
+				return Object.entries(parent.tags).filter(pair=>keys.includes(pair[0])).reduce((obj,pair)=>{
+					obj[pair[0]] = pair[1]
+					return obj
+				},{})
+			}
+
+			return parent.tags
+		},
+	},
+
+	Marker: {
+		tags: (parent, args, context, info) => {
+			if (!!args.keys && args.keys.length > 0) {
+				const keys = args.keys
+				return Object.entries(parent.tags).filter(pair=>keys.includes(pair[0])).reduce((obj,pair)=>{
+					obj[pair[0]] = pair[1]
+					return obj
+				},{})
+			}
+
+			return parent.tags
+		},
+	},
+
 
 }
