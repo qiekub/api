@@ -44,8 +44,16 @@ module.exports = async (parent, args, context, info) => {
 				_id: new mongodb.ObjectID(args._id),
 				'properties.__typename': 'Place',
 			}).then(result => {
-				console.log('result', result)
-				resolve(result)
+				if (result === null) {
+					mongodb.OsmCache_collection.findOne({
+						_id: new mongodb.ObjectID(args._id),
+						'properties.__typename': 'Place',
+					}).then(result => {
+						resolve(result)
+					}).catch(reject)
+				}else{
+					resolve(result)
+				}
 			}).catch(reject)
 		}
 	})

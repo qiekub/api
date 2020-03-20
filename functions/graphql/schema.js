@@ -6,11 +6,19 @@ const schema = gql`
 	scalar Timestamp
 
 	type Query {
-		lgbtq_3A_welcomes: String
+		search(query: String): GeoSearchResult
 
 		getPlace(_id: String): Doc
 		getPlaces: [Doc]
-		search(query: String): GeoSearchResult
+		getMarkers: [Marker]
+	}
+
+	type Marker {
+		_id: ID,
+		name: String,
+		lng: Float,
+		lat: Float,
+		tags(keys: [String]): JSONObject
 	}
 
 	type Mutation {
@@ -50,7 +58,8 @@ const schema = gql`
 		"node/0123456789"
 		osmID: ID
 
-		tags: JSON
+		tags(keys: [String]): JSONObject
+
 		permanently_closed: Boolean
 
 		formatted_address: String

@@ -23,23 +23,32 @@ export const loadPoi = gql`
 `
 
 export const loadPois = gql`
-	query{
+	query($wantedTags: [String]){
 		getPlaces{
 			_id
 			properties {
 				... on Place {
-					name
 					geometry {
 						location {
 							lng
 							lat
 						}
 					}
-					osmID
-					tags
-					permanently_closed
+					tags(keys: $wantedTags)
 				}
 			}
+		}
+	}
+`
+
+export const loadMarkers = gql`
+	query($wantedTags: [String]){
+		getMarkers{
+			_id
+			name
+			lng
+			lat
+			tags(keys: $wantedTags)
 		}
 	}
 `

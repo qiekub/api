@@ -1,4 +1,6 @@
 const fetch = require('node-fetch')
+const async = require('async')
+
 // const places = require('./data/_places.js')
 const osm_places = require('./data/osm_places.json')
 
@@ -6,8 +8,11 @@ const osm_places = require('./data/osm_places.json')
 
 async function getOverpassResult(mapping) {
 	// 50.6,7.0,50.8,7.3
+	// [bbox:48.795330416333336,2.217864990234375,48.970301503721316,2.4894332885742188]
+	// [bbox:90,-180,-90,180]
+	
 	/*
-	const url = 'https://overpass-api.de/api/interpreter?data=[bbox:90,-180,-90,180][out:json][timeout:25];(node[~"^community_centre.*$"~"(lgbt|homosexual|gay)"];node[~"^lgbtq.*$"~"."];node[~"^gay.*$"~"."];node[~"^fetish.*$"~"."];);out;'
+	const url = 'https://overpass-api.de/api/interpreter?data=[bbox:48.795330416333336,2.217864990234375,48.970301503721316,2.4894332885742188][out:json][timeout:25];(node[~"^community_centre.*$"~"(lgbt|homosexual|gay)"];(node[~"^lgbtq.*$"~"."];-node[~"^lgbtq.*$"~"(welcomeAD1457)"];);(node[~"^gay.*$"~"."];-node[~"^gay.*$"~"(welcomeAD1457)"];);(node[~"^fetish.*$"~"."];-node[~"^fetish.*$"~"(welcomeAD1457)"];););out;'
 
 	const result = await fetch(encodeURI(url), {
 		method: 'get',
@@ -48,7 +53,8 @@ async function getOverpassResult(mapping) {
 	})
 	.catch(error => null)
 	*/
-
+	
+	
 	const result = osm_places.elements.map(element=>{
 		if (element.type !== 'node') {
 			return null
@@ -78,14 +84,13 @@ async function getOverpassResult(mapping) {
 }
 
 function loadPlacesFromOsmChache(mongodb, callback){
-	mongodb.osm_collection.find({'properties.__typename': 'Place'}).limit(1000).toArray((error,docs)=>{
+	mongodb.OsmCache_collection.find({'properties.__typename': 'Place'}).limit(1000).toArray((error,docs)=>{
 		if (error) {
 			console.error(error)
 			// reject()
 			callback([])
 		}else{
-			// resolve(docs || [])
-			callback(docs || [])
+			callback(docs)
 		}
 
 		/*resolve((docs || []).map(doc => {
@@ -105,8 +110,7 @@ function loadPlacesFromDB(mongodb, callback){
 			// reject()
 			callback([])
 		}else{
-			// resolve(docs || [])
-			callback(docs || [])
+			callback(docs)
 		}
 
 		/*resolve((docs || []).map(doc => {
@@ -124,43 +128,25 @@ module.exports = async (parent, args, context, info) => {
 
 	return new Promise((resolve,reject) => {
 
-		// loadPlacesFromOsmChache(mongodb, osmDocs=>{
-		// 	// resolve([...docs, ...osmDocs])
-		// 	resolve(osmDocs)
-		// })
-
-		getOverpassResult().then(overpassDocs=>{
-			loadPlacesFromDB(mongodb, docs=>{
-				// resolve([...docs, ...overpassDocs])
-				resolve(overpassDocs)
-			})
-		}, error=>{
-			console.error(error)
-			loadPlacesFromDB(mongodb, docs=>{
-				resolve(docs)
-			})
+		async.parallel({
+			osm: function(callback) {
+				loadPlacesFromOsmChache(mongodb, docs=>{
+					callback(null, docs)
+				})
+			},
+			qiekub: callback=>{
+				loadPlacesFromDB(mongodb, docs=>{
+					callback(null, docs)
+				})
+			}
+		}, (err, results)=>{
+			resolve([...results.osm, ...results.qiekub])
 		})
 
-
-
-		// resolve(places.map(place => {
-		// 	return {
-		// 		_id: place.name,
-		// 		properties: {
-		// 			...place,
-		// 			__typename: 'Place',
-		//
-		// 			links: place.website,
-		// 			min_age: (place.min_age == -1 ? null : place.min_age),
-		// 			max_age: (place.max_age == -1 ? null : place.max_age),
-		//
-		// 			location: {
-		// 				lng: place.lng,
-		// 				lat: place.lat,
-		// 			},
-		// 		},
-		// 		metadata: null
-		// 	}
-		// }))
+		// loadPlacesFromOsmChache(mongodb, osmDocs=>{
+		// 	loadPlacesFromDB(mongodb, docs=>{
+		// 		resolve([...docs, ...osmDocs])
+		// 	})
+		// })
 	})
 }
