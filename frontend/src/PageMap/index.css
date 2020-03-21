@@ -32,6 +32,13 @@
 	font-size: 24px !important;
 }
 
+
+.leaflet-container .leaflet-control-attribution,
+.leaflet-container .leaflet-control-scale{
+	font-size: 12px !important;
+}
+
+
 .marker-cluster-custom-icon{
 	/* body-1 */
 	/*font-size: 1rem;
