@@ -64,7 +64,7 @@ export default class App extends React.Component {
 			}).then(async result => {
 				await navigate(`/`)
 
-				this.functions['PageMap'].setBounds([
+				this.functions['PageMap'].flyToBounds([
 					[
 						result.data.search.geometry.boundingbox.southwest.lat,
 						result.data.search.geometry.boundingbox.southwest.lng,
@@ -73,7 +73,10 @@ export default class App extends React.Component {
 						result.data.search.geometry.boundingbox.northeast.lat,
 						result.data.search.geometry.boundingbox.northeast.lng,
 					]
-				])
+				], {
+					animate: true,
+					duration: 1.5,
+				})
 
 				// this.functions['PageMap'].setBounds([
 				// 	[result.data.geocode.boundingbox[0], result.data.geocode.boundingbox[2]],
