@@ -1,50 +1,21 @@
-// import express from 'express';
-// import {ApolloServer} from 'apollo-server-express';
-
-// import schema from './schema';
-// import resolvers from './resolvers';
+const functions = require('firebase-functions')
+const getMongoDbContext = require('../getMongoDbContext.js')
 
 const express = require('express')
+const compression = require('../github.com-patrickmichalina-compression/index.js') // https://github.com/patrickmichalina/compression
 const ApolloServer = require('apollo-server-express').ApolloServer
 const schema = require('./schema')
 const resolvers = require('./resolvers')
 
-// const mongodb = require('mongodb')
-// const MongoClient = mongodb.MongoClient
-// const ObjectID = mongodb.ObjectID
-//
-// const mongodb_username = 'graphql_backend'
-// const mongodb_password = '83J*rQ_c1Mu!h&67xT(8bWYdP2)(4fs7'
-// const mongodb_uri = encodeURI(`mongodb+srv://${mongodb_username}:${mongodb_password}@qiekub-data-e0sh4.mongodb.net/`) // test?retryWrites=true&w=majority
-// const mongodb_options = {
-// 	useNewUrlParser: true,
-// 	useUnifiedTopology: true,
-// }
-//
-// const _ContextChache_ = {}
-//
-// function getMongoDbContext(){
-// 	return new Promise((resolve,reject)=>{
-// 		if (_ContextChache_.mongodb) {
-// 			resolve(_ContextChache_.mongodb)
-// 		}else{
-// 			MongoClient.connect(mongodb_uri,mongodb_options).then(mongodb_client => {
-// 				_ContextChache_.mongodb = {
-// 					client: mongodb_client,
-// 					ObjectID: ObjectID,
-//
-// 					collection: mongodb_client.db('Graph').collection('QueerCenters'),
-// 					osm_collection: mongodb_client.db('Graph').collection('OsmCache'),
-// 				}
-//
-// 				resolve(_ContextChache_.mongodb)
-// 			})
-// 		}
-// 	})
+// const runtimeOpts = {
+// 	timeoutSeconds: 10,
+// 	memory: '1GB',
 // }
 
-function gqlServer(options) {
-	const app = express()
+function gqlServer() {
+	const app = express() // this seams faster in a function
+
+	app.use(compression({brotli:{enabled:true,zlib:{}}}))
 
 	const apolloServer = new ApolloServer({
 		typeDefs: schema,
@@ -59,7 +30,7 @@ function gqlServer(options) {
 		},
 		context: async ({req}) => {
 			return {
-				mongodb: await options.getMongoDbContext(),
+				mongodb: await getMongoDbContext(),
 			}
 		},
 	}).applyMiddleware({app, path:'/graphql/v1', cors: true})
@@ -67,4 +38,4 @@ function gqlServer(options) {
 	return app
 }
 
-module.exports = gqlServer
+exports = module.exports = functions/*.runWith(runtimeOpts)*/.https.onRequest(gqlServer())
