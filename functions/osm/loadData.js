@@ -1,4 +1,5 @@
-// const {upsertOne} = require('../functions.js')
+const functions = require('firebase-functions')
+const getMongoDbContext = require('../getMongoDbContext.js')
 
 const async = require('async')
 const fetch = require('node-fetch')
@@ -176,7 +177,9 @@ function deleteAllCurrentDocs(collection, callback){
 	callback()
 }
 
-module.exports = async (mongodb, callback) => {
+async function loadOsmData(req, res){
+	const mongodb = getMongoDbContext()
+
 	getOverpassResult(mongodb).then(docs=>{
 
 		async.each(docs, (doc, each_callback)=>{
@@ -188,12 +191,16 @@ module.exports = async (mongodb, callback) => {
 				console.error(error)
 			}
 			callback()
+			res.send('done')
 		})
 
 		// deleteOldDocs(mongodb.OsmCache_collection, ()=>{
 		// })
 	}, error=>{
 		console.error(error)
-		callback()
+		res.send(error)
 	})
 }
+
+
+exports = module.exports = functions.https.onRequest(loadOsmData)
