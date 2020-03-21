@@ -155,19 +155,29 @@ export default class PageMap extends React.Component {
 
 	getConicGradient(values){
 		let stops = []
-		let counter = 0
-		let currentPos = 0
-		for (const pair of values) {
-			if (counter === 0) {
-				currentPos += Math.ceil(pair[1]*360)
-				stops.push(pair[0]+' '+currentPos+'deg')
-			}else if (counter === values.length-1) {
-				stops.push(pair[0]+' 0')
-			}else{
-				currentPos += Math.ceil(pair[1]*360)
-				stops.push(pair[0]+' 0 '+currentPos+'deg')
+
+		if (values.length === 1) {
+			stops = [values[0][0]+' 0']
+		}else{
+			let counter = 0
+			let currentPos = 0
+			for (const pair of values) {
+				currentPos += 5
+				if (counter === 0) {
+					stops.push('white '+currentPos+'deg')
+				}else{
+					stops.push('white 0 '+currentPos+'deg')
+				}
+	
+				if (counter === values.length-1) {
+					stops.push(pair[0]+' 0')
+				}else{
+					currentPos += Math.ceil(pair[1]*360)
+					stops.push(pair[0]+' 0 '+currentPos+'deg')
+				}
+
+				counter += 1
 			}
-			counter += 1
 		}
 		stops = stops.join(', ')
 
@@ -182,6 +192,7 @@ export default class PageMap extends React.Component {
 
 	createPruneCluster(){
 		this.clusterGroup = new PruneClusterForLeaflet()
+		this.clusterGroup.Cluster.Size = 100
 
 		this.clusterGroup.BuildLeafletCluster = (cluster, position)=>{
 			const marker = new L.Marker(position, {
@@ -232,30 +243,36 @@ export default class PageMap extends React.Component {
 		this.clusterGroup.PrepareLeafletMarker = (leafletMarker, doc)=>{
 			leafletMarker.setIcon(L.divIcon({
 				html: `
-					<div class="wrapper material-icons" style="--bg-color:${doc.___color.bg};--fg-color:${doc.___color.fg};">${doc.___preset.icon.toLowerCase() || ''}</div>
+					<div class="wrapper material-icons" style="--bg-color:${doc.___color.bg};--fg-color:${doc.___color.fg};">${doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
 				`,
 				className: 'marker-custom-icon',
 				iconSize: L.point(40, 40, true),
 			}))
+			
+			if (doc.name !== '') {
+				leafletMarker.bindTooltip(doc.name, {
+					sticky: true,
+					interactive: false,
+					opacity: 1,
+					permanent: false,
+				})
+			}
 		
-			leafletMarker.bindTooltip(doc.name, {
-				sticky: true,
-				interactive: false,
-				opacity: 1,
-				permanent: false,
-			})
-	
 			leafletMarker.on('click', ()=>this.showPlace(doc))
 		}
 
 		this.clusterGroup.BuildLeafletClusterIcon = cluster=>{
-			const colors = Object.entries(cluster.GetClusterMarkers().map(m=>m.data.___color.bg).reduce((obj,preset_key)=>{
-				if (!(!!obj[preset_key])) {
-					obj[preset_key] = 0
-				}
-				obj[preset_key] += 1
-				return obj
-			},{})).sort((a,b)=>a[1]-b[1])
+			const colors = Object.entries(cluster.GetClusterMarkers()
+				.filter(m=>!!m.data.___color.key && m.data.___color.key !== 'white')
+				.map(m=>m.data.___color.bg)
+				.reduce((obj,preset_key)=>{
+					if (!(!!obj[preset_key])) {
+						obj[preset_key] = 0
+					}
+					obj[preset_key] += 1
+					return obj
+				},{})
+			).sort((a,b)=>a[1]-b[1])
 	
 			const colors_sum = colors.reduce((sum,pair) => sum+pair[1], 0)
 	
