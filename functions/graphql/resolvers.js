@@ -45,11 +45,13 @@ module.exports = {
 		getPlaces: getPlaces,
 		getMarkers: async (parent, args, context, info) => {
 			return (await getPlaces(parent, args, context, info)).map(doc=>{
-				_id: doc._id,
-				name: doc.properties.name,
-				lng: doc.properties.geometry.location.lng,
-				lat: doc.properties.geometry.location.lat,
-				tags: doc.properties.tags,
+				return {
+					_id: doc._id,
+					name: doc.properties.name,
+					lng: doc.properties.geometry.location.lng,
+					lat: doc.properties.geometry.location.lat,
+					tags: doc.properties.tags,
+				}
 			})
 		},
 	},
