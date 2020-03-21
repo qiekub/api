@@ -1,5 +1,5 @@
 import React from 'react'
-import {Map, TileLayer, Marker, Tooltip} from 'react-leaflet'
+import {Map, TileLayer} from 'react-leaflet'
 
 import {navigate} from '@reach/router'
 import {
@@ -24,8 +24,14 @@ import {getPreset, getColorByPreset, getWantedTagsList} from '../functions.js'
 import L from 'leaflet'
 import './leaflet/leaflet.css'
 
-import MarkerClusterGroup from 'react-leaflet-markercluster'
-import 'react-leaflet-markercluster/dist/styles.min.css'
+// import { PruneCluster, PruneClusterForLeaflet } from 'exports-loader?PruneCluster,PruneClusterForLeaflet!prunecluster/dist/PruneCluster.js'
+import {PruneCluster, PruneClusterForLeaflet} from './PruneCluster_dist/PruneCluster.js'
+
+PruneCluster.Cluster.ENABLE_MARKERS_LIST = true
+
+
+// import MarkerClusterGroup from 'react-leaflet-markercluster'
+// import 'react-leaflet-markercluster/dist/styles.min.css'
 
 // import image_markerIcon1x from './marker_icon/dot_pinlet-2-medium-1x.png'
 // import image_markerIcon2x from './marker_icon/dot_pinlet-2-medium-2x.png'
@@ -58,8 +64,10 @@ export default class PageMap extends React.Component {
 		this.onViewportChanged = this.onViewportChanged.bind(this)
 		this.showPlace = this.showPlace.bind(this)
 		this.gotMapRef = this.gotMapRef.bind(this)
-		this.createCustomIcon = this.createCustomIcon.bind(this)
-		this.createClusterCustomIcon = this.createClusterCustomIcon.bind(this)
+		// this.createCustomIcon = this.createCustomIcon.bind(this)
+
+		this.createPruneCluster = this.createPruneCluster.bind(this)
+		this.addMarkersToPruneCluster = this.addMarkersToPruneCluster.bind(this)
 	}
 
 	componentDidMount(){
@@ -69,7 +77,7 @@ export default class PageMap extends React.Component {
 			this.props.onFunctions({
 				getZoom: () => this.map.getZoom(),
 				getBounds: () => this.map.getBounds(),
-				setBounds: bounds => this.map.flyToBounds(bounds),
+				flyToBounds: (...attr) => this.map.flyToBounds(...attr),
 				setView: (...attr) => this.map.setView(...attr),
 				flyTo: (...attr) => this.map.flyTo(...attr),
 			})
@@ -78,7 +86,6 @@ export default class PageMap extends React.Component {
 	componentWillUnmount(){
 		clearTimeout(this.viewportChangedTimeout)
 	}
-
 	onViewportChanged(viewport){
 		console.log('viewport', viewport)
 		// clearTimeout(this.viewportChangedTimeout)
@@ -96,18 +103,31 @@ export default class PageMap extends React.Component {
 	}
 
 	loadMarkers(){
+		const ts_s = new Date()*1
+		console.log('s', ts_s)
+
 		window.graphql.query({
 			query: query_loadMarkers,
 			variables: {
 				wantedTags: getWantedTagsList(presets), // this gets us about 11% reduction in size
 			},
 		}).then(result => {
+
+			console.log('ts_diff-1', (new Date()*1)-ts_s)
+
 			const docs = result.data.getMarkers.map(doc=>{
 				doc.___preset = getPreset(doc.tags || {}, presets)
 				doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
 				return doc
 			})
-			this.setState({docs: docs})
+
+			console.log('ts_diff-2', (new Date()*1)-ts_s)
+
+			this.docs = docs
+			this.addMarkersToPruneCluster(docs)
+			// this.setState({docs: docs})
+
+			console.log('ts_diff-3', (new Date()*1)-ts_s)
 
 
 			// const docs = result.data.getPlaces.map(doc=>{
@@ -125,7 +145,7 @@ export default class PageMap extends React.Component {
 		})
 	}
 
-	async showPlace(doc,thisMarkerRef) {
+	async showPlace(doc) {
 		await navigate(`/place/${doc._id}/`)
 		if (this.props.onViewDoc) {
 			this.props.onViewDoc(doc._id)
@@ -135,17 +155,19 @@ export default class PageMap extends React.Component {
 	gotMapRef(Map){
 		this.mapRef = Map
 		this.map = Map.leafletElement
+
+		this.createPruneCluster()
 	}
 
-	createCustomIcon(iconName,bg,fg){
-		return L.divIcon({
-			html: `
-				<div class="wrapper material-icons" style="--bg-color:${bg};--fg-color:${fg};">${iconName.toLowerCase()}</div>
-			`,
-			className: 'marker-custom-icon',
-			iconSize: L.point(40, 40, true),
-		})
-	}
+	// createCustomIcon(iconName,bg,fg){
+	// 	return L.divIcon({
+	// 		html: `
+	// 			<div class="wrapper material-icons" style="--bg-color:${bg};--fg-color:${fg};">${iconName.toLowerCase()}</div>
+	// 		`,
+	// 		className: 'marker-custom-icon',
+	// 		iconSize: L.point(40, 40, true),
+	// 	})
+	// }
 
 	getConicGradient(values){
 		let stops = []
@@ -174,30 +196,129 @@ export default class PageMap extends React.Component {
 		return gradient
 	}
 
-	createClusterCustomIcon(cluster){
-		const colors = Object.entries(cluster.getAllChildMarkers().map(m=>m.options.properties.___color.bg).reduce((obj,preset_key)=>{
-			if (!(!!obj[preset_key])) {
-				obj[preset_key] = 0
-			}
-			obj[preset_key] += 1
-			return obj
-		},{})).sort((a,b)=>a[1]-b[1])
+	createPruneCluster(){
+		this.clusterGroup = new PruneClusterForLeaflet()
 
-		const colors_sum = colors.reduce((sum,pair) => sum+pair[1], 0)
+		this.clusterGroup.BuildLeafletCluster = (cluster, position)=>{
+			const marker = new L.Marker(position, {
+				icon: this.clusterGroup.BuildLeafletClusterIcon(cluster),
+			})
+		
+			marker.on('click', ()=>{
+				// Compute the cluster bounds (it's slow : O(n))
+				const markersArea = this.clusterGroup.Cluster.FindMarkersInArea(cluster.bounds)
+				const clusterBounds = this.clusterGroup.Cluster.ComputeBounds(markersArea)
+		
+				if (clusterBounds) {
+					const bounds = new L.LatLngBounds(
+						new L.LatLng(clusterBounds.minLat, clusterBounds.maxLng),
+						new L.LatLng(clusterBounds.maxLat, clusterBounds.minLng)
+					)
+		
+					const zoomLevelBefore = this.clusterGroup._map.getZoom()
+					const zoomLevelAfter = this.clusterGroup._map.getBoundsZoom(bounds, false, new L.Point(20, 20, null))
+		
+					// If the zoom level doesn't change
+					if (zoomLevelAfter === zoomLevelBefore) {
+						// Send an event for the LeafletSpiderfier
+						this.clusterGroup._map.fire('overlappingmarkers', {
+							cluster: this.clusterGroup,
+							markers: markersArea,
+							center: marker.getLatLng(),
+							marker: marker,
+						})
+		
+						this.clusterGroup._map.flyTo(position, zoomLevelAfter, {
+							animate: true,
+							duration: 0.75,
+						})
+					}else{
+						this.clusterGroup._map.flyToBounds(bounds, {
+							animate: true,
+							duration: 0.75,
+							// padding: [100,100],
+						})
+					}
+				}
+			})
+		
+			return marker
+		}
 
-		const gradient = this.getConicGradient(colors.map(pair=>{
-			return [pair[0] , pair[1]/colors_sum]
-		}))
+		this.clusterGroup.PrepareLeafletMarker = (leafletMarker, doc)=>{
+			leafletMarker.setIcon(L.divIcon({
+				html: `
+					<div class="wrapper material-icons" style="--bg-color:${doc.___color.bg};--fg-color:${doc.___color.fg};">${doc.___preset.icon.toLowerCase() || ''}</div>
+				`,
+				className: 'marker-custom-icon',
+				iconSize: L.point(40, 40, true),
+			}))
+		
+			leafletMarker.bindTooltip(doc.name, {
+				sticky: true,
+				interactive: false,
+				opacity: 1,
+				permanent: false,
+			})
+	
+			leafletMarker.on('click', ()=>this.showPlace(doc))
+		}
 
-		return L.divIcon({
-			html: `
-				<div class="number">${cluster.getChildCount()}</div>
-				<div class="pieChart" style="background-image:url(${gradient.dataURL});"></div>
-			`,
-			className: 'marker-cluster-custom-icon',
-			iconSize: L.point(48, 48, true),
-		})
+		this.clusterGroup.BuildLeafletClusterIcon = cluster=>{
+			const colors = Object.entries(cluster.GetClusterMarkers().map(m=>m.data.___color.bg).reduce((obj,preset_key)=>{
+				if (!(!!obj[preset_key])) {
+					obj[preset_key] = 0
+				}
+				obj[preset_key] += 1
+				return obj
+			},{})).sort((a,b)=>a[1]-b[1])
+	
+			const colors_sum = colors.reduce((sum,pair) => sum+pair[1], 0)
+	
+			const gradient = this.getConicGradient(colors.map(pair=>{
+				return [pair[0] , pair[1]/colors_sum]
+			}))
+	
+			return L.divIcon({
+				html: `
+					<div class="number">${cluster.population}</div>
+					<div class="pieChart" style="background-image:url(${gradient.dataURL});"></div>
+				`,
+				className: 'marker-cluster-custom-icon',
+				iconSize: L.point(48, 48, true),
+			})
+		}
+		
+		this.map.addLayer(this.clusterGroup)
 	}
+	addMarkersToPruneCluster(docs){
+		this.clusterGroup.RemoveMarkers()
+
+		for (const doc of docs) {
+			this.clusterGroup.RegisterMarker(new PruneCluster.Marker(doc.lat, doc.lng, doc))
+		}
+
+		this.clusterGroup.ProcessView()
+		this.map.invalidateSize(false)
+	}
+
+	// getMaxClusterRadius(zoomLevel){
+	// 	if (zoomLevel<5) {
+	// 		return 80
+	// 	} else if (zoomLevel<6) {
+	// 		return 120
+	// 	}  else if (zoomLevel<9) {
+	// 		return 100
+	// 	} else if (zoomLevel<11) {
+	// 		return 80
+	// 	} else if (zoomLevel<16) {
+	// 		return 60
+	// 	} else if (zoomLevel<22) {
+	// 		return 20
+	// 	}
+	//
+	// 	return 80
+	// }
 
 	render() {
 		// <ZoomControl position="bottomright" />
@@ -206,6 +327,8 @@ export default class PageMap extends React.Component {
 			<Map
 				ref={this.gotMapRef}
 				className="map"
+
+				preferCanvas={true}
 				useFlyTo={true}
 				bounds={this.state.bounds}
 				center={[51,10]}
@@ -221,10 +344,12 @@ export default class PageMap extends React.Component {
 				maxBounds={[[-180,99999],[180,-99999]]}
 			>
 				{/*<TileLayer
+					key="tilelayer"
 					attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 				/>*/}
 				{/*<TileLayer
+					key="tilelayer"
 					attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
 					url="https://api.maptiler.com/maps/streets/256/{z}/{x}/{y}.png?key=JdjEr7nrztG6lZV91e7l"
 				/>*/}
@@ -236,11 +361,15 @@ export default class PageMap extends React.Component {
 				*/}
 
 				{<TileLayer
+					key="tilelayer"
+					detectRetina={false}
 					attribution='<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; MapBox</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
-					url="https://api.mapbox.com/styles/v1/petacat/ck7h7qgtg4c4b1ikiifin5it7/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"
+					    url="https://api.mapbox.com/styles/v1/petacat/ck7h7qgtg4c4b1ikiifin5it7/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"
+					_no_url="https://api.mapbox.com/styles/v1/petacat/ck7h7qgtg4c4b1ikiifin5it7/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"
 				/>}
 
 				{/*<TileLayer
+					key="tilelayer"
 					attribution='mapillary.com'
 					url="https://raster-tiles.mapillary.com/v0.1/{z}/{x}/{y}.png"
 					maxZoom={17}
@@ -249,102 +378,10 @@ export default class PageMap extends React.Component {
 					url="https://api.mapbox.com/styles/v1/petacat/ck7h7qgtg4c4b1ikiifin5it7/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"
 				*/}
 				{/*<TileLayer
+					key="tilelayer"
 					attribution='href="https://www.mapbox.com/about/maps/" target="_blank">&copy; MapBox</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
 					url="https://api.mapbox.com/styles/v1/petacat/cixrvkhut001a2rnts6cgmkn5/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"
 				/>*/}
-
-
-				<MarkerClusterGroup
-					maxClusterRadius={(zoomLevel)=>{
-						if (zoomLevel<5) {
-							return 80
-						} else if (zoomLevel<6) {
-							return 120
-						}  else if (zoomLevel<9) {
-							return 100
-						} else if (zoomLevel<11) {
-							return 80
-						} else if (zoomLevel<16) {
-							return 60
-						} else if (zoomLevel<22) {
-							return 20
-						}
-		
-						return 80
-					}}
-					spiderfyDistanceMultiplier={1.5}
-					showCoverageOnHover={false}
-					iconCreateFunction={this.createClusterCustomIcon}
-		
-					zoomToBoundsOnClick={false}
-					onClusterclick={event=>{
-						event.layer.zoomToBounds({padding:[128,128]})
-					}}
-				>
-					{this.state.docs.map(doc=>{
-						// icon={markerIcon}
-
-						if (!(!!doc.___preset)) {
-							doc.___preset = {}
-						}
-
-						const thisMarkerRef = React.createRef()
-						// const location = (doc.properties.geometry || {}).location || {}
-						// const location = {lng:doc.lng, lat.doc.lat}
-
-						if (doc.lng && doc.lat) {
-							return (<Marker
-								key={doc._id}
-								position={[doc.lat,doc.lng]} 
-								icon={this.createCustomIcon(
-									(!!doc.___preset.icon ? doc.___preset.icon : ''),
-									doc.___color.bg,
-									doc.___color.fg
-								)}
-								ref={thisMarkerRef}
-								onClick={()=>this.showPlace(doc,thisMarkerRef)}
-								properties={doc}
-							>
-								{(!!doc.name && doc.name.length > 0 ? (<Tooltip
-									sticky={true}
-									interactive={false}
-									opacity={1}
-									permanent={false}
-								>
-									{doc.name}
-								</Tooltip>) : null)}
-							</Marker>)
-							// {doc.name} - {doc.___preset.key}
-						}
-						return null
-					})}
-          </MarkerClusterGroup>
-
-				{/*<LayerGroup>
-					{this.state.docs.map(doc=>{
-						const thisMarkerRef = React.createRef()
-						const location = doc.properties.location || {}
-						if (location.lng && location.lat) {
-							return (<Marker
-								key={doc.properties.name}
-								position={[location.lat,location.lng]} 
-								icon={markerIcon}
-								ref={thisMarkerRef}
-								onClick={()=>this.showPlace(doc,thisMarkerRef)}
-							>
-								<Tooltip
-									sticky={true}
-									interactive={false}
-									opacity={1}
-									permanent={false}
-								>
-									{doc.properties.name}
-								</Tooltip>
-							</Marker>)
-						}
-						return null
-					})}
-				</LayerGroup>*/}
 			</Map>
 		</div>)
 	}
