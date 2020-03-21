@@ -61,7 +61,6 @@ export default class PageMap extends React.Component {
 		// this.MarkerLayerRef = React.createRef()
 		this.map = null
 
-		this.onViewportChanged = this.onViewportChanged.bind(this)
 		this.showPlace = this.showPlace.bind(this)
 		this.gotMapRef = this.gotMapRef.bind(this)
 		// this.createCustomIcon = this.createCustomIcon.bind(this)
@@ -85,21 +84,6 @@ export default class PageMap extends React.Component {
 	}
 	componentWillUnmount(){
 		clearTimeout(this.viewportChangedTimeout)
-	}
-	onViewportChanged(viewport){
-		console.log('viewport', viewport)
-		// clearTimeout(this.viewportChangedTimeout)
-		// this.viewportChangedTimeout = setTimeout(()=>{		
-		// 	const mapViewport = {
-		// 		// ...viewport,
-		// 		bounds: this.map.getCenter(),
-		// 		zoom: this.map.getZoom(),
-		// 		bounds: this.map.getBounds().toBBoxString(),
-		// 		location: window.location+''
-		// 	}
-		// 	// could be used to send stats to the server
-		// 	// but we probably shouldnt
-		// }, 500)
 	}
 
 	loadMarkers(){
@@ -336,7 +320,6 @@ export default class PageMap extends React.Component {
 				zoom={1}
 				maxZoom={21}
 				zoomControl={false}
-				onViewportChanged={this.onViewportChanged}
 
 				worldCopyJump={true}
 				maxBoundsViscosity={1.0}
