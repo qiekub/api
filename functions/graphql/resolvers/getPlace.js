@@ -40,12 +40,12 @@ module.exports = async (parent, args, context, info) => {
 		}else if (!mongodb.ObjectID.isValid(args._id)) {
 			reject('_id is not a correct ObjectID')
 		}else{
-			mongodb.collection.findOne({
+			mongodb.OsmCache_collection.findOne({
 				_id: new mongodb.ObjectID(args._id),
 				'properties.__typename': 'Place',
 			}).then(result => {
 				if (result === null) {
-					mongodb.OsmCache_collection.findOne({
+					mongodb.collection.findOne({
 						_id: new mongodb.ObjectID(args._id),
 						'properties.__typename': 'Place',
 					}).then(result => {
