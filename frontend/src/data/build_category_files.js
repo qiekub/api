@@ -71,14 +71,7 @@ const colors = {
 		presets: [
 			'shop',
 			'amenity/ice_cream',
-		]
-	},
-	white: {
-		prideFlageMeaning: '',
-		prideFlageColorName: '',
-		bg: 'white', // '#607D8B', // blue-grey
-		fg: 'black',
-		presets: [
+
 			'office',
 			'amenity/place_of_worship',
 			'tourism/hotel',
@@ -90,6 +83,13 @@ const colors = {
 			'tourism/information',
 		]
 	},
+	// white: {
+	// 	prideFlageMeaning: '',
+	// 	prideFlageColorName: '',
+	// 	bg: 'white', // '#607D8B', // blue-grey
+	// 	fg: 'black',
+	// 	presets: []
+	// },
 	pink: {
 		prideFlageMeaning: 'Sex',
 		prideFlageColorName: 'Hot pink',

@@ -22,6 +22,8 @@ import Sidebar from '../Sidebar/index.js'
 
 import 'typeface-roboto'
 
+// import categories from '../data/dist/categories.json'
+
 export default class App extends React.Component {
 	constructor(props) {
 		super(props)
@@ -103,20 +105,26 @@ export default class App extends React.Component {
 				if (doc !== null) {
 					this.functions['Sidebar'].setDoc(doc)
 		
-					// let zoomLevel = (this.props.onGetZoom ? this.props.onGetZoom() : 17)
-					// if (zoomLevel < 17) {
-					// 	zoomLevel = 17
-					// }
-					//
-					// if (new Date()*1 - window.pageOpenTS*1 < 2000) {
-					// 	if (this.props.onSetView) {
-					// 		this.props.onSetView([doc.properties.location.lat,doc.properties.location.lng],zoomLevel)
-					// 	}
+					let zoomLevel = this.functions['PageMap'].getZoom()
+					if (zoomLevel < 17) {
+						zoomLevel = 17
+					}
+					
+					if (new Date()*1 - window.pageOpenTS*1 < 2000) {
+						this.functions['PageMap'].setView(
+							[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
+							zoomLevel
+						)
 					// }else{
-					// 	if (this.props.onFlyTo) {
-					// 		this.props.onFlyTo([doc.properties.location.lat,doc.properties.location.lng],zoomLevel)
-					// 	}
-					// }
+					// 	this.functions['PageMap'].flyTo(
+					// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
+					// 		zoomLevel,
+					// 		{
+					// 			animate: true,
+					// 			duration: 1,
+					// 		}
+					// 	)
+					}
 				}
 			}).catch(error=>{
 				console.error(error)

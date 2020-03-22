@@ -190,7 +190,7 @@ async function loadOsmData(req, res){
 			if (error) {
 				console.error(error)
 			}
-			callback()
+			// callback()
 			res.send('done')
 		})
 

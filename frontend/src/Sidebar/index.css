@@ -10,6 +10,11 @@
     width: calc(100% + 32px);
 }
 
-..MuiSlider-track{
+.MuiSlider-track{
 	background: green;
+}
+
+.MuiListSubheader-sticky {
+	top: -2px !important;
+	background: white !important;
 }

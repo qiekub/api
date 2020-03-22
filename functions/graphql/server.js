@@ -7,11 +7,6 @@ const ApolloServer = require('apollo-server-express').ApolloServer
 const schema = require('./schema')
 const resolvers = require('./resolvers')
 
-// const runtimeOpts = {
-// 	timeoutSeconds: 10,
-// 	memory: '1GB',
-// }
-
 function gqlServer() {
 	const app = express() // this seams faster in a function
 
@@ -21,8 +16,8 @@ function gqlServer() {
 		typeDefs: schema,
 		resolvers,
 		// Enable graphiql gui
-		introspection: true,
-		tracing: true,
+		introspection: true, // (process.env.FUNCTIONS_EMULATOR ? true : false),
+		tracing: (process.env.FUNCTIONS_EMULATOR ? true : false),
 		playground: {
 			endpoint: '/graphql/v1',
 			// endpoint: 'https://us-central1-queercenters.cloudfunctions.net/graphql/',
@@ -38,4 +33,4 @@ function gqlServer() {
 	return app
 }
 
-exports = module.exports = functions/*.runWith(runtimeOpts)*/.https.onRequest(gqlServer())
+exports = module.exports = functions.https.onRequest(gqlServer())
