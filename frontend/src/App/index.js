@@ -9,20 +9,40 @@ import {
 } from '../queries.js'
 
 import {
-	Fab
+	Fab,
+	// Drawer,
+
+	Card,
+	// CardActions,
+	CardActionArea,
+	// CardContent,
+	// Typography,
+	Divider,
+	// Button,
+	Checkbox,
+
+	List,
+	ListItem,
+	ListItemText,
+	// ListItemIcon,
+	ListItemSecondaryAction,
 } from '@material-ui/core'
 import {
 	Add as AddIcon,
+	FilterList as FilterListIcon,
+	// ExpandLess as ExpandLessIcon,
 } from '@material-ui/icons'
 
 import PageMap from '../PageMap/index.js'
 import SearchBar from '../SearchBar/index.js'
 // import InfoCard from '../InfoCard/index.js'
 import Sidebar from '../Sidebar/index.js'
+// import FiltersPanelContent from '../FiltersPanelContent/index.js'
 
 import 'typeface-roboto'
 
-// import categories from '../data/dist/categories.json'
+import categories from '../data/dist/categories.json'
+console.log('categories', categories)
 
 export default class App extends React.Component {
 	constructor(props) {
@@ -32,6 +52,7 @@ export default class App extends React.Component {
 			searchBarValue: '',
 			sidebarIsOpen: false,
 			doc: null,
+			filtersPanelIsOpen: true,
 		}
 
 		this.functions = {}
@@ -42,9 +63,17 @@ export default class App extends React.Component {
 		this.addPlace = this.addPlace.bind(this)
 		this.loadAndViewDoc = this.loadAndViewDoc.bind(this)
 
+		this.toggleFiltersPanel = this.toggleFiltersPanel.bind(this)
+
 		this.setView = this.setView.bind(this)
 		this.flyTo = this.flyTo.bind(this)
 		this.getZoom = this.getZoom.bind(this)
+	}
+
+	toggleFiltersPanel(){
+		this.setState((state,props)=>{
+			return {filtersPanelIsOpen:!state.filtersPanelIsOpen}
+		})
 	}
 
 	saveFunctions(componentName, functionsObject){
@@ -180,6 +209,41 @@ export default class App extends React.Component {
 				Add a Place
 			</Fab>
 
+			<Fab className="toggleFiltersFab" onClick={this.toggleFiltersPanel}>
+				<FilterListIcon />
+			</Fab>
+			{/*<Drawer
+				open={this.state.filtersPanelIsOpen}
+				onClose={this.toggleFiltersPanel}
+				variant="permanent"
+				anchor="right"
+				className="filtersPanel"
+			>
+				<FiltersPanelContent />
+			</Drawer>*/}
+
+			<Card className={'filtersPanel '+(this.state.filtersPanelIsOpen ? ' open' : 'closed')} elevation={6}>
+				<div style={{display:(this.state.filtersPanelIsOpen ? 'block' : 'none')}}>					
+					<List>
+						<ListItem button style={{width:'300px'}}>
+							<ListItemText primary="Line item" />
+							<ListItemSecondaryAction>
+								<Checkbox edge="end"/>
+							</ListItemSecondaryAction>
+						</ListItem>
+					</List>
+					<Divider />
+				</div>
+				<CardActionArea className="CardActionArea" onClick={this.toggleFiltersPanel}>
+					<ListItem button className="ListItem">
+						<ListItemText className="ListItemText" primary="Filter verbergen" />
+						<ListItemSecondaryAction className="ListItemSecondaryAction">
+							<FilterListIcon />
+						</ListItemSecondaryAction>
+					</ListItem>
+				</CardActionArea>
+			</Card>
+
 			<Router primary={false}>
 				<Sidebar
 					path="/place/:docID"
@@ -199,7 +263,7 @@ export default class App extends React.Component {
 			</Router>
 			
 			<PageMap
-				className="page"
+				className={'page'+(this.state.sidebarIsOpen ? ' sidebarIsOpen' : '')}
 				onViewDoc={this.loadAndViewDoc}
 				onFunctions={(...attr)=>{this.saveFunctions('PageMap',...attr)}}
 			/>
