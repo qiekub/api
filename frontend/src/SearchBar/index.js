@@ -26,6 +26,7 @@ export default class SearchBar extends React.Component {
 		this.state = {
 			value: '',
 			loadingSearchResult: false,
+			isMainDrawerOpen: false,
 		}
 
 		this.submitTheSearchQuery = this.submitTheSearchQuery.bind(this)
@@ -88,9 +89,13 @@ export default class SearchBar extends React.Component {
 
 	render() {
 		return (<div className={this.props.className}>
-			<Drawer open={this.state.isMainDrawerOpen} onClose={this.toggleMainDrawer}>
+			<Drawer
+				open={this.state.isMainDrawerOpen}
+				onClose={this.toggleMainDrawer}
+			>
 				<MainDrawerContent />
 			</Drawer>
+
 			<Paper className={'header '+(this.props.sidebarIsOpen ? 'sidebarIsOpen' : '')} elevation={(this.props.sidebarIsOpen ? 0 : 6)} variant={(this.props.sidebarIsOpen ? 'elevation'/*'outlined'*/ : 'elevation')}>
 				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} aria-label="menu" onClick={this.toggleMainDrawer}>
 					<MenuIcon style={{color:'black'}} />
