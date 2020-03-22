@@ -19,6 +19,10 @@
 
 
 		"rewrites": [{
+				// Shows the same content for multiple URLs
+				"source": "/opening_hours+deps.min.js",
+				"destination": "/opening_hours+deps.min.js"
+			},{
 				// Directs a request to Cloud Functions
 				"source": "/graphql/**",
 				"function": "graphql"

@@ -13,6 +13,7 @@
     "graphql": "^14.6.0",
     "leaflet": "^1.6.0",
     "leaflet.markercluster": "^1.4.1",
+    "opening_hours": "^3.5.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-leaflet": "^2.6.1",
