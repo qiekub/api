@@ -730,7 +730,7 @@ export default class Sidebar extends React.Component {
 						}}>
 							<ListItem>
 								<ListItemIcon>
-									<div class="material-icons" style={{color:doc.___color.fg}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
+									<div className="material-icons" style={{color:doc.___color.fg}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
 								</ListItemIcon>
 								<ListItemText primary={doc.___preset.name.en} />
 							</ListItem>
