@@ -33,9 +33,29 @@
 }
 
 
-.leaflet-container .leaflet-control-attribution,
-.leaflet-container .leaflet-control-scale{
-	font-size: 12px !important;
+.leaflet-container .leaflet-control-attribution{
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	text-align: right;
+	background: rgba(255,255,255,0.2) !important;
+	color: black;
+	-webkit-backdrop-filter: blur(10px);
+	-moz-backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
+
+	font-size: 0.75rem !important;
+	font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+	font-weight: 400 !important;
+	/*line-height: 1.66 !important;*/
+	letter-spacing: 0.03333em !important;
+
+	height: 20px !important;
+	line-height: 20px !important;
+}
+.leaflet-container .leaflet-control-attribution a{
+	color: inherit;
 }
 
 
