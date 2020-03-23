@@ -415,7 +415,7 @@ export default class Sidebar extends React.Component {
 					days.push(<ListItem key={weekdayName} style={{display:'flex',alignItems:'flex-start'}}>
 						<ListItemText style={{width:'100px'}}>{weekdayName}</ListItemText>
 						<div>
-							{intervals.length === 0 ? <ListItemText>Geschlossen</ListItemText> : intervals.map(text=><ListItemText key={text} style={{display:'block'}}>{text}</ListItemText>)}
+							{intervals.length === 0 ? <ListItemText>Geschlossen</ListItemText> : intervals.map(text=><ListItemText style={{display:'block'}}>{text}</ListItemText>)}
 						</div>
 					</ListItem>)
 	
