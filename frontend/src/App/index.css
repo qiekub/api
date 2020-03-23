@@ -28,44 +28,59 @@ body {
 	background: white !important;
 	color: black !important;
 
-	bottom: 32px;
+	bottom: calc(20px + 16px);
 	left: 16px;
 }
-.toggleFiltersFab{
+/*.toggleFiltersFab{
 	z-index: var(--z-index-fabs);
 	position: absolute !important;
 	background: white !important;
 	color: black !important;
 
-	bottom: 32px;
+	bottom: calc(20px + 16px);
 	right: 16px;
 
 	display: none !important;
-}
-.filtersPanel{
+}*/
+/*.filtersPanel{
 	z-index: var(--z-index-fabs);
 	position: absolute !important;
 	background: white !important;
 	color: black !important;
 
-	/*bottom: calc(calc(32px + 56px) + 8px);*/
-	bottom: 32px;
+	bottom: calc(20px + 16px);
 	right: 16px;
 }
 .filtersPanel.closed{
 	border-radius: 28px;
+	width: 56px;
+}
+.filtersPanel .CardActionArea{
+	list-style: none;
+	background: rgba(0,0,0,0);
+}
+.filtersPanel.open .CardActionArea{
+	background: rgba(0,0,0,0.04);
 }
 .filtersPanel .CardActionArea .ListItem{
 	height: 56px;
 	padding: 0 16px;
 }
 .filtersPanel.closed .CardActionArea .ListItem{
-	height: 56px;
 	width: 56px;
 	padding: 0;
 }
 .filtersPanel.closed .CardActionArea .ListItem .ListItemText{
 	display: none;
+}*/
+.filtersPanel{
+	z-index: var(--z-index-fabs);
+	position: absolute;
+	top: 16px;
+	/*right: 16px;*/
+	left: 400px;
+	padding: 9px;
+	max-width: calc(calc(100% - 400px) - 16px);
 }
 
 .page {
