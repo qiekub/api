@@ -12,24 +12,24 @@ import {
 	Fab,
 	// Drawer,
 
-	Card,
+	// Card,
 	// CardActions,
-	CardActionArea,
+	// CardActionArea,
 	// CardContent,
 	// Typography,
-	Divider,
+	// Divider,
 	// Button,
-	Checkbox,
+	// Checkbox,
 
-	List,
-	ListItem,
-	ListItemText,
+	// List,
+	// ListItem,
+	// ListItemText,
 	// ListItemIcon,
-	ListItemSecondaryAction,
+	// ListItemSecondaryAction,
 } from '@material-ui/core'
 import {
 	Add as AddIcon,
-	FilterList as FilterListIcon,
+	// FilterList as FilterListIcon,
 	// ExpandLess as ExpandLessIcon,
 } from '@material-ui/icons'
 
@@ -37,12 +37,9 @@ import PageMap from '../PageMap/index.js'
 import SearchBar from '../SearchBar/index.js'
 // import InfoCard from '../InfoCard/index.js'
 import Sidebar from '../Sidebar/index.js'
-// import FiltersPanelContent from '../FiltersPanelContent/index.js'
+import FiltersPanelContent from '../FiltersPanelContent/index.js'
 
 import 'typeface-roboto'
-
-import categories from '../data/dist/categories.json'
-console.log('categories', categories)
 
 export default class App extends React.Component {
 	constructor(props) {
@@ -52,7 +49,10 @@ export default class App extends React.Component {
 			searchBarValue: '',
 			sidebarIsOpen: false,
 			doc: null,
-			filtersPanelIsOpen: true,
+
+			filters: {
+				presets: []
+			}
 		}
 
 		this.functions = {}
@@ -62,18 +62,11 @@ export default class App extends React.Component {
 		this.setSidebarIsOpen = this.setSidebarIsOpen.bind(this)
 		this.addPlace = this.addPlace.bind(this)
 		this.loadAndViewDoc = this.loadAndViewDoc.bind(this)
-
-		this.toggleFiltersPanel = this.toggleFiltersPanel.bind(this)
+		this.filtersChanged = this.filtersChanged.bind(this)
 
 		this.setView = this.setView.bind(this)
 		this.flyTo = this.flyTo.bind(this)
 		this.getZoom = this.getZoom.bind(this)
-	}
-
-	toggleFiltersPanel(){
-		this.setState((state,props)=>{
-			return {filtersPanelIsOpen:!state.filtersPanelIsOpen}
-		})
 	}
 
 	saveFunctions(componentName, functionsObject){
@@ -84,7 +77,38 @@ export default class App extends React.Component {
 		this.setState({searchBarValue:value})
 	}
 	setSidebarIsOpen(value){
-		this.setState({sidebarIsOpen:value})
+		// const center = this.functions['PageMap'].getCenter()
+		// const zoom = this.functions['PageMap'].getZoom()
+
+		this.setState({sidebarIsOpen:value}, ()=>{
+			// if (new Date()*1 - window.pageOpenTS*1 > 2000) {
+			// 	// this.functions['PageMap'].invalidateSize()
+			// 	setTimeout(()=>{
+			// 		// const center2 = this.functions['PageMap'].getCenter()
+			// 		console.log('center', center, zoom)
+			// 		// console.log('center2', center2)
+			// 		this.functions['PageMap'].flyTo(center, Math.round(zoom), {
+			// 			animate: true,
+			// 			duration: 1.5,
+			// 		})
+			// 		// this.functions['PageMap'].invalidateSize()
+			// 	}, 500)
+			// }
+
+			// if (new Date()*1 - window.pageOpenTS*1 < 2000) {
+			// 	console.log('center-2', center)
+			// 	this.functions['PageMap'].panTo(center, {
+			// 		animate: true,
+			// 		duration: 5,
+			// 	})
+			// }else{
+			// 	this.functions['PageMap'].panTo(
+			// 		this.functions['PageMap'].getCenter(), {
+			// 		animate: true,
+			// 		duration: 5,
+			// 	})
+			// }
+		})
 	}
 
 	startSearch(queryString,callback){
@@ -138,7 +162,7 @@ export default class App extends React.Component {
 					if (zoomLevel < 17) {
 						zoomLevel = 17
 					}
-					
+
 					if (new Date()*1 - window.pageOpenTS*1 < 2000) {
 						this.functions['PageMap'].setView(
 							[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
@@ -188,6 +212,11 @@ export default class App extends React.Component {
 		return this.functions['PageMap'].getZoom(...attr)
 	}
 
+	filtersChanged(newFilters){
+		console.log('filtersChanged', newFilters)
+		this.setState({filters:newFilters})
+	}
+
 	render() {
 		return (<>
 			<SearchBar
@@ -209,40 +238,9 @@ export default class App extends React.Component {
 				Add a Place
 			</Fab>
 
-			<Fab className="toggleFiltersFab" onClick={this.toggleFiltersPanel}>
-				<FilterListIcon />
-			</Fab>
-			{/*<Drawer
-				open={this.state.filtersPanelIsOpen}
-				onClose={this.toggleFiltersPanel}
-				variant="permanent"
-				anchor="right"
-				className="filtersPanel"
-			>
-				<FiltersPanelContent />
-			</Drawer>*/}
-
-			<Card className={'filtersPanel '+(this.state.filtersPanelIsOpen ? ' open' : 'closed')} elevation={6}>
-				<div style={{display:(this.state.filtersPanelIsOpen ? 'block' : 'none')}}>					
-					<List>
-						<ListItem button style={{width:'300px'}}>
-							<ListItemText primary="Line item" />
-							<ListItemSecondaryAction>
-								<Checkbox edge="end"/>
-							</ListItemSecondaryAction>
-						</ListItem>
-					</List>
-					<Divider />
-				</div>
-				<CardActionArea className="CardActionArea" onClick={this.toggleFiltersPanel}>
-					<ListItem button className="ListItem">
-						<ListItemText className="ListItemText" primary="Filter verbergen" />
-						<ListItemSecondaryAction className="ListItemSecondaryAction">
-							<FilterListIcon />
-						</ListItemSecondaryAction>
-					</ListItem>
-				</CardActionArea>
-			</Card>
+			<div className="filtersPanel">
+				<FiltersPanelContent onChange={this.filtersChanged}/>
+			</div>
 
 			<Router primary={false}>
 				<Sidebar
@@ -264,8 +262,11 @@ export default class App extends React.Component {
 			
 			<PageMap
 				className={'page'+(this.state.sidebarIsOpen ? ' sidebarIsOpen' : '')}
+
 				onViewDoc={this.loadAndViewDoc}
 				onFunctions={(...attr)=>{this.saveFunctions('PageMap',...attr)}}
+			
+				filters={this.state.filters}
 			/>
 		</>)
 	}
