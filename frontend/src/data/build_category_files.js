@@ -7,57 +7,124 @@ const supported_langs = ['en','de'] // ,'es','fr'
 
 
 
-
+/*
+(  ) Community Centers (Community Centres, Social Facilities)
+(  ) Going Out (Bars, Pubs, Nightclubs, …)
+(  ) Culture (Museums, Theatres, Historical, Libraries)
+(  ) Eating (Cafes, Restaurants)
+(  ) Tourism (Hotels, …)
+*/
 
 const categories = [
 	// This is not used in the backend. It's here as a reference for the frontend. Copy it to where it's needed.
 	{
-		icon: 'Restaurant',
-		name: {
-			en: 'Food & Drink',
-			de: 'Essen & Trinken',
-		},
-		presets: [
-			'amenity/bar',
-			// 'amenity/pub',
-			'amenity/restaurant',
-			'amenity/cafe',
-		],
-	},
-	{
-		icon: 'LocalActivity',
-		name: {
-			en: 'Things to do',
-			de: 'Aktivitäten',
-		},
-		presets: [
-			'amenity/nightclub',
-			'tourism/museum',
-			'amenity/theatre',
-			'leisure/fitness_centre',
-		],
-	},
-	{
-		icon: 'People',
-		name: {
-			en: 'Services',
-			de: 'Services',
-		},
+		name: 'Community Centers',
 		presets: [
 			'amenity/community_centre',
-			'healthcare/yes',
-			'shop/yes',
-			'amenity/place_of_worship',
-			// 'tourism/hotel',
+			'amenity/social_facility',
+			'amenity/social_centre',
+			'healthcare',
 		],
+		color: {
+			key: 'purple',
+			prideFlageMeaning: 'Spirit',
+			prideFlageColorName: 'Violet',
+			// bg: '#4A148C', // 900
+			bg: '#9C27B0', // 500
+			fg: 'white',
+		},
 	},
 	{
-		icon: 'More',
-		name: {
-			en: 'More',
-			de: 'Weiteres',
+		name: 'Going Out',
+		presets: [
+			'amenity/bar',
+			'amenity/pub',
+			'amenity/nightclub',
+			'leisure/dance',
+			'club',
+		],
+		color: {
+			key: 'red',
+			prideFlageMeaning: 'Life',
+			prideFlageColorName: 'Red',
+			// bg: '#B71C1C', // 900
+			bg: '#F44336', // 500
+			fg: 'white',
 		},
-		presets: [],
+	},
+	{
+		name: 'Culture',
+		presets: [
+			'tourism/museum',
+			'amenity/theatre',
+			'amenity/library',
+			'amenity/arts_centre',
+			'tourism/gallery',
+			'historic',
+		],
+		color: {
+			key: 'cyan',
+			prideFlageMeaning: 'Magic/Art',
+			prideFlageColorName: 'Turquoise',
+			// bg: '#006064', // 900
+			bg: '#009688', // 500
+			fg: 'white',
+		},
+	},
+	{
+		name: 'Eating',
+		presets: [
+			'amenity/cafe',
+			'amenity/restaurant',
+			'amenity/ice_cream',
+		],
+		color: {
+			key: 'orange',
+			prideFlageMeaning: 'Healing',
+			prideFlageColorName: 'Orange',
+			// bg: '#E65100', // 900
+			bg: '#FF9800', // 500
+			fg: 'white',
+		},
+	},
+	{
+		name: 'Fun', // "Fun"
+		presets: [
+			'shop/erotic',
+			'amenity/swingerclub',
+			'leisure/sauna',
+			'amenity/brothel',
+			'natural/beach/fkk',
+			'amenity/cruising_area',
+		],
+		color: {
+			key: 'pink',
+			prideFlageMeaning: 'Sex',
+			prideFlageColorName: 'Hot pink',
+			// bg: '#880E4F', // 900
+			bg: '#E91E63', // 500
+			fg: 'white',
+		},
+	},
+	{
+		name: 'Tourism',
+		presets: [
+			'tourism/hotel',
+			'tourism/hostel',
+			'tourism/apartment',
+			'tourism/camp_site',
+			'tourism/picnic_site',
+			'tourism/guest_house',
+			'tourism/information',
+		],
+		color: {
+			key: 'indigo',
+			prideFlageMeaning: 'Serenity',
+			prideFlageColorName: 'Indigo',
+			// bg: '#1A237E', // 900
+			bg: '#3F51B5', // 500
+			fg: 'white',
+		},
 	},
 ]
 
@@ -70,19 +137,19 @@ const colors = {
 		fg: 'white',
 		presets: [
 			'shop',
-			'amenity/ice_cream',
-
 			'office',
 			'amenity/place_of_worship',
-			'tourism/hotel',
-			'tourism/hostel',
-			'tourism/apartment',
-			'tourism/camp_site',
-			'tourism/picnic_site',
-			'tourism/guest_house',
-			'tourism/information',
 		]
 	},
+
+	...(
+		categories.reduce((obj,category)=>{
+			category.color.presets = category.presets
+			obj[category.color.key] = category.color
+			return obj
+		},{})
+	),
+
 	// white: {
 	// 	prideFlageMeaning: '',
 	// 	prideFlageColorName: '',
@@ -90,100 +157,44 @@ const colors = {
 	// 	fg: 'black',
 	// 	presets: []
 	// },
-	pink: {
-		prideFlageMeaning: 'Sex',
-		prideFlageColorName: 'Hot pink',
-		// bg: '#880E4F', // 900
-		bg: '#E91E63', // 500
-		fg: 'white',
-		presets: [
-			'shop/erotic',
-			'amenity/swingerclub',
-			'leisure/sauna',
-			'amenity/brothel',
-		]
-	},
-	red: {
-		prideFlageMeaning: 'Life',
-		prideFlageColorName: 'Red',
-		// bg: '#B71C1C', // 900
-		bg: '#F44336', // 500
-		fg: 'white',
-		presets: [
-			'amenity/bar',
-			'amenity/pub',
-			'amenity/nightclub',
-			'amenity/restaurant',
-			'amenity/cafe',
-			'leisure/dance',
-			'club',
-		],
-	},
-	orange: {
-		prideFlageMeaning: 'Healing',
-		prideFlageColorName: 'Orange',
-		// bg: '#E65100', // 900
-		bg: '#FF9800', // 500
-		fg: 'white',
-		presets: [
-			'healthcare',
-			'leisure/fitness_centre',
-		]
-	},
-	yellow: {
-		prideFlageMeaning: 'Sunlight',
-		prideFlageColorName: 'Yellow',
-		// bg: '#F57F17', // 900
-		bg: '#FFEB3B', // 500
-		fg: 'black',
-		presets: []
-	},
-	green: {
-		prideFlageMeaning: 'Nature',
-		prideFlageColorName: 'Green',
-		// bg: '#1B5E20', // 900
-		bg: '#43A047', // 600
-		fg: 'white',
-		presets: [
-			'natural',
-		]
-	},
-	cyan: {
-		prideFlageMeaning: 'Magic/Art',
-		prideFlageColorName: 'Turquoise',
-		// bg: '#006064', // 900
-		bg: '#009688', // 500
-		fg: 'white',
-		presets: [
-			'tourism/museum',
-			'amenity/theatre',
-			'amenity/library',
-			'amenity/arts_centre',
-			'tourism/gallery',
-			'historic',
-		]
-	},
-	indigo: {
-		prideFlageMeaning: 'Serenity',
-		prideFlageColorName: 'Indigo',
-		// bg: '#1A237E', // 900
-		bg: '#3F51B5', // 500
-		fg: 'white',
-		presets: []
-	},
-	purple: {
-		prideFlageMeaning: 'Spirit',
-		prideFlageColorName: 'Violet',
-		// bg: '#4A148C', // 900
-		bg: '#9C27B0', // 500
-		fg: 'white',
-		presets: [
-			'amenity/community_centre',
-			'amenity/social_facility',
-			'amenity/social_centre',
-		]
-	},
+	// orange: {
+	// 	prideFlageMeaning: 'Healing',
+	// 	prideFlageColorName: 'Orange',
+	// 	// bg: '#E65100', // 900
+	// 	bg: '#FF9800', // 500
+	// 	fg: 'white',
+	// 	presets: [
+	// 		'leisure/fitness_centre',
+	// 	]
+	// },
+	// yellow: {
+	// 	prideFlageMeaning: 'Sunlight',
+	// 	prideFlageColorName: 'Yellow',
+	// 	// bg: '#F57F17', // 900
+	// 	bg: '#FFEB3B', // 500
+	// 	fg: 'black',
+	// 	presets: []
+	// },
+	// green: {
+	// 	prideFlageMeaning: 'Nature',
+	// 	prideFlageColorName: 'Green',
+	// 	// bg: '#1B5E20', // 900
+	// 	bg: '#43A047', // 600
+	// 	fg: 'white',
+	// 	presets: [
+	// 		'natural',
+	// 	]
+	// },
+	// indigo: {
+	// 	prideFlageMeaning: 'Serenity',
+	// 	prideFlageColorName: 'Indigo',
+	// 	// bg: '#1A237E', // 900
+	// 	bg: '#3F51B5', // 500
+	// 	fg: 'white',
+	// 	presets: []
+	// },
 }
+
 const colorsByPreset = Object.entries(colors).reduce((obj,pair)=>{
 	const key = pair[0]
 	const color = pair[1]
@@ -319,6 +330,18 @@ const preset_overwrites = {
 			"en": "",
 		},
 	},
+	'amenity/cruising_area': {
+		icon: 'toys',
+		tags: {
+			'amenity': 'cruising_area',
+		},
+		name: {
+			"en": "Cruising Area",
+		},
+		terms: {
+			"en": "",
+		},
+	},
 
 	'amenity/community_centre': {
 		icon: 'people',
@@ -343,6 +366,20 @@ const preset_overwrites = {
 	'shop/erotic': {
 		icon: 'toys',
 	},
+	// 'shop/erotic/video/lgbtq': {		
+	// 	icon: 'toys',
+	// 	tags: {
+	// 		'shop': 'video',
+	// 		'gay': 'yes'
+	// 	},
+	// 	name: {
+	// 		"en": "LGBTQ Video Store",
+	// 		"en": "LGBTQ Video Geschäft",
+	// 	},
+	// 	terms: {
+	// 		"en": "",
+	// 	},
+	// },
 	'amenity/ice_cream': {
 		icon: 'storefront',
 	},
@@ -356,6 +393,20 @@ const preset_overwrites = {
 	'natural/beach': {
 		icon: 'beach_access',
 	},
+	'natural/beach/fkk': {
+		icon: 'beach_access',
+		tags: {
+			'natural': 'beach',
+			'nudism': 'permissive',
+		},
+		name: {
+			"en": "Naturist Beach",
+			"de": "FKK Strand",
+		},
+		terms: {
+			"en": "",
+		},
+	},
 
 	'tourism/museum': {
 		icon: 'museum',
@@ -364,12 +415,15 @@ const preset_overwrites = {
 		icon: 'museum',
 	},
 	'amenity/arts_centre': {
-		icon: 'museum',
+		icon: 'museum', // brush | palette | museum
 	},
 	'historic': {
-		icon: 'museum',
+		icon: 'local_see', // local_see | place | museum
 	},
 
+	'tourism/information': {
+		icon: 'info',
+	},
 	'tourism/hotel': {
 		icon: 'hotel',
 	},
@@ -379,21 +433,21 @@ const preset_overwrites = {
 	'tourism/apartment': {
 		icon: 'hotel',
 	},
-	'tourism/camp_site': {
-		icon: 'hotel',
-	},
-	'tourism/picnic_site': {
-		icon: 'hotel',
-	},
 	'tourism/guest_house': {
 		icon: 'hotel',
+	},
+	'tourism/camp_site': {
+		icon: 'fireplace',
+	},
+	'tourism/picnic_site': {
+		icon: 'deck',
 	},
 
 	'amenity/theatre': {
 		icon: 'local_play',
 	},
 	'amenity/cinema': {
-		icon: 'local_play',
+		icon: 'local_movies',
 	},
 
 	'amenity/library': {
