@@ -1,0 +1,17 @@
+/*.myToggleButtonGroup{
+	background: transparent !important;
+	margin: -2px -6px;
+}
+.myToggleButtonGroup button{
+	border-radius: 4px !important;
+	margin: 2px !important;
+	border: 0;
+}*/
+
+.dot{
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	border-radius: 100%;
+	margin-right: 16px;
+}

@@ -36,14 +36,18 @@ export default class PageMap extends React.Component {
 			bounds: null,
 		}
 
+		this.filters = null
+
 		// this.MarkerLayerRef = React.createRef()
 		this.map = null
+		this.markers = []
 
 		this.showPlace = this.showPlace.bind(this)
 		this.gotMapRef = this.gotMapRef.bind(this)
 
 		this.createPruneCluster = this.createPruneCluster.bind(this)
 		this.addMarkersToPruneCluster = this.addMarkersToPruneCluster.bind(this)
+		this.filterMarkers = this.filterMarkers.bind(this)
 	}
 
 	componentDidMount(){
@@ -52,12 +56,18 @@ export default class PageMap extends React.Component {
 		if (this.props.onFunctions) {
 			this.props.onFunctions({
 				getZoom: () => this.map.getZoom(),
+				getCenter: () => this.map.getCenter(),
 				getBounds: () => this.map.getBounds(),
 				flyToBounds: (...attr) => this.map.flyToBounds(...attr),
 				setView: (...attr) => this.map.setView(...attr),
+				panTo: (...attr) => this.map.panTo(...attr),
 				flyTo: (...attr) => this.map.flyTo(...attr),
+				invalidateSize: (...attr) => this.map.invalidateSize(...attr),
 			})
 		}
+	}
+	componentDidUpdate(){
+		this.filterMarkers()
 	}
 
 	loadMarkers(){
@@ -87,6 +97,9 @@ export default class PageMap extends React.Component {
 	}
 
 	async showPlace(doc) {
+		const center = this.map.getCenter()
+		console.log('center-map', center)
+
 		await navigate(`/place/${doc._id}/`)
 		if (this.props.onViewDoc) {
 			this.props.onViewDoc(doc._id)
@@ -139,7 +152,7 @@ export default class PageMap extends React.Component {
 
 	createPruneCluster(){
 		this.clusterGroup = new PruneClusterForLeaflet()
-		this.clusterGroup.Cluster.Size = 100
+		this.clusterGroup.Cluster.Size = 120
 
 		this.clusterGroup.BuildLeafletCluster = (cluster, position)=>{
 			const marker = new L.Marker(position, {
@@ -240,14 +253,48 @@ export default class PageMap extends React.Component {
 		this.map.addLayer(this.clusterGroup)
 	}
 	addMarkersToPruneCluster(docs){
+		this.markers = []
 		this.clusterGroup.RemoveMarkers()
 
 		for (const doc of docs) {
-			this.clusterGroup.RegisterMarker(new PruneCluster.Marker(doc.lat, doc.lng, doc))
+			let marker = new PruneCluster.Marker(doc.lat, doc.lng, doc)
+			// marker.filtered = false
+			this.markers.push(marker)
+			this.clusterGroup.RegisterMarker(marker)
 		}
 
 		this.clusterGroup.ProcessView()
 		this.map.invalidateSize(false)
+
+		this.filterMarkers()
+	}
+
+	filterMarkers(){
+		if (this.props.filters !== this.filters) {
+			this.filters = this.props.filters
+			if (!!this.filters) {
+				const presets = this.filters.presets || []
+
+				const presets_length = presets.length
+				const markers_length = this.markers.length
+				for (let i = markers_length - 1; i >= 0; i--) {
+					if (presets_length === 0) {
+						this.markers[i].filtered = false
+					}else{
+						const marker = this.markers[i]
+						this.markers[i].filtered = !presets.map(preset_key=>{
+							return marker.data.___preset.key.startsWith(preset_key)
+						}).reduce((bool,value) => (value ? true : bool),false)
+					}
+				}
+			}else{
+				const markers_length = this.markers.length
+				for (let i = markers_length - 1; i >= 0; i--) {
+					this.markers[i].filtered = false
+				}
+			}
+			this.clusterGroup.ProcessView()
+		}
 	}
 
 	// getMaxClusterRadius(zoomLevel){
