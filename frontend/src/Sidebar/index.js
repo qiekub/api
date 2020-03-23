@@ -470,6 +470,8 @@ export default class Sidebar extends React.Component {
 				{'lgbtq:bears': "primary"},
 			]
 	
+			clothes: "leather;latex;lacquer"
+​​​			"fetish:bdsm": "yes"
 	
 			"diet:vegetarian": "yes"
 			cuisine: "coffee_shop"​
@@ -496,21 +498,8 @@ export default class Sidebar extends React.Component {
 			"payment:mastercard": "yes"
 			"payment:paypal": "yes"
 			"payment:visa": "yes"
-			"payment:giro_card": "yes"
-
-			"currency:EUR": "yes"
-			"currency:others": "no"
 	
-			shop: "clothes"
-			clothes: "leather;latex;lacquer"
-​​​			"fetish:bdsm": "yes"
-			delivery: "yes"
-
 			"contact:yelp": "https://www.yelp.com/biz/rough-trade-gear-los-angeles"
-			"contact:mobile": "+49 177 9774995"
-			"contact:pinterest": "dasholdeweib"
-			"contact:whatsapp": "+49 177 9774995"
-			"contact:twitter": "@XXLFashion"
 	
 			community_centre: "youth_centre"​
 			"community_centre:for": "juvenile;lgbtq"
@@ -530,14 +519,9 @@ export default class Sidebar extends React.Component {
 			description: "Librairie indépendante"
 	
 	
-			"opening_hours:description": "auf Anfrage"
-
-
 	
 			Parse on the server:
 			"contact:facebook": "https://www.facebook.com/pages/Le-Tango-La-Bo%C3%AEte-%C3%A0-Frissons/164605016889712"
-
-
 		*/
 
 		const doc = this.state.doc
