@@ -76,6 +76,7 @@ export default class App extends React.Component {
 	setSearchBarValue(value){
 		this.setState({searchBarValue:value})
 	}
+	
 	setSidebarIsOpen(value){
 		// const center = this.functions['PageMap'].getCenter()
 		// const zoom = this.functions['PageMap'].getZoom()
