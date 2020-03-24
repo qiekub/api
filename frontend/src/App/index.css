@@ -28,59 +28,52 @@ body {
 	background: white !important;
 	color: black !important;
 
-	bottom: calc(20px + 16px);
+	top: auto;
+	bottom: 16px;
 	left: 16px;
 }
-/*.toggleFiltersFab{
-	z-index: var(--z-index-fabs);
-	position: absolute !important;
-	background: white !important;
-	color: black !important;
+@media (max-width: 500px) {
+	.addNewFab{
+		right: 16px;
+		left: auto;
+		bottom: calc(20px + 16px);
+	}
+}
 
-	bottom: calc(20px + 16px);
-	right: 16px;
-
-	display: none !important;
-}*/
-/*.filtersPanel{
-	z-index: var(--z-index-fabs);
-	position: absolute !important;
-	background: white !important;
-	color: black !important;
-
-	bottom: calc(20px + 16px);
-	right: 16px;
-}
-.filtersPanel.closed{
-	border-radius: 28px;
-	width: 56px;
-}
-.filtersPanel .CardActionArea{
-	list-style: none;
-	background: rgba(0,0,0,0);
-}
-.filtersPanel.open .CardActionArea{
-	background: rgba(0,0,0,0.04);
-}
-.filtersPanel .CardActionArea .ListItem{
-	height: 56px;
-	padding: 0 16px;
-}
-.filtersPanel.closed .CardActionArea .ListItem{
-	width: 56px;
-	padding: 0;
-}
-.filtersPanel.closed .CardActionArea .ListItem .ListItemText{
-	display: none;
-}*/
 .filtersPanel{
 	z-index: var(--z-index-fabs);
 	position: absolute;
-	top: 16px;
-	/*right: 16px;*/
-	left: 400px;
-	padding: 9px;
+
+	top: calc(16px + 9px);
+	left: calc(400px + 8px);
 	max-width: calc(calc(100% - 400px) - 16px);
+
+	pointer-events: none;
+}
+.filtersPanel .filterMenuInner{
+	pointer-events: none;
+}
+.filtersPanel .filterMenuInner button{
+	pointer-events: auto;
+}
+@media (max-width: 800px) {
+	.filtersPanel{
+		top: calc(52px + 16px);
+		left: 0;
+		right: 0;
+		padding: 16px;
+		max-width: none;
+		overflow: auto;
+		white-space: nowrap;
+
+		pointer-events: auto;
+	}
+	.filtersPanel .filterMenuInner{
+		display: inline-block;
+		padding-right: 16px;
+
+		pointer-events: auto;
+	}
 }
 
 .page {
@@ -94,7 +87,7 @@ body {
 	transition: left 0.2s ease;
 }
 .page.sidebarIsOpen{
-	left: 400px;
+	left: 200px;
 }
 
 
@@ -134,7 +127,7 @@ body {
 }
 
 
-.filtersDrawer{
 
-}
+
+
 

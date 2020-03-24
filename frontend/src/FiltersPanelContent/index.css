@@ -8,10 +8,29 @@
 	border: 0;
 }*/
 
-.dot{
+.filterMenuDot{
 	display: inline-block;
 	width: 16px;
 	height: 16px;
 	border-radius: 100%;
 	margin-right: 16px;
+}
+
+.filterMenuInner button{
+	margin: 0 8px;
+}
+.filterMenuInner button:first-of-type{
+	margin-left: 0px;
+}
+.filterMenuInner button:last-of-type{
+	margin-right: 0px;
+}
+
+.filterMenuInner .fab{
+	padding: 0 8px 0 16px !important;
+	text-transform: none;
+	background: white;
+}
+.filterMenuInner .fab .ArrowDropDownIcon{
+	margin-left: 16px;
 }

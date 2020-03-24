@@ -35,15 +35,14 @@
 
 .leaflet-container .leaflet-control-attribution{
 	position: fixed;
-	right: 0;
-	bottom: 0;
-	left: 0;
+	right: 4px;
+	bottom: 4px;
+	/*left: 4px;*/
 	text-align: right;
-	background: rgba(255,255,255,0.2) !important;
+	background: rgba(255,255,255,0.3) !important;
 	color: black;
-	-webkit-backdrop-filter: blur(10px);
-	-moz-backdrop-filter: blur(10px);
-	backdrop-filter: blur(10px);
+	backdrop-filter: blur(16px);
+	border-radius: 4px;
 
 	font-size: 0.75rem !important;
 	font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
@@ -53,9 +52,12 @@
 
 	height: 20px !important;
 	line-height: 20px !important;
+
+	pointer-events: none;
 }
 .leaflet-container .leaflet-control-attribution a{
 	color: inherit;
+	pointer-events: auto;
 }
 
 

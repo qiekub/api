@@ -48,6 +48,7 @@ export default class PageMap extends React.Component {
 		this.createPruneCluster = this.createPruneCluster.bind(this)
 		this.addMarkersToPruneCluster = this.addMarkersToPruneCluster.bind(this)
 		this.filterMarkers = this.filterMarkers.bind(this)
+		this.showAllMarkers = this.showAllMarkers.bind(this)
 	}
 
 	componentDidMount(){
@@ -67,14 +68,17 @@ export default class PageMap extends React.Component {
 		}
 	}
 	componentDidUpdate(){
-		this.filterMarkers()
+		if (this.props.filters !== this.filters) {
+			this.filters = this.props.filters
+			this.filterMarkers(this.filters)
+		}
 	}
 
 	loadMarkers(){
 		window.graphql.query({
 			query: query_loadMarkers,
 			variables: {
-				wantedTags: getWantedTagsList(presets), // this gets us about 11% reduction in size
+				wantedTags: ['min_age','max_age',...getWantedTagsList(presets)], // this gets us about 11% reduction in size
 			},
 		}).then(result => {
 			const docs = result.data.getMarkers.map(doc=>{
@@ -258,7 +262,7 @@ export default class PageMap extends React.Component {
 
 		for (const doc of docs) {
 			let marker = new PruneCluster.Marker(doc.lat, doc.lng, doc)
-			// marker.filtered = false
+			marker.filtered = false
 			this.markers.push(marker)
 			this.clusterGroup.RegisterMarker(marker)
 		}
@@ -266,35 +270,70 @@ export default class PageMap extends React.Component {
 		this.clusterGroup.ProcessView()
 		this.map.invalidateSize(false)
 
-		this.filterMarkers()
+		this.filterMarkers(this.filters)
 	}
 
-	filterMarkers(){
-		if (this.props.filters !== this.filters) {
-			this.filters = this.props.filters
+	showAllMarkers(){
+		const markers_length = this.markers.length
+		for (let i = markers_length - 1; i >= 0; i--) {
+			this.markers[i].filtered = false
+		}
+		this.clusterGroup.ProcessView()
+	}
+	filterMarkers(filters){
 			if (!!this.filters) {
 				const presets = this.filters.presets || []
-
+				// const presets = ['amenity/community_centre']
 				const presets_length = presets.length
-				const markers_length = this.markers.length
-				for (let i = markers_length - 1; i >= 0; i--) {
-					if (presets_length === 0) {
-						this.markers[i].filtered = false
-					}else{
+
+				const selectedAge = this.filters.selectedAge
+				const ageOption = this.filters.ageOption
+
+				console.log('selectedAge,ageOption', presets_length, selectedAge, ageOption)
+
+				if (presets_length > 0 || !!selectedAge) {
+					const markers_length = this.markers.length
+					for (let i = markers_length - 1; i >= 0; i--) {
 						const marker = this.markers[i]
-						this.markers[i].filtered = !presets.map(preset_key=>{
-							return marker.data.___preset.key.startsWith(preset_key)
-						}).reduce((bool,value) => (value ? true : bool),false)
+
+						let isInPresets = true
+						if (presets_length > 0) {
+							isInPresets = presets.map(preset_key=>{
+								return marker.data.___preset.key.startsWith(preset_key)
+							}).reduce((bool,value) => (value ? true : bool), false)
+						}
+
+						let isInAgeRange = true
+						if (!!selectedAge) {
+							isInAgeRange = false
+							if (ageOption!=='open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
+								const parsedMin = Number.parseFloat(marker.data.tags.min_age)
+								const parsedMax = Number.parseFloat(marker.data.tags.max_age)
+								isInAgeRange = (
+									   (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+									&& (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+								)
+							}else{
+								if (!!marker.data.tags.min_age) {
+									const parsedMin = Number.parseFloat(marker.data.tags.min_age)
+									isInAgeRange = (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+								}
+								if (isInAgeRange && !!marker.data.tags.max_age) {
+									const parsedMax = Number.parseFloat(marker.data.tags.max_age)
+									isInAgeRange = (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+								}
+							}
+						}
+
+						this.markers[i].filtered = !(isInPresets && isInAgeRange)
 					}
+					this.clusterGroup.ProcessView()
+				}else{
+					this.showAllMarkers()
 				}
 			}else{
-				const markers_length = this.markers.length
-				for (let i = markers_length - 1; i >= 0; i--) {
-					this.markers[i].filtered = false
-				}
+				this.showAllMarkers()
 			}
-			this.clusterGroup.ProcessView()
-		}
 	}
 
 	// getMaxClusterRadius(zoomLevel){

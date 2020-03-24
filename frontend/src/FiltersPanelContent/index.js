@@ -34,50 +34,77 @@ export default class FiltersPanelContent extends React.Component {
 		super(props)
 
 		this.state = {
-			windowIsFullscreen: false,
-
-			selectedCategory: null,
+			category: null,
+			age: null,
 		}
 
-		this.selectCategory = this.selectCategory.bind(this)
+		this.ages = Array.apply(null, Array(15)).map((v,i)=>i+14)
+		this.highest_ages_entry = this.ages[this.ages.length-1]
+
+		this.setValue = this.setValue.bind(this)
+		this.getFilterObj = this.getFilterObj.bind(this)
 	}
 
-	selectCategory(item, closeMenuCallback){
-		this.setState({selectedCategory: (!!item ? item : null)}, ()=>{
+	componentDidMount(){
+		// setTimeout(()=>{
+			// this.setValue('age', 27, ()=>{})
+		// }, 1000)
+	}
+
+	getFilterObj(){
+
+		// const tags = {}
+		// if (!!this.state.age) {
+		// 	// gte = Matches values that are greater than or equal to a specified value. #mongodb
+		// 	// lte = Matches values that are less than or equal to a specified value. #mongodb
+
+		// 	if (this.state.age === this.highest_ages_entry) {
+		// 		tags.min_age = {gte: this.state.age}
+		// 		tags.max_age = {lte: this.state.age}
+		// 	}else{				
+		// 		tags.min_age = {gte: this.state.age}
+		// 		tags.max_age = {lte: this.state.age}
+		// 	}
+		// }
+
+		return {
+			presets: (!!this.state.category ? this.state.category.presets : []),
+			
+			selectedAge: this.state.age,
+			ageOption: (this.state.age === this.highest_ages_entry ? 'open_end' : '')
+		}
+	}
+
+	setValue(stateKeyName, value, closeMenuCallback){
+		this.setState({[stateKeyName]: (!!value ? value : null)}, ()=>{
 			closeMenuCallback()
 
 			if (this.props.onChange) {
-				this.props.onChange(!!item ? {
-					presets: item.presets,
-				} : null)
+				this.props.onChange(this.getFilterObj())
 			}
 		})
 	}
 
 	render() {
-		return (<>
-			<PopupState variant="popover" popupId="demoMenu">
+		return (<div className="filterMenuInner">
+			<PopupState variant="popover">
 				{popupState => (
 					<React.Fragment>
 						<Fab
 							{...bindTrigger(popupState)}
 							size="small"
 							variant="extended"
-							style={{
-								padding: '0 8px 0 16px',
-								textTransform: 'none',
-								background: 'white',
-							}}
+							className="fab"
 						>
 							{
-								!!this.state.selectedCategory
+								!!this.state.category
 								? (<>
-									<div className="dot" style={{margin:'0 8px 0 -4px',background:this.state.selectedCategory.color.bg}}></div>
-									{this.state.selectedCategory.name}
+									<div className="filterMenuDot" style={{margin:'0 8px 0 -4px',background:this.state.category.color.bg}}></div>
+									{this.state.category.name}
 								</>)
 								: 'What to show?'
 							}
-							<ArrowDropDownIcon style={{marginLeft:'16px'}}/>
+							<ArrowDropDownIcon className="ArrowDropDownIcon"/>
 						</Fab>
 						<Menu
 							{...bindMenu(popupState)}
@@ -87,23 +114,72 @@ export default class FiltersPanelContent extends React.Component {
 								horizontal: 'left',
 							}}
 						>
-							<MenuItem value="" onClick={()=>this.selectCategory(null,popupState.close)}>Everything</MenuItem>
-							<MenuItem disabled></MenuItem>
+							<MenuItem value="" onClick={()=>this.setValue('category', null,popupState.close)}>
+								<div className="filterMenuDot" style={{background:'transparent'}}></div>
+								Everything
+							</MenuItem>
 							{_categories_.map(category=>{
-								const isSelected = (!!this.state.selectedCategory && category.name === this.state.selectedCategory.name)
+								const isSelected = (!!this.state.category && category.name === this.state.category.name)
 								return (
 								<MenuItem
 									key={category.name}
 									value={category.name}
-									onClick={()=>this.selectCategory(category,popupState.close)}
+									onClick={()=>this.setValue('category', category,popupState.close)}
 									selected={isSelected}
 									style={{
 										background: (isSelected ? category.color.bg : ''),
 										color: (isSelected ? category.color.fg : category.color.bg),
 									}}
 								>
-									<div className="dot" style={{background:(isSelected ? category.color.fg : category.color.bg)}}></div>
+									<div className="filterMenuDot" style={{background:(isSelected ? category.color.fg : category.color.bg)}}></div>
 									{category.name}
+								</MenuItem>
+								)
+							})}
+						</Menu>
+					</React.Fragment>
+				)}
+			</PopupState>
+
+			<PopupState variant="popover">
+				{popupState => (
+					<React.Fragment>
+						<Fab
+							{...bindTrigger(popupState)}
+							size="small"
+							variant="extended"
+							className="fab"
+						>
+							{
+								!!this.state.age
+								? (this.state.age===this.highest_ages_entry ? 'For age '+this.state.age+' and up' : 'For age '+this.state.age)
+								: 'For which age?'
+							}
+							<ArrowDropDownIcon className="ArrowDropDownIcon"/>
+						</Fab>
+						<Menu
+							{...bindMenu(popupState)}
+							transitionDuration={0}
+							anchorOrigin={{
+								vertical: 'top',
+								horizontal: 'left',
+							}}
+							MenuListProps={{
+								style:{
+									minWidth:'200px'
+								}
+							}}
+						>
+							<MenuItem value="" onClick={()=>this.setValue('age', null, popupState.close)}>Any Age</MenuItem>
+							{this.ages.map(number=>{
+								return (
+								<MenuItem
+									key={number}
+									value={number}
+									onClick={()=>this.setValue('age', number, popupState.close)}
+									selected={!!this.state.age && number === this.state.age}
+								>
+									{number===this.highest_ages_entry ? '≥ '+number : number}
 								</MenuItem>
 								)
 							})}
@@ -153,7 +229,7 @@ export default class FiltersPanelContent extends React.Component {
 					</ListItem>)
 				})}
 			</List>*/}
-		</>)
+		</div>)
 	}
 }
 
