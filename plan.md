@@ -285,9 +285,7 @@ or: [{and}, {and}]
 - (How can I get there?)
 
 ## Want I go there?
-- Groups
-- Events / Campains
-- Equipment (Games, ...)
+- Groups / Events / Campains / Equipment (Games, ...) (What can you do here?)
 - Do I know people there? / Will I meet people there?
 
 ## Where can I get more info?
