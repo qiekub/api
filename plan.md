@@ -297,6 +297,30 @@ or: [{and}, {and}]
 
 
 
+------------------------
+
+
+## Wheelchair support
+{
+	question: 'Can wheelchair users access this place on their own?',
+	answers: [
+		{
+			name: 'Yes',
+			tags: {
+				wheelchair: 'yes',
+			},
+		}
+	]
+}
+
+
+
+
+
+## I want to highlight places for young people!
+- Is this place good for teenagers?
+- Can you go here when your under 18?
+
 
 
 
