@@ -229,6 +229,17 @@ export default class App extends React.Component {
 				onSetSearchBarValue={this.setSearchBarValue}
 			/>
 
+			{/*<Card>
+				Start Info:
+
+				Where can I meet queer people in my town?
+				Where is the next queer-youth-center?
+				
+				Help us answer these questions!
+
+				Add queer-infos about places around you.
+			</Card>*/}
+
 			{/*<InfoCard
 				className="InfoCard"
 				place={this.state.selectedPlace}
