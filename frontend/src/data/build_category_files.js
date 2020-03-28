@@ -30,7 +30,8 @@ const categories = [
 			prideFlageMeaning: 'Spirit',
 			prideFlageColorName: 'Violet',
 			// bg: '#4A148C', // 900
-			bg: '#9C27B0', // 500
+			bg: '#6A1B9A', // 800
+			// bg: '#9C27B0', // 500
 			fg: 'white',
 		},
 	},
@@ -48,7 +49,8 @@ const categories = [
 			prideFlageMeaning: 'Life',
 			prideFlageColorName: 'Red',
 			// bg: '#B71C1C', // 900
-			bg: '#F44336', // 500
+			bg: '#C62828', // 800
+			// bg: '#F44336', // 500
 			fg: 'white',
 		},
 	},
@@ -67,7 +69,8 @@ const categories = [
 			prideFlageMeaning: 'Magic/Art',
 			prideFlageColorName: 'Turquoise',
 			// bg: '#006064', // 900
-			bg: '#009688', // 500
+			bg: '#00695C', // 800
+			// bg: '#009688', // 500
 			fg: 'white',
 		},
 	},
@@ -82,8 +85,7 @@ const categories = [
 			key: 'orange',
 			prideFlageMeaning: 'Healing',
 			prideFlageColorName: 'Orange',
-			// bg: '#E65100', // 900
-			bg: '#FF9800', // 500
+			bg: '#E65100', // 900
 			fg: 'white',
 		},
 	},
@@ -102,7 +104,8 @@ const categories = [
 			prideFlageMeaning: 'Sex',
 			prideFlageColorName: 'Hot pink',
 			// bg: '#880E4F', // 900
-			bg: '#E91E63', // 500
+			bg: '#AD1457', // 800
+			// bg: '#E91E63', // 500
 			fg: 'white',
 		},
 	},
@@ -122,7 +125,8 @@ const categories = [
 			prideFlageMeaning: 'Serenity',
 			prideFlageColorName: 'Indigo',
 			// bg: '#1A237E', // 900
-			bg: '#3F51B5', // 500
+			bg: '#283593', // 800
+			// bg: '#3F51B5', // 500
 			fg: 'white',
 		},
 	},
@@ -133,8 +137,13 @@ const colors = {
 		prideFlageMeaning: '',
 		prideFlageColorName: '',
 		// bg: '#263238', // 900 blue-grey
-		bg: '#607D8B', // 500 blue-grey
-		fg: 'white',
+		// bg: '#37474F', // 800 blue-grey
+		// bg: '#607D8B', // 500 blue-grey
+		// fg: 'white',
+
+		bg: 'white',
+		fg: 'black',
+
 		presets: [
 			'shop',
 			'office',

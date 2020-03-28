@@ -6,6 +6,7 @@ const getPlace = require('./resolvers/getPlace.js')
 const getPlaces = require('./resolvers/getPlaces.js')
 const search = require('./resolvers/search.js')
 const addChangeset = require('./resolvers/addChangeset.js')
+const answerQuestion = require('./resolvers/answerQuestion.js')
 
 module.exports = {
 	JSON: GraphQLJSON,
@@ -39,10 +40,10 @@ module.exports = {
 	Query: {
 		// hello: (parent, args, context, info) => 'world',
 
-		search: search,
+		search,
 
-		getPlace: getPlace,
-		getPlaces: getPlaces,
+		getPlace,
+		getPlaces,
 		getMarkers: async (parent, args, context, info) => {
 			return (await getPlaces(parent, args, context, info)).map(doc=>{
 				return {
@@ -56,7 +57,8 @@ module.exports = {
 		},
 	},
 	Mutation: {
-		addChangeset: addChangeset,
+		addChangeset,
+		answerQuestion,
 	},
 
 	Place: {

@@ -246,7 +246,7 @@ export default class App extends React.Component {
 			/>*/}
 
 			<Fab variant="extended" className="addNewFab" onClick={this.addPlace}>
-				<AddIcon style={{marginRight:'8px'}} />
+				<AddIcon style={{color:'var(--light-green)',marginRight:'8px'}} />
 				Add a Place
 			</Fab>
 

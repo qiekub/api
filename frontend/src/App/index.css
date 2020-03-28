@@ -4,13 +4,15 @@
 }
 
 body {
-	/*background: black;*/
+	--light-green: #00E676;
 
 	--z-index-page: 1;
 	--z-index-fabs: 2;
 	--z-index-infocard: 3;
 	--z-index-sidebar: 4;
 	--z-index-searchbar: 5;
+
+	/*background: black;*/
 }
 /*#root{
 	border-radius: 8px;
@@ -22,18 +24,23 @@ body {
 	left: 0;
 }*/
 
-.addNewFab{
+html body .MuiPaper-rounded,
+html body .MuiButton-root{
+	border-radius: 8px;
+}
+
+html body .addNewFab{
 	z-index: var(--z-index-fabs);
-	position: absolute !important;
-	background: white !important;
-	color: black !important;
+	position: absolute;
+	background: black !important;
+	color: white;
 
 	top: auto;
 	bottom: 16px;
 	left: 16px;
 }
 @media (max-width: 500px) {
-	.addNewFab{
+	html body .addNewFab{
 		right: 16px;
 		left: auto;
 		bottom: calc(20px + 16px);
@@ -101,16 +108,16 @@ body {
 	left: 0;
 }
 
-.Sidebar{
+html body .Sidebar{
 	z-index: var(--z-index-sidebar);
 	top: 0;
 	bottom: 0;
 
-	border-radius: 0 !important;
-	padding-top: 86px;
+	border-radius: 0;
+	/*padding-top: 86px;*/
 
-	overflow: auto !important;
-	overflow-x: hidden !important;
+	overflow: auto;
+	overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
 }
 .Sidebar.hide{

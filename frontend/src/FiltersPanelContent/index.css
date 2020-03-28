@@ -26,8 +26,8 @@
 	margin-right: 0px;
 }
 
-.filterMenuInner .fab{
-	padding: 0 8px 0 16px !important;
+html body .filterMenuInner .fab{
+	padding: 0 8px 0 16px;
 	text-transform: none;
 	background: white;
 }

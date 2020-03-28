@@ -1,9 +1,9 @@
 import React from 'react'
 import './index.css'
 
-// import {navigate/*,Router,Link*/} from '@reach/router'
-// import {gql} from 'apollo-boost'
-// import {loadPoi as query_loadPoi} from '../queries.js'
+import {navigate/*,Router,Link*/} from '@reach/router'
+import {gql} from 'apollo-boost'
+import {loadPoi as query_loadPoi} from '../queries.js'
 
 // import categories from '../data/dist/categories.json'
 import presets from '../data/dist/presets.json'
@@ -13,8 +13,7 @@ import {getPreset, getColorByPreset} from '../functions.js'
 
 import {
 	Typography,
-	Fab,
-	// Button,
+	Button,
 	Snackbar,
 
 	List,
@@ -23,15 +22,14 @@ import {
 	ListItemText,
 	ListSubheader,
 
-	Paper,
 	Card,
 	CardContent,
-	// Divider,
-	// Chip,
+	Divider,
+	Chip,
 
 	Icon,
-	// Backdrop,
-	// TextField,
+
+	TextField,
 } from '@material-ui/core'
 import {
 	// Map as MapIcon,
@@ -47,15 +45,12 @@ import {
 	// YouTube as YouTubeIcon,
 
 	Edit as EditIcon,
-	// Done as DoneIcon,
-	// ArrowBack as ArrowBackIcon,
-	// ArrowForward as ArrowForwardIcon,
+	ArrowBack as ArrowBackIcon,
+	ArrowForward as ArrowForwardIcon,
 } from '@material-ui/icons'
-// import {
-// 	Autocomplete
-// } from '@material-ui/lab'
-
-import Questions from '../Questions/index.js'
+import {
+	Autocomplete
+} from '@material-ui/lab'
 
 import yelp_icon from '../_images/yelp.png'
 import facebook_icon from '../_images/facebook.png'
@@ -84,10 +79,15 @@ const OpenstreetmapIcon	= props => <Icon style={{backgroundImage:'url('+openstre
       // });
 
 
+
+
+
+
+
 const ListItemLink = props => <ListItem button component="a" {...props} />
 
-// const tag_suggestions = ['youthcenter','cafe','bar','education','community-center','youthgroup','group','mediaprojects']
-// const this_is_a_place_for_suggestions = ['queer','undecided','friends','family','trans','inter','gay','hetero','bi','lesbian','friend']
+const tag_suggestions = ['youthcenter','cafe','bar','education','community-center','youthgroup','group','mediaprojects']
+const this_is_a_place_for_suggestions = ['queer','undecided','friends','family','trans','inter','gay','hetero','bi','lesbian','friend']
 
 export default class Sidebar extends React.Component {
 	constructor(props) {
@@ -101,12 +101,11 @@ export default class Sidebar extends React.Component {
 		}
 
 		this.edit = this.edit.bind(this)
-		this.view = this.view.bind(this)
-		// this.submit = this.submit.bind(this)
-		// this.back = this.back.bind(this)
+		this.addComment = this.addComment.bind(this)
+		this.submit = this.submit.bind(this)
+		this.back = this.back.bind(this)
 
 		this.renderView = this.renderView.bind(this)
-		this.renderQuestions = this.renderQuestions.bind(this)
 
 		this.updateChangedProperties = this.updateChangedProperties.bind(this)
 		this.getAgeRangeText = this.getAgeRangeText.bind(this)
@@ -118,9 +117,6 @@ export default class Sidebar extends React.Component {
 
 		this.editNewDoc = this.editNewDoc.bind(this)
 		this.setDoc = this.setDoc.bind(this)
-
-		// this.renderQuestions = this.renderQuestions.bind(this)
-		// this.closeQuestions = this.closeQuestions.bind(this)
 	}
 
 	componentDidMount(){
@@ -173,10 +169,10 @@ export default class Sidebar extends React.Component {
 
 	edit(){
 		this.setState({stage:'editing'})
-		// this.props.onSetSearchBarValue(!!this.state.doc && !!this.state.doc._id ? 'Edit Place' : 'Add Place')
+		this.props.onSetSearchBarValue(!!this.state.doc && !!this.state.doc._id ? 'Edit Place' : 'Add Place')
 	}
-	view(){
-		this.setState({stage:'viewing'})
+	addComment(){
+		this.setState({stage:'submitting'})
 	}
 	getChangesetDoc(){
 		// const properties = this.state.changedProperties
@@ -254,7 +250,7 @@ export default class Sidebar extends React.Component {
 			return null
 		}
 	}
-	/*submit(){
+	submit(){
 		this.setState({whichSnackbarIsOpen:'submittingSuggestion'})
 
 		const changesetDoc = this.getChangesetDoc()
@@ -307,7 +303,15 @@ export default class Sidebar extends React.Component {
 				this.setState({whichSnackbarIsOpen:'problemWhileSuggesting'})
 			})
 		}
-	}*/
+
+	}
+	back(){
+		if (this.state.stage === 'submitting') {
+			this.setState({stage:'editing'})
+		} else if (this.state.stage === 'editing') {
+			this.setState({stage:'viewing'})
+		}
+	}
 
 	updateChangedProperties(newValues){
 		this.setState((state, props) => {
@@ -428,11 +432,120 @@ export default class Sidebar extends React.Component {
 		return null
 	}
 
-	renderView(doc){
+	renderView(){
+		/*
+			
+			TODO:
+			
+			gay: "yes"
+			lgbtq: "primary"
+			"lgbtq:bears": "primary"
+			"lgbtq:men": "primary"
+	
+			'LGBTQ Welcome': [
+				{lgbtq: "welcome"},
+				{gay: "welcome"}
+			]
+			'LGBTQ Primary': [
+				{lgbtq: "primary"},
+				{gay: "primary"},
+				{"gay:women": "primary"},
+				{"lgbtq:women": "primary"}
+			]
+			'LGBTQ Only': [
+				{lgbtq: "only"},
+				{gay: "only"}
+			]
+			'LGBTQ Women Only': [
+				{gay: "women"},
+				{"gay:women": "only"},
+				{"lgbtq:women": "only"},
+			]
+			'LGBTQ Women Primary': [
+				{gay: "women"},
+				{"gay:women": "primary"},
+				{"lgbtq:women": "primary"}
+			]
+			'LGBTQ Bears Primary': [
+				{'lgbtq:bears': "primary"},
+			]
+	
+			clothes: "leather;latex;lacquer"
+​​​			"fetish:bdsm": "yes"
+	
+			"diet:vegetarian": "yes"
+			cuisine: "coffee_shop"​
+			takeaway: "yes"​
+			outdoor_seating: "no"
+			brewery: "yes"
+			smoking: "yes"
+			​
+			start_date: "1969"
+			
+			air_conditioning: "yes"
+	
+			nudism: "permissive"
+			​​​
+			wifi: "no"
+			internet_access: "wlan"
+	
+​​​			"toilets:wheelchair": "no"
+​​​			wheelchair: "yes" / "limited" / "no"
+	
+			"payment:american_express": "yes"
+			"payment:cash": "yes"
+			"payment:discover_card": "yes"
+			"payment:mastercard": "yes"
+			"payment:paypal": "yes"
+			"payment:visa": "yes"
+	
+			"contact:yelp": "https://www.yelp.com/biz/rough-trade-gear-los-angeles"
+	
+			community_centre: "youth_centre"​
+			"community_centre:for": "juvenile;lgbtq"
+	
+			​​​office: "association"
+​	
+			"theatre:genre": "cabaret"
+​	
+			wikidata: "Q41521104"
+​​​			wikipedia: "fr:Madame Arthur"
+​	
+			official_name: "NovarArcobaleno - Associazione LGBT"
+			alt_name: "Bar Ocidente"
+			short_name: "LGBT-CRC"
+			"name:de": "Sun City"
+			"name:en": "Sun City"
+			description: "Librairie indépendante"
+	
+	
+	
+			Parse on the server:
+			"contact:facebook": "https://www.facebook.com/pages/Le-Tango-La-Bo%C3%AEte-%C3%A0-Frissons/164605016889712"
+		*/
+
+		const doc = this.state.doc
+
+		if (!(
+			!!doc &&
+			!!doc._id &&
+			!!doc.properties &&
+			!!doc.properties.tags
+		)) {
+			return null
+		}
+
+
+		console.log('doc', doc.properties.tags)
+
+
 		const properties = doc.properties
 		const tags = properties.tags
 
-		// const age_range_text = this.getAgeRangeText(tags.min_age, tags.max_age)
+		const name = properties.name
+		const altName = tags['official_name'] || tags['alt_name'] || /*tags['short_name'] ||*/ ''
+
+		const age_range_text = this.getAgeRangeText(tags.min_age, tags.max_age)
 
 		// https://wiki.openstreetmap.org/wiki/Key:contact
 		//
@@ -584,19 +697,55 @@ export default class Sidebar extends React.Component {
 			link.type==='osm'
 		)
 
-		const openingHoursComponent = null // this.renderOpeningHours(doc)
+		const openingHoursComponent = this.renderOpeningHours(doc)
 
-		/*
-			<Typography gutterBottom variant="body2" component="p">{properties.address}</Typography>			
-			{altName.length === 0 ? null : <Typography gutterBottom variant="body2" component="p">{altName}</Typography>}
-			{age_range_text === '' ? null : <Typography variant="body2" component="p">{age_range_text}</Typography>}
-		*/
+		return (<React.Fragment key="view">
+			<Card elevation={6} className={this.props.className}>
+				{/*<CardMedia
+					style={{marginTop:'-86px',height:'240px',background:'black'}}
+					title="Contemplative Reptile"
+					component="div"
+					image={reptile}
+				/>*/}
 
-		return (<React.Fragment key="viewing">
-			<Card
-				elevation={6}
-				className="hideCardBottomShadow"
-			>
+				<CardContent style={{margin:'0 16px'}}>
+					<Typography gutterBottom variant="h5" component="h2">
+						{name}
+					</Typography>
+
+					<Typography gutterBottom variant="body2" component="p" color="textSecondary">{properties.address}</Typography>
+					
+					{altName.length === 0 ? null : <Typography gutterBottom variant="body2" component="p" color="textSecondary">{altName}</Typography>}
+					
+					{age_range_text === '' ? null : <Typography variant="body2" component="p" color="textSecondary">{age_range_text}</Typography>}
+				
+				</CardContent>
+
+				{
+					doc.___preset.key !== ''
+					? (<CardContent style={{
+							padding: '0 16px 0 16px',
+							color: doc.___color.fg,
+							background: doc.___color.bg,
+						}}>
+							<ListItem>
+								<ListItemIcon>
+									<div className="material-icons" style={{color:doc.___color.fg}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
+								</ListItemIcon>
+								<ListItemText primary={doc.___preset.name.en} />
+							</ListItem>
+						</CardContent>
+					) : <Divider />
+				}
+
+				{/*<CardContent style={{
+					padding: '0 32px 16px 32px',
+					display: 'flex',
+					justifyContent: 'flex-start',
+					flexWrap: 'wrap',
+				}}>
+					{(properties.tags || []).map(tag => <Chip key={tag} label={tag} style={{margin:'4px'}}/>)}
+				</CardContent>*/}
 
 				<CardContent>
 					{
@@ -630,35 +779,220 @@ export default class Sidebar extends React.Component {
 					{!!openingHoursComponent ? (<List dense subheader={<ListSubheader>Opening Hours</ListSubheader>}>
 						{openingHoursComponent}
 					</List>) : null}
+
+					<div style={{padding:'16px 0 0 0',textAlign:'center'}}>
+						<Button onClick={this.edit} variant="outlined" size="large" className="roundButton" startIcon={<EditIcon style={{color:'black'}} />}>
+							Suggest an edit
+						</Button>
+					</div>
 				</CardContent>
 			</Card>
-
-			<div style={{
-				padding: '32px 0',
-				textAlign: 'center',
-			}}>
-				<Fab
-					variant="extended"
-					onClick={this.edit}
-					size="large"
-					className="improveFab"
-				>
-					<EditIcon className="icon"/> Verbessern
-				</Fab>
-			</div>
 		</React.Fragment>)
 	}
-	renderQuestions(doc){
-		return (<React.Fragment key="editing">
-			<Card
-				elevation={6}
-				className="hideCardBottomShadow"
-			>
-				<CardContent>
-					<Questions key="the_questions" doc={doc} onFinish={this.view}/>
+
+	renderEdit(){
+		const properties = {
+			...this.state.doc.properties,
+			...this.state.changedProperties,
+		}
+
+		const inputStyleProps = {
+			style: {marginBottom:'16px'},
+			variant: 'outlined',
+		}
+		const commonTextFieldProps = (options) => {
+			// const options = {
+			//	key: 'min_age', // fieldName
+			// 	parser: value => value,
+			// }
+
+			return {
+				...inputStyleProps,
+				defaultValue: (properties[options.key] || ''),
+				onChange: e => {
+					let value = e.target.value
+					// if (options.parser) {
+					// 	value = options.parser(value)
+					// }
+					this.updateChangedProperties({[options.key]:value})
+				},
+				multiline: true,
+				fullWidth: true,
+				key: 'TextField_'+options.key,
+			}
+		}
+
+		const age_range_text = this.getAgeRangeText(properties.min_age, properties.max_age)
+
+		return (<Card key="edit" elevation={6} className={this.props.className}>
+			<CardContent style={{margin:'0 16px'}}>
+				<Typography gutterBottom variant="h5" component="h2">
+					{!!this.state.doc && !!this.state.doc._id ? 'Edit Place' : 'Add Place'}
+				</Typography>
+			</CardContent>
+			<Divider />	
+			<CardContent>
+
+				<TextField {...commonTextFieldProps({key:'name'})} label="Name"/>
+				<TextField {...commonTextFieldProps({key:'address'})} label="Address"/>
+
+				<fieldset style={{
+					padding: '0 16px 8px 16px',
+					border: '1px solid rgba(0, 0, 0, 0.23)',
+					borderRadius: '3px',
+					marginBottom: '16px',
+					marginTop: '-10px',
+				}}>
+					<Typography gutterBottom variant="caption" component="legend" color="textSecondary" style={{
+						// background: 'white',
+						// marginTop: '-26px',
+						// display: 'inline-block',
+						// position: 'absolute',
+						padding: '0 5px',
+					}}>
+						Age Range {age_range_text !== '' ? ' — '+age_range_text : ''}
+					</Typography>
+					<div style={{
+						display: 'flex',
+						alignItems: 'center',
+					}}>
+						<Typography variant="body2" color="textSecondary" style={{padding:'0 16px 0 0',height:'21px',lineHeight:'1.1875em'}}>From</Typography>
+						<TextField {...commonTextFieldProps({key:'min_age'})} multiline={false} inputProps={{type:"Number"}} placeholder="Minimum" fullWidth={false} variant="standard" style={{width:'50%'}}/>
+						<Typography variant="body2" color="textSecondary" style={{padding:'0 16px',height:'21px',lineHeight:'1.1875em'}}>to</Typography>
+						<TextField {...commonTextFieldProps({key:'max_age'})} multiline={false} inputProps={{type:"Number"}} placeholder="Maximum" fullWidth={false} variant="standard" style={{width:'50%'}}/>
+					</div>
+				</fieldset>
+
+				<Autocomplete
+					multiple
+					freeSolo
+					disableClearable
+					disableCloseOnSelect={false}
+					options={tag_suggestions}
+					defaultValue={properties.tags || []}
+					renderTags={(suggestions, getProps) => {
+						return suggestions.map((suggestion, index) => (<Chip key={suggestion} label={suggestion} {...getProps({index})} />))
+					}}
+					renderInput={params => (<TextField {...params} label="Tags" {...inputStyleProps}/>)}
+					onChange={(e,value)=>this.updateChangedProperties({tags:value})}
+				/>
+
+				<Autocomplete
+					multiple
+					freeSolo
+					disableClearable
+					disableCloseOnSelect={false}
+					options={this_is_a_place_for_suggestions}
+					defaultValue={properties.this_is_a_place_for || []}
+					renderTags={(suggestions, getProps) => {
+						return suggestions.map((suggestion, index) => (<Chip key={suggestion} label={suggestion} {...getProps({index})} />))
+					}}
+					renderInput={params => (<TextField {...params} label="Whom's it for?" {...inputStyleProps}/>)}
+					onChange={(e,value)=>this.updateChangedProperties({this_is_a_place_for:value})}
+				/>
+
+				<TextField {...commonTextFieldProps({key:'links'})} label="Links" rows={3} rowsMax={99} helperText={'Only links are accepted.'/* Use markdown to add a title. */}/>
+
+				<div style={{padding:'16px 0 0 0',textAlign:'right'}}>
+					{!!this.state.doc && !!this.state.doc._id ? (<Button style={{float:'left'}} onClick={this.back} size="large" className="roundButton" startIcon={<ArrowBackIcon style={{color:'black'}} />}>
+						Back
+					</Button>) : null}
+					<Button onClick={this.addComment} variant="outlined" size="large" className="roundButton" endIcon={<ArrowForwardIcon style={{color:'black'}} />}>
+						Next
+					</Button>
+				</div>
+			</CardContent>
+		</Card>)
+	}
+
+	renderSubmitScreen(){
+		const changesetDoc = this.getChangesetDoc()
+		if (changesetDoc === null) {
+
+					
+				
+			return (<Card key="submit" elevation={6} className={this.props.className}>
+				<CardContent style={{margin:'0 16px'}}>
+					<Typography gutterBottom variant="h6" component="h2">
+						Did you change anything?
+					</Typography>
 				</CardContent>
-			</Card>
-		</React.Fragment>)
+				<Divider />
+				<CardContent>
+					<Typography style={{margin:'0 16px'}} gutterBottom variant="body2" component="p">
+						Go back to suggest an edit.
+					</Typography>
+	
+					<div style={{padding:'16px 0 0 0',textAlign:'right'}}>
+						<Button style={{float:'left'}} onClick={this.back} size="large" className="roundButton" startIcon={<ArrowBackIcon style={{color:'black'}} />}>
+							Back
+						</Button>
+					</div>
+				</CardContent>
+			</Card>)
+		}
+
+		// const properties = {
+		// 	...this.state.doc.properties,
+		// 	...this.state.changedProperties,
+		// }
+
+		const inputStyleProps = {
+			style: {marginBottom:'16px'},
+			variant: 'outlined',
+		}
+		const commonTextFieldProps = (options) => {
+			// const options = {
+			//	key: 'min_age', // fieldName
+			// 	parser: value => value,
+			// }
+
+			return {
+				...inputStyleProps,
+				// defaultValue: (properties[options.key] || ''),
+				onChange: e => {
+					let value = e.target.value
+					// if (options.parser) {
+					// 	value = options.parser(value)
+					// }
+					this.updateChangedProperties({[options.key]:value})
+				},
+				multiline: true,
+				fullWidth: true,
+				key: 'TextField_'+options.key,
+			}
+		}
+
+		return (<Card key="submit" elevation={6} className={this.props.className}>
+			<CardContent style={{margin:'0 16px'}}>
+				<Typography gutterBottom variant="h6" component="h2">
+					What did you change
+				</Typography>
+			</CardContent>
+			<Divider />
+			<CardContent>
+
+				{/*
+					https://wiki.openstreetmap.org/wiki/Good_changeset_comments
+				*/}
+				
+				<TextField {...commonTextFieldProps({key:'comment'})} label="Comment" placeholder="Brief description of your contributions" />
+				<TextField {...commonTextFieldProps({key:'sources'})} label="Sources" placeholder="URLs..." />
+				
+				<div style={{padding:'16px 0 0 0',textAlign:'right'}}>
+					<Button style={{float:'left'}} onClick={this.back} size="large" className="roundButton" startIcon={<ArrowBackIcon style={{color:'black'}} />}>
+						Back
+					</Button>
+					<Button onClick={this.submit} variant="outlined" size="large" className="roundButton" endIcon={<ArrowForwardIcon style={{color:'black'}} />}>
+						Suggest
+					</Button>
+				</div>
+			</CardContent>
+
+			<CardContent>
+				<TextField disabled value={JSON.stringify(changesetDoc,null,'\t')} multiline label="The data we'll upload:" style={{marginBottom:'16px'}} variant="filled" fullWidth/>
+			</CardContent>
+		</Card>)
 	}
 
 	closeAllSnackbarsOnTimeout(event,reason){
@@ -667,97 +1001,41 @@ export default class Sidebar extends React.Component {
 		}
 	}
 
-	render(){
-		const doc = this.state.doc
-
-		if (!(
-			!!doc &&
-			!!doc._id &&
-			!!doc.properties &&
-			!!doc.properties.tags
-		)) {
-			return null
-		}
-
-		const properties = doc.properties
-		// const tags = properties.tags
-
-		const name = properties.name // || tags['official_name'] || tags['alt_name'] || tags['short_name'] || ''
-
-		return (<>
-			<Paper
-				elevation={6}
-				className={this.props.className}
-				style={{
-					// color: doc.___color.fg,
-					// background: doc.___color.bg,
-					// padding: '52px 16px 16px 16px',
-				}}
-			>
-
-			{/*<CardMedia
-				style={{marginTop:'-86px',height:'240px',background:'black'}}
-				title="Contemplative Reptile"
-				component="div"
-				image={reptile}
-			/>*/}
-
-			<Card
-				elevation={0}
-				style={{
-					margin: '0 0 -8px 0',
-					borderRadius: '0px',
-					padding: '86px 0 8px 0',
-					color: doc.___color.fg,
-					background: doc.___color.bg,
-				}}
-			>
-				<CardContent>
-					<Typography gutterBottom variant="h4" component="h1" style={{margin:'0 16px',fontWeight:'900'}}>
-						{name}
-					</Typography>
-					
-					{
-						doc.___preset.key !== ''
-						? (<ListItem style={{m_argin:'0 -32px'}}>
-								<ListItemIcon style={{m_inWidth:'auto',m_arginRight:'16px'}}>
-									<div className="material-icons" style={{color:doc.___color.fg}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
-								</ListItemIcon>
-								<ListItemText primary={doc.___preset.name.en}/>
-							</ListItem>
-						)
-						: null
-					}
-				</CardContent>
-			</Card>
-
-			{
-				this.state.stage === 'viewing'
-				? this.renderView(doc)
-				: this.renderQuestions(doc)
+	render() {
+		// if (['viewing','editing','submitting'].includes(this.state.stage)) {
+			let stageComponent = null
+			if (this.state.stage === 'viewing') {
+				stageComponent = this.renderView()
+			} else if (this.state.stage === 'editing') {
+				stageComponent = this.renderEdit()
+			} else if (this.state.stage === 'submitting') {
+				stageComponent = this.renderSubmitScreen()
 			}
-
-			</Paper>
-
-			<Snackbar
-				message="Submitting..."
-				anchorOrigin={{vertical:'bottom',horizontal:'left'}}
-				open={this.state.whichSnackbarIsOpen === 'submittingSuggestion'}
-			/>
-			<Snackbar
-				message="Couldn't submit!"
-				anchorOrigin={{vertical:'bottom',horizontal:'left'}}
-				open={this.state.whichSnackbarIsOpen === 'problemWhileSuggesting'}
-				autoHideDuration={6000}
-				onClose={this.closeAllSnackbarsOnTimeout}
-			/>
-			<Snackbar
-				message="Your suggestion got submitted!"
-				anchorOrigin={{vertical:'bottom',horizontal:'left'}}
-				open={this.state.whichSnackbarIsOpen === 'finishedSuggesting'}
-				autoHideDuration={6000}
-				onClose={this.closeAllSnackbarsOnTimeout}
-			/>
-		</>)
+	
+			return (<>
+				{stageComponent}
+				<Snackbar
+					message="Submitting..."
+					anchorOrigin={{vertical:'bottom',horizontal:'left'}}
+					open={this.state.whichSnackbarIsOpen === 'submittingSuggestion'}
+				/>
+				<Snackbar
+					message="Couldn't submit!"
+					anchorOrigin={{vertical:'bottom',horizontal:'left'}}
+					open={this.state.whichSnackbarIsOpen === 'problemWhileSuggesting'}
+					autoHideDuration={6000}
+					onClose={this.closeAllSnackbarsOnTimeout}
+				/>
+				<Snackbar
+					message="Your suggestion got submitted!"
+					anchorOrigin={{vertical:'bottom',horizontal:'left'}}
+					open={this.state.whichSnackbarIsOpen === 'finishedSuggesting'}
+					autoHideDuration={6000}
+					onClose={this.closeAllSnackbarsOnTimeout}
+				/>
+			</>)
+		// }else{
+		// 	return null
+		// }
 	}
 }

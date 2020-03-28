@@ -96,7 +96,11 @@ export default class SearchBar extends React.Component {
 				<MainDrawerContent />
 			</Drawer>
 
-			<Paper className={'header '+(this.props.sidebarIsOpen ? 'sidebarIsOpen' : '')} elevation={(this.props.sidebarIsOpen ? 0 : 6)} variant={(this.props.sidebarIsOpen ? 'elevation'/*'outlined'*/ : 'elevation')}>
+			<Paper
+				className={'header '+(this.props.sidebarIsOpen ? 'sidebarIsOpen' : '')}
+				elevation={(this.props.sidebarIsOpen ? 6 : 6)}
+				variant="elevation"
+			>
 				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} aria-label="menu" onClick={this.toggleMainDrawer}>
 					<MenuIcon style={{color:'black'}} />
 				</IconButton>
@@ -118,7 +122,7 @@ export default class SearchBar extends React.Component {
 					this.props.sidebarIsOpen
 					?
 					<IconButton style={{margin:'4px',padding:'10px'}} aria-label="close" onClick={this.closeSidebar}>
-						<CloseIcon />
+						<CloseIcon style={{color:'black'}} />
 					</IconButton>
 					:
 					<IconButton type="submit" style={{margin:'4px',padding:'10px'}} aria-label="search" onClick={this.submitTheSearchQuery}>

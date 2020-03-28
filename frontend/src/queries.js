@@ -71,3 +71,9 @@ export const search = gql`
 		}
 	}
 `
+
+export const answerQuestion = gql`
+	mutation($properties: JSONObject){
+		answerQuestion(properties: $properties)
+	}
+`

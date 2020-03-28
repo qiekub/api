@@ -105,8 +105,8 @@ function parseChangeset(mongodb, changeset, resolve, reject){
 	let doc = {
 		__typename: 'Doc',
 		_id: (
-			mongodb.ObjectID.isValid(changeset.forDoc)
-			? new mongodb.ObjectID(changeset.forDoc)
+			mongodb.ObjectID.isValid(changeset.forID)
+			? new mongodb.ObjectID(changeset.forID)
 			: new mongodb.ObjectID()
 		),
 		properties: changeset.properties,
@@ -132,8 +132,8 @@ module.exports = async (parent, args, context, info) => {
 		let doc = {
 			__typename: 'Doc',
 			_id: (
-				mongodb.ObjectID.isValid(changeset.forDoc)
-				? new mongodb.ObjectID(changeset.forDoc)
+				mongodb.ObjectID.isValid(changeset.forID)
+				? new mongodb.ObjectID(changeset.forID)
 				: new mongodb.ObjectID()
 			),
 			// _id: 'test-id',
@@ -143,7 +143,7 @@ module.exports = async (parent, args, context, info) => {
 		upsertOne(mongodb,doc,itGotUpserted=>{
 			// resolve(itGotUpserted || null)
 
-			changeset.forDoc = doc._id
+			changeset.forID = doc._id
 
 			addChangeset(mongodb.collection, changeset, (changesetID)=>{
 				if (changesetID === null) {
