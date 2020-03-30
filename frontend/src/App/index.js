@@ -4,12 +4,18 @@ import './index.css'
 // import {gql} from 'apollo-boost'
 import {Router,navigate} from '@reach/router'
 import {
-	loadPoi as query_loadPoi,
+	loadPlace as query_loadPlace,
 	search as query_search,
 } from '../queries.js'
 
+// import categories from '../data/dist/categories.json'
+import presets from '../data/dist/presets.json'
+// import colors from '../data/dist/colors.json'
+// import colorsByPreset from '../data/dist/colorsByPreset.json'
+import {getWantedTagsList} from '../functions.js'
+
 import {
-	Fab,
+	// Fab,
 	// Drawer,
 
 	// Card,
@@ -151,8 +157,14 @@ export default class App extends React.Component {
 	loadAndViewDoc(docID){
 		if (docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
 			window.graphql.query({
-				query: query_loadPoi,
-				variables: {_id:docID},
+				query: query_loadPlace,
+				variables: {
+					_id: docID,
+					wantedTags: [
+						...this.functions['Sidebar'].getWantedTagsList(),
+						...getWantedTagsList(presets),
+					],
+				},
 			}).then(async result=>{
 				const doc = result.data.getPlace
 		
@@ -245,10 +257,10 @@ export default class App extends React.Component {
 				place={this.state.selectedPlace}
 			/>*/}
 
-			<Fab variant="extended" className="addNewFab" onClick={this.addPlace}>
+			{/*<Fab variant="extended" className="addNewFab" onClick={this.addPlace}>
 				<AddIcon style={{color:'var(--light-green)',marginRight:'8px'}} />
 				Add a Place
-			</Fab>
+			</Fab>*/}
 
 			<div className="filtersPanel">
 				<FiltersPanelContent onChange={this.filtersChanged}/>

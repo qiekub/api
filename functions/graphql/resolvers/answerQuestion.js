@@ -31,13 +31,13 @@ module.exports = async (parent, args, context, info) => {
 
 	return new Promise((resolve,reject)=>{
 		const forID = string2objectID(mongodb,args.properties.forID)
-		const questionID = args.properties.questionID // string2objectID(mongodb,args.properties.questionID)
+		const questionID = string2objectID(mongodb,args.properties.questionID)
 		const answer = args.properties.answer
 
 		if (
 			!!forID &&
 			!!questionID &&
-			!!answer && answer.length > 0
+			!!answer && Object.keys(answer).length > 0
 		) {
 			if (answer !== 'skipped') {
 				addAnswer(mongodb, {

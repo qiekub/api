@@ -4,6 +4,8 @@ const async = require('async')
 // const places = require('./data/_places.js')
 const osm_places = require('./data/osm_places.json')
 
+const {compileAnswers} = require('../../functions.js')
+
 // https://overpass-api.de/api/interpreter?data=[bbox:90,-180,-90,180][out:json][timeout:25];(node[~"^community_centre.*$"~"(lgbt|homosexual|gay)"];node[~"^lgbtq.*$"~"."];node[~"^gay.*$"~"."];node[~"^fetish.*$"~"."];);out;
 
 async function getOverpassResult(mapping) {
@@ -138,9 +140,58 @@ module.exports = async (parent, args, context, info) => {
 				loadPlacesFromDB(mongodb, docs=>{
 					callback(null, docs)
 				})
+			},
+			answers: callback=>{
+				// TODO move away from here!!!
+				compileAnswers(mongodb, false, (error,docs)=>{
+					// let compiledTags = {}
+					// if (!!docs && docs.length > 0) {
+					// 	compiledTags = docs[0]
+					// }
+					callback(null, docs)
+				})
 			}
 		}, (err, results)=>{
-			resolve([...results.osm, ...results.qiekub])
+			console.log('results.answers', results.answers)
+
+			const answersByID = results.answers.reduce((obj,doc)=>{
+				// TODO move away from here!!!
+				obj[doc._id] = doc
+				return obj
+			}, {})
+
+			let places = [...results.osm, ...results.qiekub]
+			for (var i = places.length - 1; i >= 0; i--) {
+				// TODO move away from here!!!
+				if (!!answersByID[places[i]._id]) {
+				// TODO move away from here!!!
+					const compiledTags = answersByID[places[i]._id]
+					const placeDoc = places[i]
+					places[i] = {
+						// TODO move away from here!!!
+						...placeDoc,
+						properties: {
+							// TODO move away from here!!!
+							...placeDoc.properties,
+							tags: {
+								// TODO move away from here!!!
+								...placeDoc.properties.tags,
+								...compiledTags.tags,
+							},
+							confidences: {
+								// TODO move away from here!!!
+								// ...Object.entries(placeDoc.properties.tags).reduce((obj,pair)=>{
+								// 	obj[pair[0]] = 'osm'
+								// 	return obj
+								// },{}),
+								...compiledTags.confidences
+							},
+						}
+					}
+				}
+			}
+
+			resolve(places)
 		})
 
 		// loadPlacesFromOsmChache(mongodb, osmDocs=>{

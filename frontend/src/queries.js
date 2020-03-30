@@ -1,7 +1,7 @@
 import {gql} from 'apollo-boost'
 
-export const loadPoi = gql`
-	query($_id: String=""){
+export const loadPlace = gql`
+	query($_id: String="", $wantedTags: [String]){
 		getPlace(_id: $_id){
 			_id
 			properties {
@@ -14,7 +14,8 @@ export const loadPoi = gql`
 						}
 					}
 					osmID
-					tags
+					tags(keys: $wantedTags)
+					confidences(keys: $wantedTags)
 					permanently_closed
 				}
 			}
@@ -22,7 +23,7 @@ export const loadPoi = gql`
 	}
 `
 
-export const loadPois = gql`
+export const loadPlaces = gql`
 	query($wantedTags: [String]){
 		getPlaces{
 			_id
@@ -65,6 +66,26 @@ export const search = gql`
 					southwest {
 						lng
 						lat
+					}
+				}
+			}
+		}
+	}
+`
+
+export const loadQuestions = gql`
+	query{
+		questions: getQuestions {
+			_id
+			properties {
+				... on Question {
+					question
+					possibleAnswers {
+						inputtype
+						key
+						icon
+						title
+						tags
 					}
 				}
 			}

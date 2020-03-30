@@ -3,7 +3,7 @@ import './index.css'
 
 // import {navigate/*,Router,Link*/} from '@reach/router'
 // import {gql} from 'apollo-boost'
-// import {loadPoi as query_loadPoi} from '../queries.js'
+// import {loadPlace as query_loadPlace} from '../queries.js'
 
 // import categories from '../data/dist/categories.json'
 import presets from '../data/dist/presets.json'
@@ -134,6 +134,27 @@ export default class Sidebar extends React.Component {
 			this.props.onFunctions({
 				editNewDoc: this.editNewDoc,
 				setDoc: (...attr)=>this.setDoc(...attr),
+				getWantedTagsList: ()=>{
+					return [
+						'min_age',
+						'max_age',
+
+						'wheelchair',
+
+						'contact:',
+
+						'website',
+						'email',
+						'phone',
+						'fax',
+
+						'instagram',
+						'facebook',
+						'twitter',
+						'youtube',
+						'yelp',
+					]
+				}
 			})
 		}
 
@@ -438,7 +459,7 @@ export default class Sidebar extends React.Component {
 		const properties = doc.properties
 		const tags = properties.tags
 
-		// const age_range_text = this.getAgeRangeText(tags.min_age, tags.max_age)
+		const age_range_text = this.getAgeRangeText(tags.min_age, tags.max_age)
 
 		// https://wiki.openstreetmap.org/wiki/Key:contact
 		//
@@ -605,6 +626,20 @@ export default class Sidebar extends React.Component {
 			>
 
 				<CardContent>
+					{
+						age_range_text === ''
+						? null
+						: (<>
+							<List dense>
+								<ListItem>
+									<ListItemIcon><CheckIcon style={{color:'black'}}/></ListItemIcon>
+									<ListItemText primary={'Altersbeschränkung: '+age_range_text} />
+								</ListItem>
+							</List>
+							<Divider style={{margin:'16px -16px'}} />
+						</>)
+					}
+
 					{
 						//  subheader={<ListSubheader>Contact</ListSubheader>}
 						contact.length === 0

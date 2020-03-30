@@ -289,8 +289,6 @@ export default class PageMap extends React.Component {
 				const selectedAge = this.filters.selectedAge
 				const ageOption = this.filters.ageOption
 
-				console.log('selectedAge,ageOption', presets_length, selectedAge, ageOption)
-
 				if (presets_length > 0 || !!selectedAge) {
 					const markers_length = this.markers.length
 					for (let i = markers_length - 1; i >= 0; i--) {
@@ -368,7 +366,8 @@ export default class PageMap extends React.Component {
 				center={[51,10]}
 				minZoom={2}
 				zoom={1}
-				maxZoom={21}
+				maxZoom={19}
+				zoomSnap={1}
 				zoomControl={false}
 
 				worldCopyJump={true}
@@ -380,14 +379,36 @@ export default class PageMap extends React.Component {
 					key="tilelayer_english_labels"
 					detectRetina={false}
 					attribution='<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">&copy; MapBox</a> <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">&copy; OpenStreetMap contributors</a>'
-					url={"https://api.mapbox.com/styles/v1/petacat/ck7h7qgtg4c4b1ikiifin5it7/tiles/256/{z}/{x}/{y}"+(window.devicePixelRatio > 1 ? '@2x' : '')+"?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"}
+					url={"https://api.mapbox.com/styles/v1/petacat/ck7h7qgtg4c4b1ikiifin5it7/tiles/256/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"}
 				/>*/}
 				<TileLayer
 					key="tilelayer_international_lables"
 					detectRetina={false}
 					attribution='<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">&copy; MapBox</a> <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">&copy; OpenStreetMap contributors</a>'
-					url={"https://api.mapbox.com/styles/v1/qiekub/ck8aum3p70aa51in4ikxao8ii/tiles/256/{z}/{x}/{y}"+(window.devicePixelRatio > 1 ? '@2x' : '')+"?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"}
+					url={"https://api.mapbox.com/styles/v1/qiekub/ck8aum3p70aa51in4ikxao8ii/tiles/256/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"}
 				/>
+				{/*<TileLayer
+					key="tilelayer_stamen_watercolor"
+					maxZoom={19}
+					detectRetina={window.devicePixelRatio > 1}
+					attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'
+					url="https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png"
+				/>*/}
+				{/*<TileLayer
+					key="tilelayer_openstreetmap"
+					maxZoom={19}
+					detectRetina={window.devicePixelRatio > 1}
+					attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'
+					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+				/>*/}
+				{/*<TileLayer
+					key="tilelayer_CartoDB_Voyager"
+					maxZoom={19}
+					subdomains="abcd"
+					detectRetina={false}
+					attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>'
+					url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+				/>*/}
 			</Map>
 		</div>)
 	}

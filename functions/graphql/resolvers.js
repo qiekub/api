@@ -7,6 +7,35 @@ const getPlaces = require('./resolvers/getPlaces.js')
 const search = require('./resolvers/search.js')
 const addChangeset = require('./resolvers/addChangeset.js')
 const answerQuestion = require('./resolvers/answerQuestion.js')
+const getQuestions = require('./resolvers/getQuestions.js')
+
+function getFilterByKeysFunction(graphqlKey){
+	return (parent, args, context, info) => {
+		if (!!args.keys && args.keys.length > 0) {
+			const keys = args.keys
+			return (
+				Object.entries(parent[graphqlKey])
+				// .filter(pair => keys.includes(pair[0]))
+				// .reduce((obj,pair)=>{
+				// 	obj[pair[0]] = pair[1]
+				// 	return obj
+				// },{})
+				.reduce((obj,pair)=>{
+					const truth = keys.reduce((bool,key) => {
+						return bool || pair[0].startsWith(key) // || `"${pair[0]}"` === key
+					},false)
+
+					if (truth) {
+						obj[pair[0]] = pair[1]
+					}
+					
+					return obj
+				},{})
+			)
+		}
+		return parent[graphqlKey]
+	}
+}
 
 module.exports = {
 	JSON: GraphQLJSON,
@@ -55,6 +84,8 @@ module.exports = {
 				}
 			})
 		},
+
+		getQuestions,
 	},
 	Mutation: {
 		addChangeset,
@@ -62,31 +93,22 @@ module.exports = {
 	},
 
 	Place: {
-		tags: (parent, args, context, info) => {
-			if (!!args.keys && args.keys.length > 0) {
-				const keys = args.keys
-				return Object.entries(parent.tags).filter(pair=>keys.includes(pair[0])).reduce((obj,pair)=>{
-					obj[pair[0]] = pair[1]
-					return obj
-				},{})
-			}
-
-			return parent.tags
-		},
+		tags: getFilterByKeysFunction('tags'),
+		confidences: getFilterByKeysFunction('confidences'),
 	},
 
 	Marker: {
-		tags: (parent, args, context, info) => {
-			if (!!args.keys && args.keys.length > 0) {
-				const keys = args.keys
-				return Object.entries(parent.tags).filter(pair=>keys.includes(pair[0])).reduce((obj,pair)=>{
-					obj[pair[0]] = pair[1]
-					return obj
-				},{})
-			}
-
-			return parent.tags
-		},
+		tags: getFilterByKeysFunction('tags'),
+		// tags: (parent, args, context, info) => {
+		// 	if (!!args.keys && args.keys.length > 0) {
+		// 		const keys = args.keys
+		// 		return Object.entries(parent.tags).filter(pair=>keys.includes(pair[0])).reduce((obj,pair)=>{
+		// 			obj[pair[0]] = pair[1]
+		// 			return obj
+		// 		},{})
+		// 	}
+		// 	return parent.tags
+		// },
 	},
 
 

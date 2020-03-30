@@ -6,11 +6,12 @@ const schema = gql`
 	scalar Timestamp
 
 	type Query {
-		search(query: String): GeoSearchResult
+		search(query: String): GeoSearchResult!
 
-		getPlace(_id: String): Doc
-		getPlaces: [Doc]
-		getMarkers: [Marker]
+		getPlace(_id: String): Doc!
+		getPlaces: [Doc]!
+		getMarkers: [Marker]!
+		getQuestions: [Doc]!
 	}
 
 	type Marker {
@@ -60,6 +61,7 @@ const schema = gql`
 		osmID: ID
 
 		tags(keys: [String]): JSONObject
+		confidences(keys: [String]): JSONObject
 
 		permanently_closed: Boolean
 
@@ -87,6 +89,19 @@ const schema = gql`
 		created_at: Timestamp
 	}
 
+	type Question {
+		question: String
+		condition: JSONObject
+		possibleAnswers: [Answer]
+	}
+	type Answer {
+		inputtype: String
+		key: String
+		icon: String
+		title: String
+		tags: JSONObject
+	}
+
 	type Metadata {
 		lastModified: Timestamp
 		created: Timestamp
@@ -97,7 +112,7 @@ const schema = gql`
 
 
 
-	union Properties = Error | Place | Changeset
+	union Properties = Error | Place | Changeset | Question | Answer
 	type Doc {
 		_id: ID
 		properties: Properties
