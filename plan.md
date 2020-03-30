@@ -44,15 +44,15 @@ add / update-proposal {
 }
 
 data of a place {
-    "name": "Anyway",
-    "lat": 50.9419,
-    "lng": 6.9380,
-    "address": "Kamekestr. 14, 50672 Köln, Germany",
-    "min_age": 14,
-    "max_age": 27,
-    "website": "http://www.anyway-koeln.de/",
-    "this_is_a_place_for": ["queer", "undecided", "hetero-friends"],
-    "tags": ["youthcenter", "cafe", "bar"]
+	"name": "Anyway",
+	"lat": 50.9419,
+	"lng": 6.9380,
+	"address": "Kamekestr. 14, 50672 Köln, Germany",
+	"min_age": 14,
+	"max_age": 27,
+	"website": "http://www.anyway-koeln.de/",
+	"this_is_a_place_for": ["queer", "undecided", "hetero-friends"],
+	"tags": ["youthcenter", "cafe", "bar"]
 }
 
 https://github.com/thomasrosen/queer-centers
@@ -297,7 +297,7 @@ or: [{and}, {and}]
 
 
 
-------------------------
+——————————————————————————————————————————
 
 
 ## How to compile a place from answers
@@ -307,7 +307,7 @@ or: [{and}, {and}]
 - overwrite the old place data with these tags
 
 
-------------------------
+——————————————————————————————————————————
 
 
 ## Wheelchair support
@@ -330,6 +330,408 @@ or: [{and}, {and}]
 ## I want to highlight places for young people!
 - Is this place good for teenagers?
 - Can you go here when your under 18?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+——————————————————————————————————————————
+
+
+
+(
+	God gave me depression, cause he knew, if I only had mania, I would try to overthrough him.
+)
+
+
+
+
+## How to compile a place from answers
+- get the 4 latest answers for a specfic place and a question
+- get the answer with the highest amount of votes or the latest answer-date
+- get the tags of that answer
+- overwrite the old place data with these tags
+
+
+
+
+
+db.getCollection('Answers').aggregate([
+	// START get answers
+	/*{$match:{
+		"properties.forID": ObjectId("5e743d99d083985272c9bf99"),
+	}},*/
+	{$sort:{
+		"metadata.lastModified": -1
+	}},
+	{$group:{
+		_id: {$concat:[
+			{$toString:"$properties.forID"},
+			"_",
+			{$toString:"$properties.questionID"},
+		]},
+		docs: {$push:"$$ROOT"},
+	}},
+	{$project:{
+		docs: {$slice:["$docs",0,10]}
+	}},
+	{$unwind:"$docs"},
+	{$replaceRoot:{newRoot:"$docs"}},
+	// END get answers
+	
+	
+	// START group answers
+	{$group:{
+		_id: {$concat:[
+			{$toString:"$properties.forID"},
+			"_",
+			{$toString:"$properties.questionID"},
+			"_",
+			{$toString:"$properties.answer"}
+		]},
+		forID: { $first: "$properties.forID" },
+		questionID: { $first: "$properties.questionID" },
+		answer: { $first: "$properties.answer" },
+		count: { $sum: 1 },
+	}},
+	{$sort:{
+		count: -1,
+		_id: 1,
+	}},
+	{$group:{
+		_id: {$concat:[
+			{$toString:"$forID"},
+			"_",
+			{$toString:"$questionID"},
+		]},
+		forID: { $first: "$forID" },
+		questionID: { $first: "$questionID" },
+		answer: { $first: "$answer" },
+		this_answer_count: { $first: "$count" },
+		all_answers_count: { $sum: "$count" },
+	}},
+	{$addFields:{
+		confidence: {$divide:["$this_answer_count",{$max:[10,"$all_answers_count"]}]}
+	}},
+	// END group answers
+	
+	
+	// START compile tags
+	{$lookup:{
+		from: "Questions",
+		localField: "questionID",
+		foreignField: "_id",
+		as: "question_doc"
+	}},
+	{$addFields:{
+		question_doc: {$arrayElemAt:["$question_doc",0]}
+	}},
+	{$addFields:{
+		// condition: {$ifNull:["$question_doc.properties.condition",null]},
+		// question_doc: null,
+		tags: {$arrayElemAt:[{ "$setDifference": [
+			{ "$map": {
+				"input": "$question_doc.properties.possibleAnswers",
+				"as": "a",
+				"in": { "$cond": [
+					{$eq:["$$a.key","$answer"]},
+					"$$a.tags",
+					false
+				]}
+			}},
+			[false]
+		]},0]},
+	}},
+	// END compile tags
+	
+	
+	// START seperate confidences
+	{$addFields:{
+		confidences: {$arrayToObject:{$map:{
+			input: {$objectToArray:"$tags"},
+			as: "a",
+			in: {k:"$$a.k",v:"$confidence"}
+		}}},
+	}},
+	// END seperate confidences
+	
+	
+	// START combine tags by forID
+	{$sort:{
+		confidence: 1,
+		_id: 1,
+	}},
+	{$group:{
+		_id: "$forID",
+		tags: {$mergeObjects:"$tags"},
+		confidences: {$mergeObjects:"$confidences"},
+	}},
+	// END combine tags by forID
+	
+	// START for the eye
+	{$sort:{
+		_id: 1
+	}},
+])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const __last_n_answers__ = 10
+db.getCollection('Answers').aggregate([
+    // START get answers
+    /*{$match:{
+        "properties.forID": ObjectId("5e743d99d083985272c9bfd3"),
+    }},*/
+    {$sort:{
+        "metadata.lastModified": -1
+    }},
+    {$set:{
+        "properties.answer": { $objectToArray: "$properties.answer" },
+    }},
+    {$unwind: "$properties.answer"},
+    {$group:{
+        _id: {$concat:[
+            {$toString:"$properties.forID"},
+            "_",
+            {$toString:"$properties.questionID"},
+            "_",
+            {$toString:"$properties.answer.k"},
+        ]},
+        docs: {$push:"$$ROOT"},
+    }},
+    {$set:{
+        docs: {$slice:["$docs",0,__last_n_answers__]}
+    }},
+    {$set:{
+        all_answers_count: {$size:"$docs"}
+    }},
+    {$unwind:"$docs"},
+    // END get answers
+    
+    
+    // START group answers
+    {$set:{
+        "forID": "$docs.properties.forID",
+        "questionID": "$docs.properties.questionID",
+        "answer": "$docs.properties.answer",
+    }},
+    {$set:{
+         "value_as_string": {$switch:{
+            branches: [
+                {case: {$eq:[{$type:"$answer.v"},"string"]}, then: "$answer.v"},
+            ],
+            default: ""
+         }},
+    }},
+    {$group: {
+        _id: {$concat:[
+            {$toString:"$forID"},
+            "_",
+            {$toString:"$questionID"},
+            "_",
+            {$toString:"$answer.k"},
+            "_",
+            {$toString:"$value_as_string"},
+        ]},
+        
+        forID: { $first: "$forID" },
+        questionID: { $first: "$questionID" },
+        answer: { $first: "$answer" },
+        // value_as_string: { $first: "$value_as_string" },
+        
+        all_answers_count: { $first: "$all_answers_count" },
+        this_answer_count: { $sum: 1 },
+    }},
+    {$sort:{
+        all_answers_count: -1,
+        this_answer_count: -1,
+        _id: 1,
+    }},
+    {$group: {
+        _id: {$concat:[
+            {$toString:"$forID"},
+            "_",
+            {$toString:"$questionID"},
+            "_",
+            {$toString:"$answer.k"},
+        ]},
+        
+        forID: { $first: "$forID" },
+        questionID: { $first: "$questionID" },
+        answer: { $first: "$answer" },
+        // value_as_string: { $first: "$value_as_string" },
+        
+        all_answers_count: { $first: "$all_answers_count" },
+        this_answer_count: { $first: "$this_answer_count" },
+    }},
+    {$set:{
+        confidence: {$divide:["$this_answer_count",{$max:[__last_n_answers__,"$all_answers_count"]}]}
+    }},
+    // END group answers
+    
+    
+    // START compile tags
+    {$lookup:{
+        from: "Questions",
+        localField: "questionID",
+        foreignField: "_id",
+        as: "question_doc"
+    }},
+    {$set:{
+        question_doc: {$arrayElemAt:["$question_doc",0]}
+    }},
+    {$set:{
+        // question_doc: null,
+        tags: {$arrayElemAt:[{ "$setDifference": [
+            { "$map": {
+                "input": "$question_doc.properties.possibleAnswers",
+                "as": "a",
+                "in": { "$cond": {
+                    if: {$eq:["$$a.key","$answer.k"]},
+                    then: { "$cond": {
+                        if: {$eq:["$answer.v",true]},
+                        then: "$$a.tags",
+                        else: {$arrayToObject:{$map:{
+                            input: {$objectToArray:"$$a.tags"},
+                            as: "a",
+                            in: {k:"$$a.k",v: {$switch:{
+                                    branches: [
+                                        {case: {$and:[
+                                            {$eq:[{$type:"$answer.v"},"bool"]},
+                                            {$eq:["$answer.v",true]},
+                                        ]}, then: "$$a.tags"},
+
+                                        {case: {$eq:[{$type:"$answer.v"},"double"]}, then: "$answer.v"},
+                                        {case: {$eq:[{$type:"$answer.v"},"string"]}, then: "$answer.v"},
+                                        {case: {$eq:[{$type:"$answer.v"},"int"]}, then: "$answer.v"},
+                                        {case: {$eq:[{$type:"$answer.v"},"long"]}, then: "$answer.v"},
+
+                                        // {case: {$eq:[{$type:"$answer.v"},"object"]}, then: {
+                                        //     $arrayToObject:{$map:{
+                                        //         input: {$objectToArray:"$$a.tags"},
+                                        //         as: "a",
+                                        //         in: {k:"$$a.k",v:"$$a.v"}
+                                        //     }}}
+                                        // },
+                                    ],
+                                    default: false
+                                }},
+                           }
+                        }}},
+                    }},
+                    else: false
+                 }}
+            }},
+            [false]
+        ]},0]},
+    }},
+    
+    {$project:{
+        question_doc: false
+    }},
+    // END compile tags
+    
+    
+    // START seperate confidences
+    {$set:{
+        confidences: {$arrayToObject:{$map:{
+            input: {$objectToArray:"$tags"},
+            as: "a",
+            in: {k:"$$a.k",v:"$confidence"}
+        }}},
+    }},
+    // END seperate confidences
+    
+    
+    // START combine tags by forID
+    {$sort:{
+        confidence: 1,
+        _id: 1,
+    }},
+    {$group:{
+        _id: "$forID",
+        tags: {$mergeObjects:"$tags"},
+        confidences: {$mergeObjects:"$confidences"},
+    }},
+    // END combine tags by forID
+    
+    // START for the eye
+    {$sort:{
+        _id: 1
+    }},
+])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
