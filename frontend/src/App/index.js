@@ -28,7 +28,7 @@ import {
 	// ListItemSecondaryAction,
 } from '@material-ui/core'
 import {
-	Add as AddIcon,
+	// AddRounded as AddIcon,
 	// FilterList as FilterListIcon,
 	// ExpandLess as ExpandLessIcon,
 } from '@material-ui/icons'

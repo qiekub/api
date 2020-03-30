@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core'
 
 import {
-	ArrowDropDown as ArrowDropDownIcon,
+	ArrowDropDownRounded as ArrowDropDownIcon,
 } from '@material-ui/icons'
 // import {
 // 	ToggleButton,

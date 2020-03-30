@@ -207,7 +207,7 @@ export default class PageMap extends React.Component {
 		this.clusterGroup.PrepareLeafletMarker = (leafletMarker, doc)=>{
 			leafletMarker.setIcon(L.divIcon({
 				html: `
-					<div class="wrapper material-icons" style="--bg-color:${doc.___color.bg};--fg-color:${doc.___color.fg};">${doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
+					<div class="wrapper material-icons-round" style="--bg-color:${doc.___color.bg};--fg-color:${doc.___color.fg};">${doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
 				`,
 				className: 'marker-custom-icon',
 				iconSize: L.point(40, 40, true),

@@ -11,10 +11,10 @@ import {
 } from '@material-ui/core'
 
 import {
-	Search as SearchIcon,
-	HourglassEmpty as HourglassEmptyIcon,
-	Close as CloseIcon,
-	Menu as MenuIcon,
+	SearchRounded as SearchIcon,
+	HourglassEmptyRounded as HourglassEmptyIcon,
+	CloseRounded as CloseIcon,
+	MenuRounded as MenuIcon,
 } from '@material-ui/icons'
 
 import MainDrawerContent from '../MainDrawerContent/index.js'

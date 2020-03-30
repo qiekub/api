@@ -46,56 +46,59 @@ import {
 	// YouTube as YouTubeIcon,
 
 	// Edit as EditIcon,
-	Done as DoneIcon,
-	ArrowForward as ArrowForwardIcon,
+	DoneRounded as DoneIcon,
+	ArrowForwardRounded as ArrowForwardIcon,
 } from '@material-ui/icons'
 // import {
 // 	Autocomplete
 // } from '@material-ui/lab'
 
-
+/*
 const questions = [
 	{
 		_id: 'tag_wheelchair',
 		properties: {
 			question: 'Ist dieser Ort mit einem Rollstuhl erreichbar?',
-			listAnswers: false,
-			answers: {
-				yes: {
+			possibleAnswers: [
+				{
+					key: 'yes',
 					// icon: 'check',
 					title: 'Ja',
 					tag: {
 						wheelchair:'yes',
 					},
 				},
-				no: {
+				{
+					key: 'no',
 					// icon: 'clear',
 					title: 'Nein',
 					tag: {
 						wheelchair:'no',
 					},
 				},
-			},
+			],
 		}
 	},
 	{
 		_id: 'tag_toilets',
 		properties: {
 			question: 'Hat dieser Ort Toiletten?',
-			answers: {
-				yes: {
+			possibleAnswers: [
+				{
+					key: 'yes',
 					title: 'Ja',
 					tag: {
 						'toilets':'yes',
 					},
 				},
-				no: {
+				{
+					key: 'no',
 					title: 'Nein',
 					tag: {
 						'toilets':'no',
 					},
 				},
-			},
+			]
 		}
 	}
 ]

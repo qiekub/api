@@ -26,7 +26,7 @@ import {
 	Paper,
 	Card,
 	CardContent,
-	// Divider,
+	Divider,
 	// Chip,
 
 	Icon,
@@ -34,19 +34,25 @@ import {
 	// TextField,
 } from '@material-ui/core'
 import {
-	// Map as MapIcon,
-	Link as LinkIcon,
+	// Block as BlockIcon,
+	// Announcement as AnnouncementIcon,
+	CheckRounded as CheckIcon,
+	// ChildFriendly as ChildFriendlyIcon,
+	// Explicit as ExplicitIcon,
 
-	Phone as PhoneIcon,
-	Print as PrintIcon,
-	Mail as MailIcon,
+	// Map as MapIcon,
+	LinkRounded as LinkIcon,
+
+	PhoneRounded as PhoneIcon,
+	PrintRounded as PrintIcon,
+	MailRounded as MailIcon,
 
 	// Facebook as FacebookIcon,
 	// Instagram as InstagramIcon,
 	// Twitter as TwitterIcon,
 	// YouTube as YouTubeIcon,
 
-	Edit as EditIcon,
+	EditRounded as EditIcon,
 	// Done as DoneIcon,
 	// ArrowBack as ArrowBackIcon,
 	// ArrowForward as ArrowForwardIcon,
@@ -721,7 +727,7 @@ export default class Sidebar extends React.Component {
 						doc.___preset.key !== ''
 						? (<ListItem style={{m_argin:'0 -32px'}}>
 								<ListItemIcon style={{m_inWidth:'auto',m_arginRight:'16px'}}>
-									<div className="material-icons" style={{color:doc.___color.fg}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
+									<div className="material-icons-round" style={{color:doc.___color.fg}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
 								</ListItemIcon>
 								<ListItemText primary={doc.___preset.name.en}/>
 							</ListItem>

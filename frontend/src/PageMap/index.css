@@ -127,8 +127,14 @@
 
 	color: var(--fg-color);
 }
-.marker-custom-icon .wrapper.material-icons{
+.marker-custom-icon .wrapper.material-icons,
+.marker-custom-icon .wrapper.material-icons-outlined,
+.marker-custom-icon .wrapper.material-icons-sharp,
+.marker-custom-icon .wrapper.material-icons-two-tone{
 	line-height: 38px;
+}
+.marker-custom-icon .wrapper.material-icons-round{
+	line-height: 40px;
 }
 
 .marker-custom-icon .wrapper::before {
