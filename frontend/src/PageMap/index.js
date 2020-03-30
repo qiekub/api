@@ -370,6 +370,8 @@ export default class PageMap extends React.Component {
 				zoomSnap={1}
 				zoomControl={false}
 
+				fadeAnimation={false}
+
 				worldCopyJump={true}
 				maxBoundsViscosity={1.0}
 
