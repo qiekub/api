@@ -33,7 +33,7 @@ html body .hideCardBottomShadow{
 
 html body .improveFab{
 	z-index: var(--z-index-fabs);
-	position: absolute;
+	position: fixed;
 	background: black !important;
 	color: white;
 
