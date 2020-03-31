@@ -1,3 +1,6 @@
+const secretManager = require('../../secretManager.js')
+const getSecret = secretManager.getSecret
+
 const fetch = require('node-fetch')
 
 // const { api_key } = process.env
@@ -7,12 +10,13 @@ const fetch = require('node-fetch')
 
 // DONE:
 https://nominatim.openstreetmap.org/search?q=Bonn,%20Germany&format=json&limit=1&addressdetails=0&extratags=0&namedetails=0
-https://api.opencagedata.com/geocode/v1/json?key=8a904b5af9c3455fadc6360ad48ac99b&pretty=0&no_annotations=1&limit=1&no_record=1&q=Bonn,%20Germany
-https://eu1.locationiq.com/v1/search.php?key=66291d9b656090&limit=1&format=json&q=Bonn,%20Germany
-https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCkhuqMjYusEcCOejNs2lqKrJsP1Y-fj1w&address=Bonn,Germany
+https://api.opencagedata.com/geocode/v1/json?key=&pretty=0&no_annotations=1&limit=1&no_record=1&q=Bonn,%20Germany
+https://eu1.locationiq.com/v1/search.php?key=&limit=1&format=json&q=Bonn,%20Germany
+https://maps.googleapis.com/maps/api/geocode/json?key=&address=Bonn,Germany
 
 // TODO:
-https://www.mapquestapi.com/geocoding/v1/address?key=HvexZhJykiXrYIAMAWiLIFJGeDoSmZuK&outFormat=json&maxResults=1&location=Bonn,Germany
+https://www.mapquestapi.com/geocoding/v1/address?key=&outFormat=json&maxResults=1&location=Bonn,Germany
+`https://www.mapquestapi.com/geocoding/v1/address?key=${getSecret('api_key_mapquestapi')}&outFormat=json&maxResults=1&location=${queryString}`
 
 */
 
@@ -47,7 +51,7 @@ module.exports = async (parent, args, context, info) => {
 	}else{
 		return new Promise((resolve,reject) => {
 			// &viewbox=min_lon,min_lat,max_lon,max_lat
-			tryToGeocode(`https://eu1.locationiq.com/v1/search.php?key=66291d9b656090&limit=1&format=json&q=${queryString}`, data => {
+			tryToGeocode(`https://eu1.locationiq.com/v1/search.php?key=${getSecret('locationiq_api_key')}&limit=1&format=json&q=${queryString}`, data => {
 				if (data && Array.isArray(data) && data.length > 0) {
 					const firstResult = data[0]
 					return {
@@ -82,7 +86,9 @@ module.exports = async (parent, args, context, info) => {
 			})
 			.then(data=>data, error=>{
 				// &proximity=51.952659,7.632473
-				return tryToGeocode('https://api.opencagedata.com/geocode/v1/json?key=8a904b5af9c3455fadc6360ad48ac99b&pretty=0&no_annotations=1&limit=1&no_record=1&q='+queryString, data => {				
+
+
+				return tryToGeocode(`https://api.opencagedata.com/geocode/v1/json?key=${getSecret('opencagedata_api_key')}&pretty=0&no_annotations=1&limit=1&no_record=1&q=${queryString}`, data => {				
 					const results = data.results
 					if (results && Array.isArray(results) && results.length > 0) {
 						const firstResult = results[0]
@@ -120,7 +126,8 @@ module.exports = async (parent, args, context, info) => {
 				})
 			})
 			.then(data=>data, error=>{
-				return tryToGeocode('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCkhuqMjYusEcCOejNs2lqKrJsP1Y-fj1w&address='+queryString, data => {
+				
+				return tryToGeocode(`https://maps.googleapis.com/maps/api/geocode/json?key=${getSecret('googleapis_api_key')}&address=${queryString}`, data => {
 					const results = data.results
 					if (results && Array.isArray(results) && results.length > 0) {
 						const firstResult = results[0]
@@ -149,7 +156,7 @@ module.exports = async (parent, args, context, info) => {
 				})
 			})
 			.then(data=>data, error=>{
-				return tryToGeocode('https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=0&extratags=0&namedetails=0&q='+queryString, data => {				
+				return tryToGeocode(`https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=0&extratags=0&namedetails=0&q=${queryString}`, data => {				
 					if (data && Array.isArray(data) && data.length > 0) {
 						const firstResult = data[0]
 						resolve({

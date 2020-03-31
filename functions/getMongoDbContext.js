@@ -1,10 +1,11 @@
+const secretManager = require('./secretManager.js')
+const getSecret = secretManager.getSecret
+
 const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient
 const ObjectID = mongodb.ObjectID
 
-const mongodb_username = 'graphql_backend'
-const mongodb_password = '83J*rQ_c1Mu!h&67xT(8bWYdP2)(4fs7'
-const mongodb_uri = encodeURI(`mongodb+srv://${mongodb_username}:${mongodb_password}@qiekub-data-e0sh4.mongodb.net/`) // test?retryWrites=true&w=majority
+const mongodb_uri = encodeURI(`mongodb+srv://${getSecret('mongodb_username')}:${getSecret('mongodb_password')}@${getSecret('mongodb_server_domain')}/`) // test?retryWrites=true&w=majority
 const mongodb_options = {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
