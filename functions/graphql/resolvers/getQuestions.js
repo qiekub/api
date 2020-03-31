@@ -1,4 +1,3 @@
-const fetch = require('node-fetch')
 const async = require('async')
 
 function loadQuestionsFromDB(mongodb, callback){
