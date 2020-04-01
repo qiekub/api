@@ -1,16 +1,19 @@
+const env = require('node-env-file')
+env(`${__dirname}/../.env`)
 
 // TODO
 // !!!!!! The following object should't be stored within this file or even exist! !!!!!!
 // It is here so all secrets are in one place and can be put somewhere else with ease.
+// Look into "rotating secrets"
 const secrets = {
-	mongodb_username: 'graphql_backend',
-	mongodb_password: '83J*rQ_c1Mu!h&67xT(8bWYdP2)(4fs7', // REVOKE
-	mongodb_server_domain: 'qiekub-data-e0sh4.mongodb.net',
+	mongodb_username: process.env.mongodb_username,
+	mongodb_password: process.env.mongodb_password,
+	mongodb_server_domain: process.env.mongodb_server_domain,
 
-	api_key_locationiq: '66291d9b656090', // REVOKE
-	api_key_opencagedata: '8a904b5af9c3455fadc6360ad48ac99b', // REVOKE
-	api_key_googleapis: 'AIzaSyCkhuqMjYusEcCOejNs2lqKrJsP1Y-fj1w', // REVOKE
-	api_key_mapquestapi: 'HvexZhJykiXrYIAMAWiLIFJGeDoSmZuK', // REVOKE
+	api_key_locationiq: process.env.api_key_locationiq,
+	api_key_opencagedata: process.env.api_key_opencagedata,
+	api_key_googleapis: process.env.api_key_googleapis,
+	api_key_mapquestapi: process.env.api_key_mapquestapi,
 }
 
 
@@ -34,6 +37,7 @@ async function getSecretAsync(secretName){
 
 	return false
 }
+
 
 
 module.exports = {
