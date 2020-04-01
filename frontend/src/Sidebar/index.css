@@ -14,13 +14,15 @@ html body .MuiListSubheader-sticky {
 	background: white;
 }
 
-html body .hideCardBottomShadow{
+html body .sidebarContentCard{
 	position: relative;
 	overflow: visible;
 	border-bottom-right-radius: 0;
 	border-bottom-left-radius: 0;
+	background: var(--color-surface);
+	flex-grow: 1;
 }
-.hideCardBottomShadow:after{
+/*.sidebarContentCard:after{
 	content: '';
 	position: absolute;
 	right: 0;
@@ -28,7 +30,7 @@ html body .hideCardBottomShadow{
 	bottom: -50px;
 	height: 50px;
 	background: white;
-}
+}*/
 
 
 html body .improveFab{
