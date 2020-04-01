@@ -51,7 +51,7 @@ module.exports = async (parent, args, context, info) => {
 	}else{
 		return new Promise(async (resolve,reject) => {
 			// &viewbox=min_lon,min_lat,max_lon,max_lat
-			tryToGeocode(`https://eu1.locationiq.com/v1/search.php?key=${await getSecretAsync('locationiq_api_key')}&limit=1&format=json&q=${queryString}`, data => {
+			tryToGeocode(`https://eu1.locationiq.com/v1/search.php?key=${await getSecretAsync('api_key_locationiq')}&limit=1&format=json&q=${queryString}`, data => {
 				if (data && Array.isArray(data) && data.length > 0) {
 					const firstResult = data[0]
 					return {
@@ -88,7 +88,7 @@ module.exports = async (parent, args, context, info) => {
 				// &proximity=51.952659,7.632473
 
 
-				return tryToGeocode(`https://api.opencagedata.com/geocode/v1/json?key=${await getSecretAsync('opencagedata_api_key')}&pretty=0&no_annotations=1&limit=1&no_record=1&q=${queryString}`, data => {				
+				return tryToGeocode(`https://api.opencagedata.com/geocode/v1/json?key=${await getSecretAsync('api_key_opencagedata')}&pretty=0&no_annotations=1&limit=1&no_record=1&q=${queryString}`, data => {				
 					const results = data.results
 					if (results && Array.isArray(results) && results.length > 0) {
 						const firstResult = results[0]
@@ -127,7 +127,7 @@ module.exports = async (parent, args, context, info) => {
 			})
 			.then(data=>data, async error=>{
 				
-				return tryToGeocode(`https://maps.googleapis.com/maps/api/geocode/json?key=${await getSecretAsync('googleapis_api_key')}&address=${queryString}`, data => {
+				return tryToGeocode(`https://maps.googleapis.com/maps/api/geocode/json?key=${await getSecretAsync('api_key_googleapis')}&address=${queryString}`, data => {
 					const results = data.results
 					if (results && Array.isArray(results) && results.length > 0) {
 						const firstResult = results[0]
