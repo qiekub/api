@@ -269,10 +269,9 @@ export default class App extends React.Component {
 			<Router primary={false}>
 				<Sidebar
 					path="/place/:docID"
+					
 					className="Sidebar"
 					
-					hello="test"
-
 					onViewDoc={this.loadAndViewDoc}
 					onSetSearchBarValue={this.setSearchBarValue}
 					onSetSidebarIsOpen={this.setSidebarIsOpen}
