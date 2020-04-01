@@ -1,5 +1,5 @@
 const secretManager = require('../../secretManager.js')
-const getSecret = secretManager.getSecret
+const getSecretAsync = secretManager.getSecretAsync
 
 const fetch = require('node-fetch')
 
@@ -16,7 +16,7 @@ https://maps.googleapis.com/maps/api/geocode/json?key=&address=Bonn,Germany
 
 // TODO:
 https://www.mapquestapi.com/geocoding/v1/address?key=&outFormat=json&maxResults=1&location=Bonn,Germany
-`https://www.mapquestapi.com/geocoding/v1/address?key=${getSecret('api_key_mapquestapi')}&outFormat=json&maxResults=1&location=${queryString}`
+`https://www.mapquestapi.com/geocoding/v1/address?key=${await getSecretAsync('api_key_mapquestapi')}&outFormat=json&maxResults=1&location=${queryString}`
 
 */
 
@@ -49,9 +49,9 @@ module.exports = async (parent, args, context, info) => {
 	) {
 		return new Promise((resolve,reject) => reject("No real search-query!"))
 	}else{
-		return new Promise((resolve,reject) => {
+		return new Promise(async (resolve,reject) => {
 			// &viewbox=min_lon,min_lat,max_lon,max_lat
-			tryToGeocode(`https://eu1.locationiq.com/v1/search.php?key=${getSecret('locationiq_api_key')}&limit=1&format=json&q=${queryString}`, data => {
+			tryToGeocode(`https://eu1.locationiq.com/v1/search.php?key=${await getSecretAsync('locationiq_api_key')}&limit=1&format=json&q=${queryString}`, data => {
 				if (data && Array.isArray(data) && data.length > 0) {
 					const firstResult = data[0]
 					return {
@@ -84,11 +84,11 @@ module.exports = async (parent, args, context, info) => {
 					throw new Error('No place found!')
 				}
 			})
-			.then(data=>data, error=>{
+			.then(data=>data, async error=>{
 				// &proximity=51.952659,7.632473
 
 
-				return tryToGeocode(`https://api.opencagedata.com/geocode/v1/json?key=${getSecret('opencagedata_api_key')}&pretty=0&no_annotations=1&limit=1&no_record=1&q=${queryString}`, data => {				
+				return tryToGeocode(`https://api.opencagedata.com/geocode/v1/json?key=${await getSecretAsync('opencagedata_api_key')}&pretty=0&no_annotations=1&limit=1&no_record=1&q=${queryString}`, data => {				
 					const results = data.results
 					if (results && Array.isArray(results) && results.length > 0) {
 						const firstResult = results[0]
@@ -125,9 +125,9 @@ module.exports = async (parent, args, context, info) => {
 					}
 				})
 			})
-			.then(data=>data, error=>{
+			.then(data=>data, async error=>{
 				
-				return tryToGeocode(`https://maps.googleapis.com/maps/api/geocode/json?key=${getSecret('googleapis_api_key')}&address=${queryString}`, data => {
+				return tryToGeocode(`https://maps.googleapis.com/maps/api/geocode/json?key=${await getSecretAsync('googleapis_api_key')}&address=${queryString}`, data => {
 					const results = data.results
 					if (results && Array.isArray(results) && results.length > 0) {
 						const firstResult = results[0]

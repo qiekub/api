@@ -1,36 +1,42 @@
 const secretManager = require('./secretManager.js')
-const getSecret = secretManager.getSecret
+const getSecretAsync = secretManager.getSecretAsync
 
 const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient
 const ObjectID = mongodb.ObjectID
 
-const mongodb_uri = encodeURI(`mongodb+srv://${getSecret('mongodb_username')}:${getSecret('mongodb_password')}@${getSecret('mongodb_server_domain')}/`) // test?retryWrites=true&w=majority
-const mongodb_options = {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-}
-
 const _ContextChache_ = {}
 
 function getMongoDbContext(){
-	return new Promise((resolve,reject)=>{
+	return new Promise(async (resolve,reject)=>{
 		if (_ContextChache_.mongodb) {
 			resolve(_ContextChache_.mongodb)
 		}else{
-			MongoClient.connect(mongodb_uri,mongodb_options).then(mongodb_client => {
-				_ContextChache_.mongodb = {
-					client: mongodb_client,
-					ObjectID: ObjectID,
+			let mongodb_uri = encodeURI(`mongodb+srv://${await getSecretAsync('mongodb_username')}:${await getSecretAsync('mongodb_password')}@${await getSecretAsync('mongodb_server_domain')}/`) // test?retryWrites=true&w=majority
 
-					collection: mongodb_client.db('Graph').collection('QueerCenters'),
-					OsmCache_collection: mongodb_client.db('Graph').collection('OsmCache'),
-					Answers_collection: mongodb_client.db('Graph').collection('Answers'),
-					Questions_collection: mongodb_client.db('Graph').collection('Questions'),
-				}
-
-				resolve(_ContextChache_.mongodb)
-			})
+			if (!mongodb_uri) {
+				reject('probably no mongodb rights')
+			}else{
+				MongoClient.connect(mongodb_uri,{
+					useNewUrlParser: true,
+					useUnifiedTopology: true,
+				}).then(mongodb_client => {
+					_ContextChache_.mongodb = {
+						client: mongodb_client,
+						ObjectID: ObjectID,
+	
+						collection: mongodb_client.db('Graph').collection('QueerCenters'),
+						OsmCache_collection: mongodb_client.db('Graph').collection('OsmCache'),
+						Answers_collection: mongodb_client.db('Graph').collection('Answers'),
+						Questions_collection: mongodb_client.db('Graph').collection('Questions'),
+					}
+	
+					resolve(_ContextChache_.mongodb)
+				}).catch(error=>{
+					console.error(error)
+					reject('could not connect to mongodb')
+				})
+			}
 		}
 	})
 }

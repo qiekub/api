@@ -24,9 +24,15 @@ function gqlServer() {
 			// endpoint: 'http://localhost:5001/queercenters/us-central1/graphql/',
 		},
 		context: async ({req}) => {
-			return {
-				mongodb: await getMongoDbContext(),
+			try{
+				return {
+					mongodb: await getMongoDbContext(),
+				}
+			}catch (error) {
+				console.error(error)
 			}
+
+			return null
 		},
 	}).applyMiddleware({app, path:'/graphql/v1', cors: true})
 
