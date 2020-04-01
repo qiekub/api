@@ -412,7 +412,7 @@ export default class Sidebar extends React.Component {
 		})
 	}
 
-	renderOpeningHours(doc){
+	/*renderOpeningHours(doc){
 		const weekdayNames = 'Monday Tuesday Wednesday Thursday Friday Saturday Sunday'.split(' ')
 
 		if (!!doc.properties.tags.opening_hours) {
