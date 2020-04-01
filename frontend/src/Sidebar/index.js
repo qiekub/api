@@ -26,7 +26,7 @@ import {
 	Paper,
 	Card,
 	CardContent,
-	Divider,
+	// Divider,
 	// Chip,
 
 	Icon,
@@ -453,7 +453,7 @@ export default class Sidebar extends React.Component {
 		}
 
 		return null
-	}
+	}*/
 
 	renderView(doc){
 		const properties = doc.properties
@@ -622,22 +622,20 @@ export default class Sidebar extends React.Component {
 		return (<React.Fragment key="viewing">
 			<Card
 				elevation={6}
-				className="hideCardBottomShadow"
+				className="sidebarContentCard"
 			>
-
 				<CardContent>
 					{
 						age_range_text === ''
 						? null
-						: (<>
+						: (
 							<List dense>
 								<ListItem>
 									<ListItemIcon><CheckIcon style={{color:'black'}}/></ListItemIcon>
 									<ListItemText primary={'Altersbeschränkung: '+age_range_text} />
 								</ListItem>
 							</List>
-							<Divider style={{margin:'16px -16px'}} />
-						</>)
+						)
 					}
 
 					{
@@ -674,26 +672,21 @@ export default class Sidebar extends React.Component {
 				</CardContent>
 			</Card>
 
-			<div style={{
-				padding: '32px 0',
-				textAlign: 'center',
-			}}>
-				<Fab
-					variant="extended"
-					onClick={this.edit}
-					size="large"
-					className="improveFab"
-				>
-					<EditIcon className="icon"/> Verbessern
-				</Fab>
-			</div>
+			<Fab
+				variant="extended"
+				onClick={this.edit}
+				size="large"
+				className="improveFab"
+			>
+				<EditIcon className="icon"/> Verbessern
+			</Fab>
 		</React.Fragment>)
 	}
 	renderQuestions(doc){
 		return (<React.Fragment key="editing">
 			<Card
 				elevation={6}
-				className="hideCardBottomShadow"
+				className="sidebarContentCard"
 			>
 				<CardContent>
 					<Questions key="the_questions" doc={doc} onFinish={this.view}/>
@@ -730,9 +723,11 @@ export default class Sidebar extends React.Component {
 				elevation={6}
 				className={this.props.className}
 				style={{
-					// color: doc.___color.fg,
-					// background: doc.___color.bg,
-					// padding: '52px 16px 16px 16px',
+					backgroundColor: doc.___color.bg,
+					background: `linear-gradient(180deg, ${doc.___color.bg} 50%, var(--color-surface) 50%)`,
+					display: 'flex',
+					alignContent: 'stretch',
+					flexDirection: 'column',
 				}}
 			>
 
@@ -751,6 +746,7 @@ export default class Sidebar extends React.Component {
 					padding: '86px 0 8px 0',
 					color: doc.___color.fg,
 					background: doc.___color.bg,
+					flexShrink: 0,
 				}}
 			>
 				<CardContent>
