@@ -5,7 +5,7 @@
     "node": "10"
   },
   "scripts": {
-    "serve": "firebase serve --only functions -p 5000 -o $(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1')",
-    "deploy": "firebase deploy --only functions"
+    "serve": "! [ -f ./functions/.env ] && echo \"ERROR: \\\"./functions/.env\\\" is missing\" || firebase serve --only functions -p 5000 -o $(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1')",
+    "deploy": "! [ -f ./functions/.env ] && echo \"ERROR: \\\"./functions/.env\\\" is missing\" || firebase deploy --only functions"
   }
 }
