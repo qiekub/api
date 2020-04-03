@@ -756,6 +756,73 @@ https://de.wikipedia.org/wiki/Liste_von_L%C3%A4ndern_nach_pers%C3%B6nlicher_Frei
 
 
 
+——————————————————————————————————————————
+
+
+
+
+
+Hi Marena,
+
+These are great news!
+Thanks for your support and trust in this project!
+
+All data presented is already public (It's currently just from OSM).
+
+I want to add tools to add and edit places. These will be restricted to countries/regions where the place would be legal. (I'm probably gonna use a hardcoded list of legal-countries from ilga.org and Forward-Geocoding to check for the legalities.)
+
+Of course, I'll mention your support on the website and 
+
+I corrected the attribution. Hope it's okay like that.
+
+
+
+Thomas
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
