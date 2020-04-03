@@ -130,7 +130,7 @@ module.exports = async (parent, args, context, info) => {
 										lat: firstResult.bounds.northeast.lat,
 									},
 								},
-								boundingbox: firstResult.bounds,
+								// boundingbox: firstResult.bounds,
 							},
 							// licence: firstResult.licence[0].url,
 							// licence: 'opencagedata.com',
@@ -148,7 +148,6 @@ module.exports = async (parent, args, context, info) => {
 				})
 			})
 			.then(data=>data, async error=>{
-				
 				return tryToGeocode(`https://maps.googleapis.com/maps/api/geocode/json?key=${await getSecretAsync('api_key_googleapis')}&address=${queryString}`, data => {
 					const results = data.results
 					if (results && Array.isArray(results) && results.length > 0) {
@@ -178,7 +177,7 @@ module.exports = async (parent, args, context, info) => {
 				})
 			})
 			.then(data=>data, error=>{
-				return tryToGeocode(`https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=0&extratags=0&namedetails=0&q=${queryString}`, data => {				
+				return tryToGeocode(`https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=0&extratags=0&namedetails=0&q=${queryString}`, data => {
 					if (data && Array.isArray(data) && data.length > 0) {
 						const firstResult = data[0]
 						resolve({
