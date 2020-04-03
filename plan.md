@@ -768,15 +768,14 @@ These are great news!
 Thanks for your support and trust in this project!
 
 All data presented is already public (It's currently just from OSM).
+I want to add tools to add and edit places. These will be restricted to countries/regions where being queer is legal. I'm probably gonna use a hardcoded list of legal-countries from ilga.org and Forward-Geocoding / the Search-Api to check for legalities. The collected data will be public and regularly published to OSM.
 
-I want to add tools to add and edit places. These will be restricted to countries/regions where the place would be legal. (I'm probably gonna use a hardcoded list of legal-countries from ilga.org and Forward-Geocoding to check for the legalities.)
+Of course, I'll mention your support on the website. Just give me a day or two to update it.
 
-Of course, I'll mention your support on the website and 
+I currently don't have a useful visitors count. But you can look at usage statistics of the "petacat" account. I used it for the maptiles last month.
+From now on, I'll use "qiekub", so everything is named the same.
 
-I corrected the attribution. Hope it's okay like that.
-
-
-
+Best wishes and thanks again,
 Thomas
 
 
