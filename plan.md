@@ -736,6 +736,7 @@ What's missing?
 
 
 
+——————————————————————————————————————————
 
 
 
@@ -743,12 +744,12 @@ What's missing?
 
 
 
+https://api.mapbox.com/geocoding/v5/mapbox.places/-73.989,40.733.json?types=country&limit=1&access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g
 
 
-
-
-
-
+https://ilga.org/maps-sexual-orientation-laws
+https://ilga.org/trans-legal-mapping-report
+https://de.wikipedia.org/wiki/Liste_von_L%C3%A4ndern_nach_pers%C3%B6nlicher_Freiheit#Liste
 
 
 
