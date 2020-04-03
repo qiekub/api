@@ -79,10 +79,38 @@ module.exports = async (parent, args, context, info) => {
 				}
 			})
 			.then(data=>data, async error=>{
+				return tryToGeocode(`https://api.mapbox.com/geocoding/v5/mapbox.places/${queryString}.json?fuzzyMatch=true&limit=1&access_token=${await getSecretAsync('api_key_mapbox')}`, data => {
+					const results = data.features
+					if (results && Array.isArray(results) && results.length > 0) {
+						const firstResult = results[0]
+						return {
+							geometry: {
+								location: {
+									lng: firstResult.geometry.coordinates[0],
+									lat: firstResult.geometry.coordinates[1],
+								},
+								boundingbox: {
+									northeast: {
+										lng: firstResult.bbox[0],
+										lat: firstResult.bbox[1],
+									},
+									southwest: {
+										lng: firstResult.bbox[2],
+										lat: firstResult.bbox[3],
+									},
+								},
+							},
+							// licence: data.attribution,
+							// licence: 'mapbox.com',
+						}
+					}else{
+						throw new Error('No place found!')
+					}
+				})
+			})
+			.then(data=>data, async error=>{
 				// &proximity=51.952659,7.632473
-
-
-				return tryToGeocode(`https://api.opencagedata.com/geocode/v1/json?key=${await getSecretAsync('api_key_opencagedata')}&pretty=0&no_annotations=1&limit=1&no_record=1&q=${queryString}`, data => {				
+				return tryToGeocode(`https://api.opencagedata.com/geocode/v1/json?key=${await getSecretAsync('api_key_opencagedata')}&pretty=0&no_annotations=1&limit=1&no_record=1&q=${queryString}`, data => {
 					const results = data.results
 					if (results && Array.isArray(results) && results.length > 0) {
 						const firstResult = results[0]
