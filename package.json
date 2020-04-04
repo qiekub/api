@@ -6,7 +6,6 @@
   },
   "scripts": {
     "backup_commit": "git commit -a -m \"#deploy\"",
-    
     "serve": "! [ -f ./functions/.env ] && echo \"ERROR: \\\"./functions/.env\\\" is missing\" || firebase serve --only functions -p 5000 -o $(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1')",
     "deploy": "yarn backup_commit; ! [ -f ./functions/.env ] && echo \"ERROR: \\\"./functions/.env\\\" is missing\" || firebase deploy --only functions"
   }
