@@ -786,9 +786,12 @@ Thomas
 
 
 
+——————————————————————————————————————————
 
+## Links to use wikidata infos:
 
-
+https://www.npmjs.com/package/wikidata-sdk
+https://github.com/maxlath/wikibase-sdk/blob/HEAD/docs/get_entities.md#by-ids
 
 
 
