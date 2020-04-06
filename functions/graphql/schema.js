@@ -14,11 +14,16 @@ const schema = gql`
 		getQuestions: [Doc]!
 	}
 
+	type Text {
+		text: String
+		language: String
+	}
+
 	type Marker {
-		_id: ID,
-		name: String,
-		lng: Float,
-		lat: Float,
+		_id: ID
+		name(languages: [String]): [Text]
+		lng: Float
+		lat: Float
 		tags(keys: [String]): JSONObject
 	}
 
@@ -53,7 +58,7 @@ const schema = gql`
 	lgbtq_58_welcomes: String
 	"""
 	type Place {
-		name: String
+		name(languages: [String]): [Text]
 
 		geometry: GeoData
 
@@ -90,7 +95,8 @@ const schema = gql`
 	}
 
 	type Question {
-		question: String
+		question(languages: [String]): [Text]
+
 		condition: JSONObject
 		possibleAnswers: [Answer]
 	}
@@ -98,7 +104,7 @@ const schema = gql`
 		inputtype: String
 		key: String
 		icon: String
-		title: String
+		title(languages: [String]): [Text]
 		tags: JSONObject
 	}
 
@@ -112,7 +118,7 @@ const schema = gql`
 
 
 
-	union Properties = Error | Place | Changeset | Question | Answer
+	union Properties = Error | Place | Changeset | Question | Answer | Text
 	type Doc {
 		_id: ID
 		properties: Properties

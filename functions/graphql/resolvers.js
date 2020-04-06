@@ -37,6 +37,27 @@ function getFilterByKeysFunction(graphqlKey){
 	}
 }
 
+function getFilterByLanguageFunction(graphqlKey){
+	return (parent, args, context, info) => {
+		let dbValue = parent[graphqlKey]
+		if (!(
+			!!dbValue && Array.isArray(dbValue)
+		)) {
+			dbValue = [{
+				text: dbValue,
+				language: null,
+			}]
+		}
+
+		if (!!args.languages && args.languages.length > 1) { // should have more than one entry. Otherwise, theres nothing to filter about
+			const languages = args.languages // [...new Set(args.languages).add('en')] // make sure english i ever returned as the default language
+			return dbValue.filter(entry => entry.language === null || languages.includes(entry.language))
+		}
+
+		return dbValue
+	}
+}
+
 module.exports = {
 	JSON: GraphQLJSON,
 	JSONObject: GraphQLJSONObject,
@@ -93,22 +114,24 @@ module.exports = {
 	},
 
 	Place: {
+		name: getFilterByLanguageFunction('name'),
+
 		tags: getFilterByKeysFunction('tags'),
 		confidences: getFilterByKeysFunction('confidences'),
 	},
 
 	Marker: {
+		name: getFilterByLanguageFunction('name'),
+
 		tags: getFilterByKeysFunction('tags'),
-		// tags: (parent, args, context, info) => {
-		// 	if (!!args.keys && args.keys.length > 0) {
-		// 		const keys = args.keys
-		// 		return Object.entries(parent.tags).filter(pair=>keys.includes(pair[0])).reduce((obj,pair)=>{
-		// 			obj[pair[0]] = pair[1]
-		// 			return obj
-		// 		},{})
-		// 	}
-		// 	return parent.tags
-		// },
+	},
+
+	Question: {
+		question: getFilterByLanguageFunction('question'),
+	},
+
+	Answer: {
+		title: getFilterByLanguageFunction('title'),
 	},
 
 
