@@ -3,7 +3,7 @@ const async = require('async')
 const {compileAnswers} = require('../../functions.js')
 
 function loadPlacesFromOsmChache(mongodb, callback){
-	mongodb.OsmCache_collection.find({'properties.__typename': 'Place'}).limit(1000).toArray((error,docs)=>{
+	mongodb.OsmCache_collection.find({'properties.__typename': 'Place'}).limit(10000).toArray((error,docs)=>{
 		if (error) {
 			console.error(error)
 			// reject()
@@ -23,7 +23,7 @@ function loadPlacesFromOsmChache(mongodb, callback){
 }
 
 function loadPlacesFromDB(mongodb, callback){
-	mongodb.collection.find({'properties.__typename': 'Place'}).limit(1000).toArray((error,docs)=>{
+	mongodb.collection.find({'properties.__typename': 'Place'}).limit(10000).toArray((error,docs)=>{
 		if (error) {
 			console.error(error)
 			// reject()

@@ -1,12 +1,15 @@
 const async = require('async')
 
 function loadQuestionsFromDB(mongodb, callback){
-	mongodb.Questions_collection.find({'properties.__typename': 'Question'}).limit(1000).toArray((error,docs)=>{
+	mongodb.Questions_collection.find({
+		'properties.__typename': 'Question',
+		// '_id': new mongodb.ObjectID('5e8b36df989255079c9baaf6'),
+	}).limit(100).toArray((error,docs)=>{
 		if (error) {
 			console.error(error)
 			callback([])
 		}else{
-			callback(docs)
+			callback(docs.reverse())
 		}
 	})
 }
