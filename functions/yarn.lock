@@ -83,6 +83,11 @@
   dependencies:
     tslib "1.11.1"
 
+"@fluent/langneg@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@fluent/langneg/-/langneg-0.4.0.tgz#40d6d8feb36747910aac05bfb850fec8f363bbef"
+  integrity sha512-MV5/cFL5TrTNhZ/gOlkJmU0KWSHSIxsyJiNjwkIsQOGZlZ56vU92hOfgG47tBRJ9Or74WTxyQcteCSlPHddnww==
+
 "@google-cloud/common@^2.1.1":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@google-cloud/common/-/common-2.4.0.tgz#2783b7de8435024a31453510f2dab5a6a91a4c82"
