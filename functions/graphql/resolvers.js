@@ -45,10 +45,14 @@ function getFilterByLanguageFunction(graphqlKey){
 		if (!(
 			!!dbValue && Array.isArray(dbValue)
 		)) {
-			dbValue = [{
-				text: dbValue,
-				language: null,
-			}]
+			if (!!dbValue) {
+				dbValue = [{
+					text: dbValue,
+					language: null,
+				}]
+			}else{
+				dbValue = []
+			}
 		}
 
 		// if (!!args.languages && args.languages.length > 1) { // should have more than one entry. Otherwise, theres nothing to filter about
@@ -63,7 +67,7 @@ function getFilterByLanguageFunction(graphqlKey){
 				{ defaultLocale: 'en' }
 			)
 
-			return dbValue.filter(entry => entry.language === null || currentLocales.includes(entry.language))
+			return dbValue.filter(entry => entry.text !== null && (entry.language === null || currentLocales.includes(entry.language)))
 		}
 
 		return dbValue
