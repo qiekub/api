@@ -1,0 +1,429 @@
+[
+	{
+		"_id": "age",
+		"__typename": "Doc",
+		"properties": {
+			"question": [
+				{
+					"text": "Gibt es ein Altersbeschränkung?",
+					"language": "de"
+				}
+			],
+			"possibleAnswers": [
+				{
+					"icon": null,
+					"inputtype": "number",
+					"title": [
+						{
+							"text": "Mindest-Alter",
+							"language": "de"
+						}
+					],
+					"tags": {
+						"min_age": null
+					},
+					"__typename": "Answer",
+					"key": "min_age",
+					"description": []
+				},
+				{
+					"icon": null,
+					"inputtype": "number",
+					"title": [
+						{
+							"text": "Maximal-Alter",
+							"language": "de"
+						}
+					],
+					"tags": {
+						"max_age": null
+					},
+					"__typename": "Answer",
+					"key": "max_age",
+					"description": []
+				}
+			],
+			"__typename": "Question"
+		}
+	},
+	{
+		"_id": "answer_more",
+		"__typename": "Doc",
+		"properties": {
+			"question": [
+				{
+					"text": "Do want to answer more questions?",
+					"language": "en"
+				},
+				{
+					"text": "Möchtest du mehr Fragen beantworten?",
+					"language": "de"
+				}
+			],
+			"possibleAnswers": [
+				{
+					"icon": null,
+					"title": [
+						{
+							"text": "Yes",
+							"language": "en"
+						},
+						{
+							"text": "Ja",
+							"language": "de"
+						}
+					],
+					"followUpQuestions": [
+						"wheelchair_accessible",
+						"website",
+						"age"
+					],
+					"__typename": "Answer",
+					"key": "yes",
+					"description": [],
+					"followUpQuestionIDs": [
+						"wheelchair_accessible",
+						"website",
+						"age"
+					]
+				},
+				{
+					"title": [
+						{
+							"text": "No",
+							"language": "en"
+						},
+						{
+							"text": "Nein",
+							"language": "de"
+						}
+					],
+					"__typename": "Answer",
+					"key": "no",
+					"description": []
+				}
+			],
+			"__typename": "Question"
+		}
+	},
+	{
+		"_id": "geo_pos",
+		"__typename": "Doc",
+		"properties": {
+			"question": [
+				{
+					"text": "Wo liegt der Ort?",
+					"language": "de"
+				}
+			],
+			"possibleAnswers": [
+				{
+					"inputtype": "geo",
+					"title": [
+						{
+							"text": "Geo-Position",
+							"language": "de"
+						}
+					],
+					"__typename": "Answer",
+					"key": "geo",
+					"description": []
+				},
+				{
+					"hidden": true,
+					"tags": {
+						"lat": ""
+					},
+					"__typename": "Answer",
+					"key": "lat",
+					"title": [],
+					"description": []
+				},
+				{
+					"hidden": true,
+					"tags": {
+						"lng": ""
+					},
+					"__typename": "Answer",
+					"key": "lng",
+					"title": [],
+					"description": []
+				}
+			],
+			"__typename": "Question"
+		}
+	},
+	{
+		"_id": "name",
+		"__typename": "Doc",
+		"properties": {
+			"question": [
+				{
+					"text": "What's the name of this place?",
+					"language": "en"
+				},
+				{
+					"text": "Wie heißt der Ort?",
+					"language": "de"
+				}
+			],
+			"possibleAnswers": [
+				{
+					"icon": null,
+					"inputtype": "text",
+					"title": [
+						{
+							"text": "Name in the local language",
+							"language": "en"
+						},
+						{
+							"text": "Name in der Orts-Sprache",
+							"language": "de"
+						}
+					],
+					"tags": {
+						"name": ""
+					},
+					"__typename": "Answer",
+					"key": "name",
+					"description": []
+				},
+				{
+					"icon": null,
+					"inputtype": "text",
+					"title": [
+						{
+							"text": "Name in English",
+							"language": "en"
+						},
+						{
+							"text": "Name in Englisch",
+							"language": "de"
+						}
+					],
+					"tags": {
+						"name_en": ""
+					},
+					"__typename": "Answer",
+					"key": "name_en",
+					"description": []
+				}
+			],
+			"__typename": "Question"
+		}
+	},
+	{
+		"_id": "start_improve",
+		"__typename": "Doc",
+		"properties": {
+			"question": [
+				{
+					"text": "What do you want to improve?",
+					"language": "en"
+				}
+			],
+			"possibleAnswers": [
+				{
+					"icon": "edit_location",
+					"title": [
+						{
+							"text": "Edit information",
+							"language": "en"
+						}
+					],
+					"description": [
+						{
+							"text": "I want to contribute my knowledge!",
+							"language": "en"
+						}
+					],
+					"followUpQuestions": [
+						"wheelchair_accessible",
+						"website",
+						"age"
+					],
+					"__typename": "Answer",
+					"key": "edit_infos",
+					"followUpQuestionIDs": [
+						"wheelchair_accessible",
+						"website",
+						"age"
+					]
+				},
+				{
+					"icon": "short_text",
+					"title": [
+						{
+							"text": "Typo",
+							"language": "en"
+						}
+					],
+					"description": [
+						{
+							"text": "There's a typo in the name but it's otherwise correct.",
+							"language": "en"
+						}
+					],
+					"followUpQuestions": [
+						"name"
+					],
+					"__typename": "Answer",
+					"key": "typo",
+					"followUpQuestionIDs": [
+						"name"
+					]
+				},
+				{
+					"icon": "pin_drop",
+					"title": [
+						{
+							"text": "Wrong location",
+							"language": "en"
+						}
+					],
+					"description": [
+						{
+							"text": "The marker is in the wrong place or the address is incorrect.",
+							"language": "en"
+						}
+					],
+					"followUpQuestions": [
+						"geo_pos"
+					],
+					"__typename": "Answer",
+					"key": "wrong_location",
+					"followUpQuestionIDs": [
+						"geo_pos"
+					]
+				},
+				{
+					"icon": "location_off",
+					"title": [
+						{
+							"text": "Closed",
+							"language": "en"
+						}
+					],
+					"description": [
+						{
+							"text": "This place permanently closed, moved, or was replaced.",
+							"language": "en"
+						}
+					],
+					"__typename": "Answer",
+					"key": "closed"
+				},
+				{
+					"icon": "report",
+					"title": [
+						{
+							"text": "Spam",
+							"language": "en"
+						}
+					],
+					"description": [
+						{
+							"text": "It's fake, offensize, or doesn't exist.",
+							"language": "en"
+						}
+					],
+					"tags": {
+						"spam": "yes"
+					},
+					"__typename": "Answer",
+					"key": "spam"
+				}
+			],
+			"__typename": "Question"
+		}
+	},
+	{
+		"_id": "website",
+		"__typename": "Doc",
+		"properties": {
+			"question": [
+				{
+					"text": "Wie lautet die Webseite?",
+					"language": "de"
+				}
+			],
+			"possibleAnswers": [
+				{
+					"icon": null,
+					"inputtype": "text",
+					"title": [
+						{
+							"text": "Link zur Webseite",
+							"language": "de"
+						}
+					],
+					"tags": {
+						"contact:website": "",
+						"website": ""
+					},
+					"__typename": "Answer",
+					"key": "url",
+					"description": []
+				}
+			],
+			"__typename": "Question"
+		}
+	},
+	{
+		"_id": "wheelchair_accessible",
+		"__typename": "Doc",
+		"properties": {
+			"question": [
+				{
+					"text": "Is this place wheelchair accessible?",
+					"language": "en"
+				},
+				{
+					"text": "Ist dieser Ort mit einem Rollstuhl erreichbar?",
+					"language": "de"
+				}
+			],
+			"possibleAnswers": [
+				{
+					"icon": "check",
+					"title": [
+						{
+							"text": "Yes",
+							"language": "en"
+						},
+						{
+							"text": "Ja",
+							"language": "de"
+						}
+					],
+					"tags": {
+						"wheelchair": "yes"
+					},
+					"__typename": "Answer",
+					"key": "yes",
+					"description": []
+				},
+				{
+					"icon": "clear",
+					"title": [
+						{
+							"text": "No",
+							"language": "en"
+						},
+						{
+							"text": "Nein",
+							"language": "de"
+						}
+					],
+					"tags": {
+						"wheelchair": "no"
+					},
+					"__typename": "Answer",
+					"key": "no",
+					"description": []
+				}
+			],
+			"__typename": "Question"
+		}
+	}
+]

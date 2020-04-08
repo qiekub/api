@@ -1,4 +1,5 @@
-const {compileAnswers} = require('../../functions.js')
+const async = require('async')
+const { compileAnswers } = require('../../functions.js')
 
 /*function getPlace(placeID, resolve){
 	let foundPlace = null
@@ -271,36 +272,77 @@ module.exports = async (parent, args, context, info) => {
 			reject('_id is not a correct ObjectID')
 		}else{
 
-			compileAnswers(mongodb, new mongodb.ObjectID(args._id), (error,docs)=>{
-				let compiledTags = {}
-				if (!!docs && docs.length > 0) {
-					compiledTags = docs[0]
-				}
+			const docID = new mongodb.ObjectID(args._id)
 
-				mongodb.OsmCache_collection.findOne({
-					_id: new mongodb.ObjectID(args._id),
-					'properties.__typename': 'Place',
-				}).then(resultDoc => {
-					resolve({
-						...resultDoc,
-						properties: {
-							...resultDoc.properties,
-							tags: {
-								...resultDoc.properties.tags,
-								...compiledTags.tags,
-							},
-							confidences: {
-								// ...Object.entries(resultDoc.properties.tags).reduce((obj,pair)=>{
-								// 	obj[pair[0]] = 'osm'
-								// 	return obj
-								// },{}),
-								...compiledTags.confidences
-							},
-						}
+			async.parallel({
+				osm: function(callback) {
+					mongodb.OsmCache_collection.findOne({
+						_id: new mongodb.ObjectID(args._id),
+						'properties.__typename': 'Place',
+					}).then(resultDoc => {
+						callback(null, resultDoc || {})
+					}).catch(error=>{
+						callback(null, {})
 					})
-				}).catch(reject)
-			})
+				},
+				// qiekub: callback=>{
+				// 	loadPlacesFromDB(mongodb, docs=>{
+				// 		callback(null, docs)
+				// 	})
+				// },
+				answers: callback=>{
+					console.log('answers-docID', docID)
+					// TODO move away from here!!!
+					compileAnswers(mongodb, docID, (error,docs)=>{
+						let doc = {}
+						if (!!docs && docs.length > 0) {
+							doc = docs[0]
+						}
+						callback(null, doc)
+					})
+				}
+			}, (err, results)=>{
+				
 
+				const doc = {
+					...(results.osm || {}),
+					properties: {
+						...(results.osm.properties || {}),
+						tags: {
+							...((results.osm.properties || {}).tags || {}),
+							...results.answers.tags,
+						},
+						confidences: {
+							// ...Object.entries(results.osm.properties.tags).reduce((obj,pair)=>{
+							// 	obj[pair[0]] = 'osm'
+							// 	return obj
+							// },{}),
+							...results.answers.confidences
+						},
+					}
+				}
+				console.log('doc', doc)
+
+				resolve({
+					...results.osm,
+					_id: results.osm._id || results.answers._id,
+					properties: {
+						__typename: 'Place',
+						...(results.osm.properties || {}),
+						tags: {
+							...((results.osm.properties || {}).tags || {}),
+							...results.answers.tags,
+						},
+						confidences: {
+							// ...Object.entries(results.osm.properties.tags).reduce((obj,pair)=>{
+							// 	obj[pair[0]] = 'osm'
+							// 	return obj
+							// },{}),
+							...results.answers.confidences
+						},
+					}
+				})
+			})
 			/*mongodb.OsmCache_collection.findOne({
 				_id: new mongodb.ObjectID(args._id),
 				'properties.__typename': 'Place',

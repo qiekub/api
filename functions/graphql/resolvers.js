@@ -106,6 +106,8 @@ module.exports = {
 	Query: {
 		// hello: (parent, args, context, info) => 'world',
 
+		getID: (parent, args, context, info) => (new context.mongodb.ObjectID())+'',
+
 		search,
 
 		getPlace,

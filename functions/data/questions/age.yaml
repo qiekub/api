@@ -1,0 +1,20 @@
+%YAML 1.2
+---
+question:
+  de: Gibt es ein Altersbeschränkung?
+possibleAnswers:
+  min_age:
+    icon: 
+    inputtype: number
+    title: 
+      de: Mindest-Alter
+    tags:
+      min_age:
+  max_age:
+    icon: 
+    inputtype: number
+    title: 
+      de: Maximal-Alter
+    tags:
+      max_age:
+...

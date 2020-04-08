@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+question:
+  de: Wo liegt der Ort?
+possibleAnswers:
+  geo:
+    inputtype: geo
+    title: 
+      de: Geo-Position
+  lat:
+    hidden: true
+    tags:
+      lat: ""
+  lng:
+    hidden: true
+    tags:
+      lng: ""
+...

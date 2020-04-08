@@ -1,5 +1,7 @@
 const async = require('async')
 
+const questionsInSchema = require('../../data/dist/questionsInSchema.json')
+
 function loadQuestionsFromDB(mongodb, callback){
 	mongodb.Questions_collection.find({
 		'properties.__typename': 'Question',
@@ -14,6 +16,10 @@ function loadQuestionsFromDB(mongodb, callback){
 	})
 }
 
+function loadQuestionsFromFile(callback){
+	callback(questionsInSchema)
+}
+
 module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
 
@@ -21,7 +27,10 @@ module.exports = async (parent, args, context, info) => {
 
 		async.parallel({
 			qiekub: callback=>{
-				loadQuestionsFromDB(mongodb, docs=>{
+				// loadQuestionsFromDB(mongodb, docs=>{
+				// 	callback(null, docs)
+				// })
+				loadQuestionsFromFile(docs=>{
 					callback(null, docs)
 				})
 			}

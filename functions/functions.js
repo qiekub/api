@@ -1,5 +1,11 @@
 const flatten = require('flat')
 
+const questionsInSchema = require('./data/dist/questionsInSchema.json')
+const questionsInSchemaById = questionsInSchema.reduce((obj,question)=>{
+	obj[question._id] = question
+	return obj
+}, {})
+
 
 
 function upsertOne(collection,doc,callack){
@@ -79,9 +85,7 @@ function upsertOne(collection,doc,callack){
 
 
 
-
-function compileAnswers(mongodb, placeID, callback){
-
+function OLD_compileAnswers(mongodb, placeID, callback){
 	const __last_n_answers__ = 5
 	mongodb.Answers_collection.aggregate([
 		// START get answers
@@ -118,6 +122,7 @@ function compileAnswers(mongodb, placeID, callback){
 		
 		// START group answers
 		{$set:{
+			"_id": "$docs._id",
 			"forID": "$docs.properties.forID",
 			"questionID": "$docs.properties.questionID",
 			"answer": "$docs.properties.answer",
@@ -127,7 +132,7 @@ function compileAnswers(mongodb, placeID, callback){
 				branches: [
 					{case: {$eq:[{$type:"$answer.v"},"string"]}, then: "$answer.v"},
 				],
-				default: ""
+				default: "$_id"
 			 }},
 		}},
 		{$group: {
@@ -268,6 +273,220 @@ function compileAnswers(mongodb, placeID, callback){
 		}},
 	]).toArray(callback)
 }
+
+function filterOutliers(numbers){
+	// https://clevercalcul.wordpress.com/2016/02/16/wie-du-ausreisser-in-deiner-datenreihe-findest/
+	// https://anleitung-tipps.anleiter.de/wie-berechnet-man-quartile/
+
+	numbers.sort((a,b) => a-b)
+	
+	const terciles_1_pos = Math.round(0.333*(numbers.length+1)) // terciles to have more room at the edges
+	const terciles_2_pos = Math.floor(0.666*(numbers.length+1))
+	const quartil_abstand = numbers[terciles_2_pos] - numbers[terciles_1_pos]
+	const antenne_min = numbers[terciles_1_pos] - quartil_abstand
+	const antenne_max = numbers[terciles_2_pos] + quartil_abstand
+
+	return numbers.filter(number => number >= antenne_min && number <= antenne_max)
+}
+
+function compileAnswers(mongodb, placeID, callback){
+	const __last_n_answers__ = 5
+	mongodb.Answers_collection.aggregate([
+		// START get answers
+		...(!!placeID ? [{$match:{
+			"properties.forID": placeID,
+			// "properties.questionID": "geo_pos",
+		}}] : []),
+
+		{$sort:{
+			"metadata.lastModified": -1
+		}},
+		{$set:{
+			"properties.answer": { $objectToArray: "$properties.answer" },
+		}},
+		{$unwind: "$properties.answer"},
+		{$group:{
+			_id: {$concat:[
+				{$toString:"$properties.forID"},
+				"_",
+				{$toString:"$properties.questionID"},
+				"_",
+				{$toString:"$properties.answer.k"},
+			]},
+			docs: {$push:"$$ROOT"},
+		}},
+		{$set:{
+			docs: {$slice:["$docs",0,__last_n_answers__]}
+		}},
+		{$set:{
+			all_answers_count: {$size:"$docs"}
+		}},
+		{$unwind:"$docs"},
+		// END get answers
+	]).toArray((error,docs)=>{
+
+		docs = docs.map(doc => {
+			const newDoc = {
+				forID: doc.docs.properties.forID,
+				questionID: doc.docs.properties.questionID,
+				// answerID: doc.docs._id,
+				// answer: doc.docs.properties.answer,
+				all_answers_count: doc.all_answers_count,
+
+				answerKey: doc.docs.properties.answer.k,
+				answerValue: doc.docs.properties.answer.v,
+			}
+			newDoc.key_id = newDoc.forID+'|'+newDoc.questionID+'|'+newDoc.answerKey
+			const answerValueAsJSON = JSON.stringify(newDoc.answerValue)
+			newDoc.value_id = newDoc.key_id+'|'+answerValueAsJSON
+
+			return newDoc
+		})
+		// .filter(doc => doc.questionID === 'age')
+
+		const answerCountsByValue = docs.reduce((obj,doc)=>{
+			if (!obj[doc.value_id]) {
+				obj[doc.value_id] = 0
+			}
+			obj[doc.value_id] += 1
+			return obj
+		}, {})
+
+		docs = docs.map(doc => {
+			doc.confidence = answerCountsByValue[doc.value_id] / Math.max(__last_n_answers__, doc.all_answers_count)
+			delete doc.all_answers_count
+			delete doc.value_id
+			return doc
+		})
+		.sort((a,b) => b.confidence - a.confidence)
+		.reduce((obj,doc)=>{
+			if (
+				!isNaN(doc.answerValue)
+				&& typeof doc.answerValue !== 'boolean'
+				&& (doc.answerKey === 'lat' || doc.answerKey === 'lng')
+			) {
+				if (!obj[doc.key_id]) {
+					obj[doc.key_id] = {
+						doc,
+						values: [],
+					}
+				}
+				obj[doc.key_id].values.push(doc.answerValue*1)
+			}else if (!obj[doc.key_id]) {
+				obj[doc.key_id] = {
+					doc,
+					values: [doc.answerValue],
+				}
+			}
+		
+			return obj
+		},{})
+
+		// merge lat and lng values
+		const shiftBy = 180 // Use a higher number than 180 when accepting number other than geo-lat-lng (eg.: 10000)
+		docs = Object.keys(docs).reduce((obj,key_id) => {
+			obj[key_id] = docs[key_id].doc
+			delete obj[key_id].key_id
+
+			let this_values = docs[key_id].values
+			if (this_values.length > 1) {
+				this_values = filterOutliers(this_values)
+				
+				// // geometric-mean:
+				// const value = this_values.reduce((n,v)=>n*(shiftBy+v),1)
+				// const new_value = (value ** (1/this_values.length)) - shiftBy
+				
+				// average:
+				const value = this_values.reduce((n,v)=>n+v,0)
+				const new_value = (value / this_values.length)
+
+				obj[key_id].answerValue = Number.parseFloat(new_value.toFixed(6)) // https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
+			}else{
+			 	obj[key_id].answerValue = this_values[0]
+			}
+			return obj
+		}, {})
+		
+		docs = Object.values(docs).map(doc=>{
+			const question_doc = questionsInSchemaById[doc.questionID]
+
+			if (!!question_doc && !!question_doc.properties && !!question_doc.properties.possibleAnswers) {
+				doc.tags = question_doc.properties.possibleAnswers.reduce((obj,answer) => {
+					if (
+						typeof answer.tags === "object"
+						&& answer.key === doc.answerKey
+						&& Object.keys(answer.tags).length > 0
+					) {
+						if (typeof doc.answerValue === "boolean") {
+							if (doc.answerValue === true) {
+								obj = { ...obj, ...answer.tags }
+							}
+						// } else if (typeof doc.answerValue === "object") {
+						// 	for (const key in answer.tags) {
+						// 		if (doc.answerValue[key]) {
+						// 			obj[key] = doc.answerValue[key]
+						// 		}
+						// 	}
+						} else {
+							for (const key in answer.tags) {
+								obj[key] = doc.answerValue
+							}
+						}
+					}
+					return obj
+				},{})
+
+				if (Object.keys(doc.tags).length > 0) {
+					doc.confidences = Object.keys(doc.tags).reduce((obj,tag) => {
+						obj[tag] = doc.confidence
+						return obj
+					}, {})
+	
+					return doc
+				}
+			}
+
+			return false
+		})
+		.filter(doc => doc)
+		.reduce((obj,doc) => {
+			if (!obj[doc.forID]) {
+				obj[doc.forID] = {
+					_id: doc.forID,
+					tags: {},
+					confidences: {},
+				}
+			}
+
+			obj[doc.forID].tags = {
+				...obj[doc.forID].tags,
+				...doc.tags,
+			}
+
+			obj[doc.forID].confidences = {
+				...obj[doc.forID].confidences,
+				...doc.confidences,
+			}
+
+			return obj
+		}, {})
+
+		docs = Object.values(docs)
+		.map(doc => {
+			doc.geometry = {}
+			if (doc.tags.lat && doc.tags.lng) {
+				doc.geometry.location = {
+					lat: doc.tags.lat,
+					lng: doc.tags.lng,
+				}
+			}
+			return doc
+		})
+
+		callback(null,docs)
+	})
+}
+
 
 
 module.exports = {

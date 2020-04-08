@@ -30,7 +30,8 @@
     "node-fetch": "^2.6.0",
     "on-headers": "~1.0.2",
     "safe-buffer": "5.1.2",
-    "vary": "~1.1.2"
+    "vary": "~1.1.2",
+    "yaml": "^1.8.3"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.1.6"

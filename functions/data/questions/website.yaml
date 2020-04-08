@@ -1,0 +1,14 @@
+%YAML 1.2
+---
+question:
+  de: Wie lautet die Webseite?
+possibleAnswers:
+  url:
+    icon: 
+    inputtype: text
+    title: 
+      de: Link zur Webseite
+    tags:
+      contact:website: ""
+      website: ""
+...

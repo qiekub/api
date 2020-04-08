@@ -69,7 +69,7 @@ module.exports = async (parent, args, context, info) => {
 				})
 			}
 		}, (err, results)=>{
-			console.log('results.answers', results.answers)
+			// console.log('results.answers', results.answers)
 
 			const answersByID = results.answers.reduce((obj,doc)=>{
 				// TODO move away from here!!!

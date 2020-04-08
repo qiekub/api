@@ -27,7 +27,7 @@ function getMongoDbContext(){
 	
 						collection: mongodb_client.db('Graph').collection('QueerCenters'),
 						OsmCache_collection: mongodb_client.db('Graph').collection('OsmCache'),
-						Answers_collection: mongodb_client.db('Graph').collection('Answers'),
+						Answers_collection: mongodb_client.db('Graph').collection('Answers2'),
 						Questions_collection: mongodb_client.db('Graph').collection('Questions'),
 					}
 	

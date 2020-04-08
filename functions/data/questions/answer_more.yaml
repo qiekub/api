@@ -1,0 +1,20 @@
+%YAML 1.2
+---
+question:
+  en: Do want to answer more questions?
+  de: Möchtest du mehr Fragen beantworten?
+possibleAnswers:
+  yes:
+    icon:
+    title:
+      en: Yes
+      de: Ja
+    followUpQuestions:
+      - wheelchair_accessible
+      - website
+      - age
+  no:
+    title:
+      en: No
+      de: Nein
+...

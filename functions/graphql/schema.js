@@ -6,6 +6,7 @@ const schema = gql`
 	scalar Timestamp
 
 	type Query {
+		getID: ID
 		search(query: String): GeoSearchResult!
 
 		getPlace(_id: String): Doc!
@@ -105,7 +106,10 @@ const schema = gql`
 		key: String
 		icon: String
 		title(languages: [String]): [Text]
+		description(languages: [String]): [Text]
+		followUpQuestionIDs: [ID]
 		tags: JSONObject
+		hidden: Boolean
 	}
 
 	type Metadata {

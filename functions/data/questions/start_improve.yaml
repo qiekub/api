@@ -1,0 +1,46 @@
+%YAML 1.2
+---
+question:
+  en: What do you want to improve?
+possibleAnswers:
+  edit_infos:
+    icon: edit_location
+    title:
+      en: Edit information
+    description:
+      en: I want to contribute my knowledge!
+    followUpQuestions:
+      - wheelchair_accessible
+      - website
+      - age
+  typo:
+    icon: short_text
+    title:
+      en: Typo
+    description:
+      en: There's a typo in the name but it's otherwise correct.
+    followUpQuestions:
+      - name
+  wrong_location:
+    icon: pin_drop
+    title:
+      en: Wrong location
+    description:
+      en: The marker is in the wrong place or the address is incorrect.
+    followUpQuestions:
+      - geo_pos
+  closed:
+    icon: location_off
+    title:
+      en: Closed
+    description:
+      en: This place permanently closed, moved, or was replaced.
+  spam:
+    icon: report
+    title:
+      en: Spam
+    description:
+      en: It's fake, offensize, or doesn't exist.
+    tags:
+      spam: yes
+...

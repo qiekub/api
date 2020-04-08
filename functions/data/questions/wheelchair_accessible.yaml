@@ -1,0 +1,21 @@
+%YAML 1.2
+---
+question:
+  en: Is this place wheelchair accessible?
+  de: Ist dieser Ort mit einem Rollstuhl erreichbar?
+possibleAnswers:
+  yes:
+    icon: check
+    title: 
+      en: Yes
+      de: Ja
+    tags:
+      wheelchair: yes
+  no:
+    icon: clear
+    title: 
+      en: No
+      de: Nein
+    tags:
+      wheelchair: no
+...
