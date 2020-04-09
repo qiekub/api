@@ -298,46 +298,46 @@ module.exports = async (parent, args, context, info) => {
 					})
 				}
 			}, (err, results)=>{
+
+				results.osm = results.osm || {}
+				results.osm.properties = results.osm.properties || {}
+				results.osm.properties.geometry = results.osm.properties.geometry || {}
+				results.osm.properties.geometry.location = results.osm.properties.geometry.location || {}
+				results.osm.properties.tags = results.osm.properties.tags || {}
 				
+				results.answers = results.answers || {}
+				results.answers.properties = results.answers.properties || {}
+				results.answers.properties.geometry = results.answers.properties.geometry || {}
+				results.answers.properties.geometry.location = results.answers.properties.geometry.location || {}
+				results.answers.properties.tags = results.answers.properties.tags || {}
+				results.answers.properties.confidences = results.answers.properties.confidences || {}
 
 				const doc = {
-					...(results.osm || {}),
+					...results.osm,
 					properties: {
-						...(results.osm.properties || {}),
+						...results.osm.properties,
+						geometry: {
+							...results.osm.properties.geometry,
+							location: {
+								...results.osm.properties.geometry.location,
+								...results.answers.properties.geometry.location,
+							}
+						},
 						tags: {
-							...((results.osm.properties || {}).tags || {}),
-							...results.answers.tags,
+							...results.osm.properties.tags,
+							...results.answers.properties.tags,
 						},
 						confidences: {
 							// ...Object.entries(results.osm.properties.tags).reduce((obj,pair)=>{
 							// 	obj[pair[0]] = 'osm'
 							// 	return obj
 							// },{}),
-							...results.answers.confidences
+							...results.answers.properties.confidences
 						},
 					}
 				}
-				console.log('doc', doc)
 
-				resolve({
-					...results.osm,
-					_id: results.osm._id || results.answers._id,
-					properties: {
-						__typename: 'Place',
-						...(results.osm.properties || {}),
-						tags: {
-							...((results.osm.properties || {}).tags || {}),
-							...results.answers.tags,
-						},
-						confidences: {
-							// ...Object.entries(results.osm.properties.tags).reduce((obj,pair)=>{
-							// 	obj[pair[0]] = 'osm'
-							// 	return obj
-							// },{}),
-							...results.answers.confidences
-						},
-					}
-				})
+				resolve(doc)
 			})
 			/*mongodb.OsmCache_collection.findOne({
 				_id: new mongodb.ObjectID(args._id),

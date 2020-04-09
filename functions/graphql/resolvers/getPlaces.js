@@ -81,6 +81,7 @@ module.exports = async (parent, args, context, info) => {
 				if (!!answersByID[places[i]._id]) {
 				// TODO move away from here!!!
 					const compiledTags = answersByID[places[i]._id]
+					
 					const placeDoc = places[i]
 					places[i] = {
 						// TODO move away from here!!!
@@ -88,10 +89,17 @@ module.exports = async (parent, args, context, info) => {
 						properties: {
 							// TODO move away from here!!!
 							...placeDoc.properties,
+							geometry: {
+								...placeDoc.properties.geometry,
+								location: {
+									...placeDoc.properties.geometry.location,
+									...compiledTags.properties.geometry.location,
+								}
+							},
 							tags: {
 								// TODO move away from here!!!
 								...placeDoc.properties.tags,
-								...compiledTags.tags,
+								...compiledTags.properties.tags,
 							},
 							confidences: {
 								// TODO move away from here!!!
@@ -99,11 +107,13 @@ module.exports = async (parent, args, context, info) => {
 								// 	obj[pair[0]] = 'osm'
 								// 	return obj
 								// },{}),
-								...compiledTags.confidences
+								...compiledTags.properties.confidences
 							},
 						}
 					}
 				}
+				
+				// break
 			}
 
 			resolve(places)
