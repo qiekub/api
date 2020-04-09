@@ -453,18 +453,20 @@ function compileAnswers(mongodb, placeID, callback){
 			if (!obj[doc.forID]) {
 				obj[doc.forID] = {
 					_id: doc.forID,
-					tags: {},
-					confidences: {},
+					properties: {
+						tags: {},
+						confidences: {},
+					}
 				}
 			}
 
-			obj[doc.forID].tags = {
-				...obj[doc.forID].tags,
+			obj[doc.forID].properties.tags = {
+				...obj[doc.forID].properties.tags,
 				...doc.tags,
 			}
 
-			obj[doc.forID].confidences = {
-				...obj[doc.forID].confidences,
+			obj[doc.forID].properties.confidences = {
+				...obj[doc.forID].properties.confidences,
 				...doc.confidences,
 			}
 
@@ -473,11 +475,12 @@ function compileAnswers(mongodb, placeID, callback){
 
 		docs = Object.values(docs)
 		.map(doc => {
-			doc.geometry = {}
-			if (doc.tags.lat && doc.tags.lng) {
-				doc.geometry.location = {
-					lat: doc.tags.lat,
-					lng: doc.tags.lng,
+			// add geometry
+			doc.properties.geometry = {}
+			if (doc.properties.tags.lat && doc.properties.tags.lng) {
+				doc.properties.geometry.location = {
+					lat: doc.properties.tags.lat,
+					lng: doc.properties.tags.lng,
 				}
 			}
 			return doc
