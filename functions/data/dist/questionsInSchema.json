@@ -112,6 +112,10 @@
 		"properties": {
 			"question": [
 				{
+					"text": "Where is this place?",
+					"language": "en"
+				},
+				{
 					"text": "Wo liegt der Ort?",
 					"language": "de"
 				}
@@ -119,14 +123,9 @@
 			"possibleAnswers": [
 				{
 					"inputtype": "geo",
-					"title": [
-						{
-							"text": "Geo-Position",
-							"language": "de"
-						}
-					],
 					"__typename": "Answer",
 					"key": "geo",
+					"title": [],
 					"description": []
 				},
 				{
