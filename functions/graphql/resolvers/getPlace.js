@@ -248,9 +248,6 @@ function compileAnswers(mongodb, placeID, callback){
 			_id: 1
 		}},
 	]).toArray((error,docs)=>{
-		// console.log('error', error)
-		// console.log('docs', docs)
-
 		if (!!docs && docs.length > 0) {
 			callback(docs[0])
 		}else{
@@ -291,7 +288,6 @@ module.exports = async (parent, args, context, info) => {
 				// 	})
 				// },
 				answers: callback=>{
-					console.log('answers-docID', docID)
 					// TODO move away from here!!!
 					compileAnswers(mongodb, docID, (error,docs)=>{
 						let doc = {}
