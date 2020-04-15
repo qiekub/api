@@ -46,7 +46,7 @@ fs.readFileSync('./laws_around_the_world/Same-Sex Sexual Acts Legality.csv', 'ut
 .reduce((legalCountriesTmp,orginal) => {
 	const pair = orginal.split(';').map(e => e.trim())
 	if (pair[1] === 'LEGAL') {
-		legalCountriesTmp.push(getCountryCode(pair[0]))
+		legalCountriesTmp.push(getCountryCode(pair[0]).toLowerCase())
 	}
 	return legalCountriesTmp
 }, [])
