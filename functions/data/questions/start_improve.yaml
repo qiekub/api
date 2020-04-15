@@ -11,8 +11,8 @@ possibleAnswers:
       en: I want to contribute my knowledge!
     followUpQuestions:
       - wheelchair_accessible
-      - website
       - age
+      - website
   typo:
     icon: short_text
     title:
