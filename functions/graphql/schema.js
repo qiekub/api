@@ -8,6 +8,7 @@ const schema = gql`
 	type Query {
 		getID: ID
 		search(query: String): GeoSearchResult!
+		isGeoCoordinateLegal(lat: Float, lng: Float): Boolean
 
 		getPlace(_id: String): Doc!
 		getPlaces: [Doc]!

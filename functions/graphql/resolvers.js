@@ -8,6 +8,7 @@ const search = require('./resolvers/search.js')
 const addChangeset = require('./resolvers/addChangeset.js')
 const answerQuestion = require('./resolvers/answerQuestion.js')
 const getQuestions = require('./resolvers/getQuestions.js')
+const isGeoCoordinateLegal = require('./resolvers/isGeoCoordinateLegal.js')
 
 const { negotiateLanguages } = require('@fluent/langneg')
 
@@ -105,6 +106,8 @@ module.exports = {
 
 	Query: {
 		// hello: (parent, args, context, info) => 'world',
+
+		isGeoCoordinateLegal,
 
 		getID: (parent, args, context, info) => (new context.mongodb.ObjectID())+'',
 
