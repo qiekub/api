@@ -19,8 +19,8 @@ async function tryToGeocode(url, mapping) {
 		method: 'get',
 		headers: {
 			'Content-Type': 'application/json',
-			'Referer': 'queer.qiekub.com',
-			'User-Agent': 'A geocoder for queer.qiekub.com',
+			'Referer': 'qiekub.com',
+			'User-Agent': 'A geocoder for qiekub.com',
 		},
 	})
 	.then(res => res.json())
