@@ -107,11 +107,10 @@ module.exports = {
 	Query: {
 		// hello: (parent, args, context, info) => 'world',
 
-		isGeoCoordinateLegal,
-
 		getID: (parent, args, context, info) => (new context.mongodb.ObjectID())+'',
 
 		search,
+		isGeoCoordinateLegal,
 
 		getPlace,
 		getPlaces,
