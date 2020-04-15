@@ -1,13 +1,12 @@
 const fs = require('fs')
 
 const synonyms = {
-	// TODO: are these all correct?
 	'North Korea': "Korea (Democratic People's Republic of)",
 	'South Korea': "Korea (Republic of)",
 	'São Tome & Principe': "Sao Tome and Principe",
-	'North Macedonia': "Macedonia (the former Yugoslav Republic of)",
+	'North Macedonia': "Macedonia (the former Yugoslav Republic of)", // TODO: Is this correct?
 	'Democratic Republic of Congo': "Congo",
-	'Cape Verde': "Cabo Verde",
+	'Cape Verde': "Cabo Verde", // TODO: Is this correct?
 }
 
 
