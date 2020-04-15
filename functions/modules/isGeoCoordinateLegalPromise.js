@@ -39,7 +39,5 @@ async function isGeoCoordinateLegalPromise(lng,lat){
 
 
 
-module.exports = {
-	isGeoCoordinateLegalPromise,
-}
+module.exports = isGeoCoordinateLegalPromise
 
