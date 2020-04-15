@@ -154,6 +154,5 @@ module.exports = {
 	Answer: {
 		title: getFilterByLanguageFunction('title'),
 	},
-
-
 }
+
