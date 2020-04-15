@@ -25,7 +25,7 @@ async function tryToFetchJson(url, mapping) {
 	return new Promise(resolve => resolve(result)).then(mapping)
 }
 
-async function isGeoCoordinateLegalPromise(lat,lng){
+async function isGeoCoordinateLegalPromise(lng,lat){
 	return tryToFetchJson(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=country&limit=1&access_token=${await getSecretAsync('api_key_mapbox')}`, data => {
 		const features = data.features
 		if (features && Array.isArray(features) && features.length > 0) {
