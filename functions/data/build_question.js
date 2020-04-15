@@ -42,7 +42,7 @@ if (!fs.existsSync(distPath)){
 	fs.mkdirSync(distPath)
 }
 
-// fs.writeFileSync(distPath+'questions.json', JSON.stringify(questions,null,4))
-fs.writeFileSync(distPath+'questionsInSchema.json', JSON.stringify(questionsInSchema,null,'\t'))
+// fs.writeFileSync(distPath+'questions.json', JSON.stringify(questions))
+fs.writeFileSync(distPath+'questionsInSchema.json', JSON.stringify(questionsInSchema))
 
 

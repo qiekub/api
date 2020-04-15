@@ -44,7 +44,6 @@ fs.readFileSync('./laws_around_the_world/Same-Sex Sexual Acts Legality.csv', 'ut
 .replace(/\r/g, '')
 .split('\n')
 .slice(1, -1)
-// .slice(0, 5)
 .reduce((legalCountriesTmp,orginal) => {
 	const pair = orginal.split(';').map(e => e.trim())
 	if (pair[1] === 'LEGAL') {
@@ -53,7 +52,9 @@ fs.readFileSync('./laws_around_the_world/Same-Sex Sexual Acts Legality.csv', 'ut
 	return legalCountriesTmp
 }, [])
 
-legalCountries = [... new Set(legalCountries)].join(' ')
+legalCountries = {
+	countryCodes: [... new Set(legalCountries)]
+}
 // END get legalCountries
 
 
@@ -63,14 +64,6 @@ if (!fs.existsSync(distPath)){
 	fs.mkdirSync(distPath)
 }
 
-fs.writeFileSync(distPath+'legalCountries.text', legalCountries)
-
-
-// console.log(JSON.stringify(legalCountries, null, 4))
-
-
-const all_countries_formated = require('./laws_around_the_world/all_countries.json')
-fs.writeFileSync(distPath+'all_countries_formated.json', JSON.stringify(all_countries_formated,null,'\t'))
-
+fs.writeFileSync(distPath+'legalCountries.json', JSON.stringify(legalCountries))
 
 
