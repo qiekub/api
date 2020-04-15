@@ -35,12 +35,14 @@ possibleAnswers:
       en: Closed
     description:
       en: This place permanently closed, moved, or was replaced.
+    # tags:
+    #   permanently_closed: yes
   spam:
     icon: report
     title:
       en: Spam
     description:
       en: It's fake, offensize, or doesn't exist.
-    tags:
-      spam: yes
+    # tags:
+    #   spam: yes
 ...
