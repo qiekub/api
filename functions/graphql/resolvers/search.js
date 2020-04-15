@@ -14,7 +14,7 @@ https://maps.googleapis.com/maps/api/geocode/json?key=&address=Bonn,Germany
 
 */
 
-async function tryToGeocode(url, mapping) {
+async function tryToFetchJson(url, mapping) {
 	const result = await fetch(encodeURI(url), {
 		method: 'get',
 		headers: {
@@ -45,7 +45,7 @@ module.exports = async (parent, args, context, info) => {
 	}else{
 		return new Promise(async (resolve,reject) => {
 			// &viewbox=min_lon,min_lat,max_lon,max_lat
-			tryToGeocode(`https://eu1.locationiq.com/v1/search.php?key=${await getSecretAsync('api_key_locationiq')}&limit=1&format=json&q=${queryString}`, data => {
+			tryToFetchJson(`https://eu1.locationiq.com/v1/search.php?key=${await getSecretAsync('api_key_locationiq')}&limit=1&format=json&q=${queryString}`, data => {
 				if (data && Array.isArray(data) && data.length > 0) {
 					const firstResult = data[0]
 					return {
@@ -79,7 +79,7 @@ module.exports = async (parent, args, context, info) => {
 				}
 			})
 			.then(data=>data, async error=>{
-				return tryToGeocode(`https://api.mapbox.com/geocoding/v5/mapbox.places/${queryString}.json?fuzzyMatch=true&limit=1&access_token=${await getSecretAsync('api_key_mapbox')}`, data => {
+				return tryToFetchJson(`https://api.mapbox.com/geocoding/v5/mapbox.places/${queryString}.json?fuzzyMatch=true&limit=1&access_token=${await getSecretAsync('api_key_mapbox')}`, data => {
 					const results = data.features
 					if (results && Array.isArray(results) && results.length > 0) {
 						const firstResult = results[0]
@@ -110,7 +110,7 @@ module.exports = async (parent, args, context, info) => {
 			})
 			.then(data=>data, async error=>{
 				// &proximity=51.952659,7.632473
-				return tryToGeocode(`https://api.opencagedata.com/geocode/v1/json?key=${await getSecretAsync('api_key_opencagedata')}&pretty=0&no_annotations=1&limit=1&no_record=1&q=${queryString}`, data => {
+				return tryToFetchJson(`https://api.opencagedata.com/geocode/v1/json?key=${await getSecretAsync('api_key_opencagedata')}&pretty=0&no_annotations=1&limit=1&no_record=1&q=${queryString}`, data => {
 					const results = data.results
 					if (results && Array.isArray(results) && results.length > 0) {
 						const firstResult = results[0]
@@ -148,7 +148,7 @@ module.exports = async (parent, args, context, info) => {
 				})
 			})
 			.then(data=>data, async error=>{
-				return tryToGeocode(`https://maps.googleapis.com/maps/api/geocode/json?key=${await getSecretAsync('api_key_googleapis')}&address=${queryString}`, data => {
+				return tryToFetchJson(`https://maps.googleapis.com/maps/api/geocode/json?key=${await getSecretAsync('api_key_googleapis')}&address=${queryString}`, data => {
 					const results = data.results
 					if (results && Array.isArray(results) && results.length > 0) {
 						const firstResult = results[0]
@@ -177,7 +177,7 @@ module.exports = async (parent, args, context, info) => {
 				})
 			})
 			.then(data=>data, error=>{
-				return tryToGeocode(`https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=0&extratags=0&namedetails=0&q=${queryString}`, data => {
+				return tryToFetchJson(`https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=0&extratags=0&namedetails=0&q=${queryString}`, data => {
 					if (data && Array.isArray(data) && data.length > 0) {
 						const firstResult = data[0]
 						resolve({
