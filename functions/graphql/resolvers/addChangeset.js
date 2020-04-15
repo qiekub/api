@@ -1,4 +1,4 @@
-const {upsertOne} = require('../../functions.js')
+const {upsertOne} = require('../../modules.js')
 
 // const flatten = require('flat')
 // also look at https://jsperf.com/flatten-un-flatten/16

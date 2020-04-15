@@ -1,5 +1,7 @@
 const flatten = require('flat')
 
+const isGeoCoordinateLegalPromise = require('./modules/isGeoCoordinateLegalPromise.js')
+
 const questionsInSchema = require('./data/dist/questionsInSchema.json')
 const questionsInSchemaById = questionsInSchema.reduce((obj,question)=>{
 	obj[question._id] = question
@@ -495,4 +497,5 @@ function compileAnswers(mongodb, placeID, callback){
 module.exports = {
 	upsertOne,
 	compileAnswers,
+	isGeoCoordinateLegalPromise,
 }

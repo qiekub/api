@@ -1,6 +1,6 @@
 const async = require('async')
 
-const {compileAnswers} = require('../../functions.js')
+const {compileAnswers} = require('../../modules.js')
 
 function loadPlacesFromOsmChache(mongodb, callback){
 	mongodb.OsmCache_collection.find({'properties.__typename': 'Place'}).limit(10000).toArray((error,docs)=>{

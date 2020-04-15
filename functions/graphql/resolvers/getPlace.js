@@ -1,5 +1,5 @@
 const async = require('async')
-const { compileAnswers } = require('../../functions.js')
+const { compileAnswers } = require('../../modules.js')
 
 /*function getPlace(placeID, resolve){
 	let foundPlace = null
