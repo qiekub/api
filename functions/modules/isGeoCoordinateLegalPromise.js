@@ -32,7 +32,8 @@ async function isGeoCoordinateLegalPromise(lng,lat){
 			const short_code = features[0].properties.short_code
 			return countryCodes.includes(short_code)
 		}else{
-			throw new Error('No place found!')
+			return false
+			// throw new Error('No place found!')
 		}
 	})
 }
