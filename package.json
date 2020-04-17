@@ -8,6 +8,6 @@
   	"buildData": "cd ./functions/data/; node ./build_question.js; node ./build_legality.js; cd ../../;",
     
     "serve": "yarn buildData; ! [ -f ./functions/.env ] && echo \"ERROR: \\\"./functions/.env\\\" is missing\" || firebase serve --only functions -p 5000 -o $(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1')",
-    "deploy": "yarn buildData; ! [ -f ./functions/.env ] && echo \"ERROR: \\\"./functions/.env\\\" is missing\" || firebase deploy --only functions"
+    "deploy": "yarn buildData; ! [ -f ./functions/.env ] && echo \"ERROR: \\\"./functions/.env\\\" is missing\" || firebase deploy"
   }
 }
