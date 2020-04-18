@@ -7,7 +7,7 @@ possibleAnswers:
   yes:
     icon:
     title:
-      en: Yes
+      en: "Yes"
       de: Ja
     followUpQuestions:
       - wheelchair_accessible
@@ -15,6 +15,6 @@ possibleAnswers:
       - age
   no:
     title:
-      en: No
+      en: "No"
       de: Nein
 ...

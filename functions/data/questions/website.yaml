@@ -1,12 +1,14 @@
 %YAML 1.2
 ---
 question:
+  en: What's its website?
   de: Wie lautet die Webseite?
 possibleAnswers:
   url:
     icon: 
     inputtype: text
     title: 
+      en: Link to the webseite
       de: Link zur Webseite
     tags:
       contact:website: ""
