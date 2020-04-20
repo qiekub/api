@@ -30,7 +30,7 @@ const schema = gql`
 	}
 
 	type Mutation {
-		addSources(properties: JSONObject): ID
+		addSources(properties: Sources_input): ID
 		addChangeset(changeset: Changeset_Input): Doc
 		answerQuestion(properties: JSONObject): ID
 	}
@@ -59,6 +59,9 @@ const schema = gql`
 	"""
 	lgbtq:welcomes = undecided;friends;family;trans;inter;gay;hetero;bi;lesbian;woman;man
 	lgbtq_58_welcomes: String
+	formatted_address: String
+	formatted_phone_number: String
+	international_phone_number: String
 	"""
 	type Place {
 		name(languages: [String]): [Text]
@@ -70,12 +73,7 @@ const schema = gql`
 
 		tags(keys: [String]): JSONObject
 		confidences(keys: [String]): JSONObject
-
-		permanently_closed: Boolean
-
-		formatted_address: String
-		formatted_phone_number: String
-		international_phone_number: String
+		sources(keys: [String]): JSONObject
 	}
 
 	type Changeset {
@@ -113,6 +111,16 @@ const schema = gql`
 		tags: JSONObject
 		hidden: Boolean
 	}
+	type Sources {
+		forIDs: [ID]
+		sources: String
+		dataset: String
+	}
+	input Sources_input {
+		forIDs: [ID]
+		sources: String
+		dataset: String
+	}
 
 	type Metadata {
 		lastModified: Timestamp
@@ -124,7 +132,7 @@ const schema = gql`
 
 
 
-	union Properties = Error | Place | Changeset | Question | Answer | Text
+	union Properties = Error | Place | Changeset | Question | Answer | Sources | Text
 	type Doc {
 		_id: ID
 		properties: Properties

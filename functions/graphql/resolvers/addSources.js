@@ -3,20 +3,22 @@ module.exports = async (parent, args, context, info) => {
 
 	return new Promise((resolve,reject)=>{
 		const sources = args.properties.sources
+		const dataset = args.properties.dataset
 
-		if (args.properties.answerIDs && Array.isArray(args.properties.answerIDs) && sources) {
-			const answerIDs = args.properties.answerIDs
+		if (args.properties.forIDs && Array.isArray(args.properties.forIDs) && sources) {
+			const forIDs = args.properties.forIDs
 			.filter(answerID => mongodb.ObjectID.isValid(answerID))
 			.map(answerID => new mongodb.ObjectID(answerID))
 
-			if (answerIDs.length === 0) {
-				reject(`Please provide answerIDs.`)
+			if (forIDs.length === 0) {
+				reject(`Please provide forIDs.`)
 			}else{
 				mongodb.Sources_collection.insertOne({
 					__typename: 'Doc',
 					properties: {
-						answerIDs,
+						forIDs,
 						sources,
+						dataset,
 						__typename: 'Sources',
 					},
 					metadata: {
@@ -26,7 +28,7 @@ module.exports = async (parent, args, context, info) => {
 					},
 				}).then(result => {
 					if (!!result.insertedId) {
-						resolve(result.insertedId || null)
+						resolve(result.insertedId)
 					}else{
 						reject(null)
 					}

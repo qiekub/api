@@ -140,6 +140,7 @@ module.exports = {
 
 		tags: getFilterByKeysFunction('tags'),
 		confidences: getFilterByKeysFunction('confidences'),
+		sources: getFilterByKeysFunction('sources'),
 	},
 
 	Marker: {
