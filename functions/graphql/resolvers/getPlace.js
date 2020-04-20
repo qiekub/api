@@ -297,47 +297,55 @@ module.exports = async (parent, args, context, info) => {
 						callback(null, doc)
 					})
 				}
-			}, (err, results)=>{
-
-				results.osm = results.osm || {}
-				results.osm.properties = results.osm.properties || {}
-				results.osm.properties.geometry = results.osm.properties.geometry || {}
-				results.osm.properties.geometry.location = results.osm.properties.geometry.location || {}
-				results.osm.properties.tags = results.osm.properties.tags || {}
-				
-				results.answers = results.answers || {}
-				results.answers.properties = results.answers.properties || {}
-				results.answers.properties.geometry = results.answers.properties.geometry || {}
-				results.answers.properties.geometry.location = results.answers.properties.geometry.location || {}
-				results.answers.properties.tags = results.answers.properties.tags || {}
-				results.answers.properties.confidences = results.answers.properties.confidences || {}
-
-				const doc = {
-					...results.osm,
-					properties: {
-						...results.osm.properties,
-						geometry: {
-							...results.osm.properties.geometry,
-							location: {
-								...results.osm.properties.geometry.location,
-								...results.answers.properties.geometry.location,
-							}
+			}, (error, results)=>{
+				if (
+					Object.keys(results.osm).length > 0 ||
+					Object.keys(results.answers).length > 0
+				) {	
+					results.osm = results.osm || {}
+					results.osm.properties = results.osm.properties || {}
+					results.osm.properties.geometry = results.osm.properties.geometry || {}
+					results.osm.properties.geometry.location = results.osm.properties.geometry.location || {}
+					results.osm.properties.tags = results.osm.properties.tags || {}
+					
+					results.answers = results.answers || {}
+					results.answers.properties = results.answers.properties || {}
+					results.answers.properties.geometry = results.answers.properties.geometry || {}
+					results.answers.properties.geometry.location = results.answers.properties.geometry.location || {}
+					results.answers.properties.tags = results.answers.properties.tags || {}
+					results.answers.properties.confidences = results.answers.properties.confidences || {}
+	
+					const doc = {
+						...results.osm,
+						properties: {
+							...results.osm.properties,
+							geometry: {
+								...results.osm.properties.geometry,
+								location: {
+									...results.osm.properties.geometry.location,
+									...results.answers.properties.geometry.location,
+								},
+							},
+							tags: {
+								...results.osm.properties.tags,
+								...results.answers.properties.tags,
+							},
+							confidences: {
+								// ...Object.entries(results.osm.properties.tags).reduce((obj,pair)=>{
+								// 	obj[pair[0]] = 'osm'
+								// 	return obj
+								// },{}),
+								...results.answers.properties.confidences,
+							},
+							__typename: 'Place',
 						},
-						tags: {
-							...results.osm.properties.tags,
-							...results.answers.properties.tags,
-						},
-						confidences: {
-							// ...Object.entries(results.osm.properties.tags).reduce((obj,pair)=>{
-							// 	obj[pair[0]] = 'osm'
-							// 	return obj
-							// },{}),
-							...results.answers.properties.confidences
-						},
+						__typename: 'Doc',
 					}
-				}
 
-				resolve(doc)
+					resolve(doc)
+				}else{
+					reject('No place found!')
+				}
 			})
 			/*mongodb.OsmCache_collection.findOne({
 				_id: new mongodb.ObjectID(args._id),
