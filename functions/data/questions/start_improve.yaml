@@ -13,6 +13,7 @@ possibleAnswers:
       - wheelchair_accessible
       - age
       - website
+      # - answer_more
   typo:
     icon: short_text
     title:
@@ -21,6 +22,7 @@ possibleAnswers:
       en: There's a typo in the name but it's otherwise correct.
     followUpQuestions:
       - name
+      - answer_more
   wrong_location:
     icon: pin_drop
     title:
@@ -29,6 +31,7 @@ possibleAnswers:
       en: The marker is in the wrong place or the address is incorrect.
     followUpQuestions:
       - geo_pos
+      - answer_more
   closed:
     icon: location_off
     title:
@@ -37,6 +40,8 @@ possibleAnswers:
       en: This place permanently closed, moved, or was replaced.
     # tags:
     #   permanently_closed: yes
+    followUpQuestions:
+      - answer_more
   spam:
     icon: report
     title:
@@ -45,4 +50,6 @@ possibleAnswers:
       en: It's fake, offensize, or doesn't exist.
     # tags:
     #   spam: yes
+    followUpQuestions:
+      - answer_more
 ...
