@@ -17,8 +17,13 @@ function addAnswer(mongodb, properties, resolve, reject){
 			__typename: 'Metadata',
 		},
 	}).then(result => {
-		// calc new Place doc
-		resolve(result.insertedId || null)
+		if (!!result.insertedId) {
+			resolve(result.insertedId)
+		}else{
+			reject(null)
+		}
+
+		// TODO: calc new place doc
 	}).catch(reject)
 }
 
