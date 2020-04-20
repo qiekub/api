@@ -30,8 +30,9 @@ const schema = gql`
 	}
 
 	type Mutation {
+		addSources(properties: JSONObject): ID
 		addChangeset(changeset: Changeset_Input): Doc
-		answerQuestion(properties: JSONObject): JSON
+		answerQuestion(properties: JSONObject): ID
 	}
 
 	type GeoCoordinate {
