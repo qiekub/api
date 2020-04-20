@@ -42,17 +42,13 @@ module.exports = async (parent, args, context, info) => {
 			!!questionID &&
 			!!answer && Object.keys(answer).length > 0
 		) {
-			if (answer !== 'skipped') {
-				addAnswer(mongodb, {
-					forID,
-					questionID,
-					answer,
-				}, resolve, reject)
-			}else{
-				resolve(null) // skipped
-			}
+			addAnswer(mongodb, {
+				forID,
+				questionID,
+				answer,
+			}, resolve, reject)
 		}else{
-			reject(`The variables aren't okay`)
+			reject(`The variables aren't okay.`)
 		}
 	})
 }
