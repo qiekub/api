@@ -23,7 +23,7 @@ function loadPlacesFromOsmChache(mongodb, callback){
 }
 
 function loadPlacesFromDB(mongodb, callback){
-	mongodb.collection.find({'properties.__typename': 'Place'}).limit(10000).toArray((error,docs)=>{
+	mongodb.CompiledPlaces_collection.find({'properties.__typename': 'Place'}).limit(10000).toArray((error,docs)=>{
 		if (error) {
 			console.error(error)
 			// reject()

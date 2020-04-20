@@ -46,7 +46,7 @@ const { compileAnswers } = require('../../modules.js')
 				'properties.__typename': 'Place',
 			}).then(result => {
 				if (result === null) {
-					mongodb.collection.findOne({
+					mongodb.CompiledPlaces_collection.findOne({
 						_id: new mongodb.ObjectID(args._id),
 						'properties.__typename': 'Place',
 					}).then(result => {
@@ -352,7 +352,7 @@ module.exports = async (parent, args, context, info) => {
 				'properties.__typename': 'Place',
 			}).then(result => {
 				// if (result === null) {
-				// 	mongodb.collection.findOne({
+				// 	mongodb.CompiledPlaces_collection.findOne({
 				// 		_id: new mongodb.ObjectID(args._id),
 				// 		'properties.__typename': 'Place',
 				// 	}).then(result => {

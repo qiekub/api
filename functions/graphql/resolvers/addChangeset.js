@@ -112,7 +112,7 @@ function parseChangeset(mongodb, changeset, resolve, reject){
 		properties: changeset.properties,
 	}
 		
-	upsertOne(mongodb.collection,doc,itGotUpserted=>{
+	upsertOne(mongodb.CompiledPlaces_collection,doc,itGotUpserted=>{
 		resolve(itGotUpserted || null)
 	})
 }
@@ -145,11 +145,11 @@ module.exports = async (parent, args, context, info) => {
 
 			changeset.forID = doc._id
 
-			addChangeset(mongodb.collection, changeset, (changesetID)=>{
+			addChangeset(mongodb.CompiledPlaces_collection, changeset, (changesetID)=>{
 				if (changesetID === null) {
 					resolve(null)
 				}else{
-					mongodb.collection.findOne({_id:changesetID}).then(changesetDoc => {
+					mongodb.CompiledPlaces_collection.findOne({_id:changesetID}).then(changesetDoc => {
 						if (changesetDoc === null) {
 							resolve(null)
 						}else{
