@@ -2,6 +2,7 @@ const { GraphQLJSON, GraphQLJSONObject } = require('graphql-type-json')
 const {GraphQLScalarType} = require('graphql')
 const {Kind} = require('graphql/language')
 
+const compilePlace = require('./resolvers/compilePlace.js')
 const addSources = require('./resolvers/addSources.js')
 const getPlace = require('./resolvers/getPlace.js')
 const getPlaces = require('./resolvers/getPlaces.js')
@@ -133,6 +134,7 @@ module.exports = {
 		addSources,
 		addChangeset,
 		answerQuestion,
+		compilePlace,
 	},
 
 	Place: {

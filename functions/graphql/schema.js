@@ -33,6 +33,7 @@ const schema = gql`
 		addSources(properties: Sources_input): ID
 		addChangeset(changeset: Changeset_Input): Doc
 		answerQuestion(properties: JSONObject): ID
+		compilePlace(_id: ID): Boolean
 	}
 
 	type GeoCoordinate {
