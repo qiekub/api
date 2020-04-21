@@ -488,6 +488,21 @@ function compileAnswers(mongodb, placeID, callback){
 		.map(doc => {
 			// add geometry
 
+			doc.properties.name = []
+			if (doc.properties.tags.name) {
+				doc.properties.name.push({
+					__typename: 'Text',
+					language: null,
+					text: doc.properties.tags.name,
+				})
+			}
+			if (doc.properties.tags.name_en) {
+				doc.properties.name.push({
+					__typename: 'Text',
+					language: 'en',
+					text: doc.properties.tags.name_en,
+				})
+			}
 
 			doc.properties.geometry = {
 				__typename: 'GeoData',
