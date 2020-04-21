@@ -274,7 +274,7 @@ module.exports = async (parent, args, context, info) => {
 			async.parallel({
 				osm: function(callback) {
 					mongodb.OsmCache_collection.findOne({
-						_id: new mongodb.ObjectID(args._id),
+						_id: docID,
 						'properties.__typename': 'Place',
 					}).then(resultDoc => {
 						callback(null, resultDoc || {})
