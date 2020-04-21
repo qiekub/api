@@ -47,11 +47,17 @@ module.exports = async (parent, args, context, info) => {
 
 	return new Promise((resolve,reject) => {
 
+		loadPlacesFromDB(mongodb, docs=>{
+			resolve(docs)
+		})
+
+		/*
 		async.parallel({
 			osm: function(callback) {
-				loadPlacesFromOsmChache(mongodb, docs=>{
-					callback(null, docs)
-				})
+				callback(null, [])
+				// loadPlacesFromOsmChache(mongodb, docs=>{
+				// 	callback(null, docs)
+				// })
 			},
 			qiekub: callback=>{
 				loadPlacesFromDB(mongodb, docs=>{
@@ -59,14 +65,15 @@ module.exports = async (parent, args, context, info) => {
 				})
 			},
 			answers: callback=>{
-				// TODO move away from here!!!
-				compileAnswers(mongodb, false, (error,docs)=>{
-					// let compiledTags = {}
-					// if (!!docs && docs.length > 0) {
-					// 	compiledTags = docs[0]
-					// }
-					callback(null, docs)
-				})
+				callback(null, [])
+				// // TODO move away from here!!!
+				// compileAnswers(mongodb, false, (error,docs)=>{
+				// 	// let compiledTags = {}
+				// 	// if (!!docs && docs.length > 0) {
+				// 	// 	compiledTags = docs[0]
+				// 	// }
+				// 	callback(null, docs)
+				// })
 			}
 		}, (err, results)=>{
 			const answersByID = results.answers.reduce((obj,doc)=>{
@@ -117,7 +124,9 @@ module.exports = async (parent, args, context, info) => {
 			}
 
 			resolve(places)
+
 		})
+		*/
 
 		// loadPlacesFromOsmChache(mongodb, osmDocs=>{
 		// 	loadPlacesFromDB(mongodb, docs=>{

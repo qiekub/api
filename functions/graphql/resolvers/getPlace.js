@@ -271,6 +271,18 @@ module.exports = async (parent, args, context, info) => {
 
 			const docID = new mongodb.ObjectID(args._id)
 
+			mongodb.CompiledPlaces_collection.findOne({
+				_id: docID,
+				'properties.__typename': 'Place',
+			}).then(resultDoc => {
+				resolve(resultDoc || {})
+				// callback(null, resultDoc || {})
+			}).catch(error=>{
+				reject(error)
+				// callback(null, {})
+			})
+
+			/*
 			async.parallel({
 				osm: function(callback) {
 					mongodb.OsmCache_collection.findOne({
@@ -346,7 +358,10 @@ module.exports = async (parent, args, context, info) => {
 				}else{
 					reject('No place found!')
 				}
+				
 			})
+			*/
+			
 			/*mongodb.OsmCache_collection.findOne({
 				_id: new mongodb.ObjectID(args._id),
 				'properties.__typename': 'Place',
