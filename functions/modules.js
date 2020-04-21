@@ -461,8 +461,10 @@ function compileAnswers(mongodb, placeID, callback){
 		.reduce((obj,doc) => {
 			if (!obj[doc.forID]) {
 				obj[doc.forID] = {
+					__typename: 'Doc',
 					_id: doc.forID,
 					properties: {
+						__typename: 'Place',
 						tags: {},
 						confidences: {},
 					}
@@ -485,9 +487,14 @@ function compileAnswers(mongodb, placeID, callback){
 		docs = Object.values(docs)
 		.map(doc => {
 			// add geometry
-			doc.properties.geometry = {}
+
+
+			doc.properties.geometry = {
+				__typename: 'GeoData',
+			}
 			if (doc.properties.tags.lat && doc.properties.tags.lng) {
 				doc.properties.geometry.location = {
+					__typename: 'GeoCoordinate',
 					lat: doc.properties.tags.lat,
 					lng: doc.properties.tags.lng,
 				}
