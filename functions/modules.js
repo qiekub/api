@@ -293,7 +293,8 @@ function filterOutliers(numbers){
 
 function compileAnswers(mongodb, placeID, callback){
 	const __last_n_answers__ = 5
-	mongodb.Answers_collection.aggregate([
+	mongodb.Answers_collection
+	.aggregate([
 		// START get answers
 		...(!!placeID ? [{$match:{
 			"properties.forID": placeID,
@@ -325,9 +326,11 @@ function compileAnswers(mongodb, placeID, callback){
 		}},
 		{$unwind:"$docs"},
 		// END get answers
-	]).toArray((error,docs)=>{
+	])
+	.toArray((error,docs)=>{
 
-		docs = docs.map(doc => {
+		docs = docs
+		.map(doc => {
 			const newDoc = {
 				forID: doc.docs.properties.forID,
 				questionID: doc.docs.properties.questionID,
@@ -346,7 +349,8 @@ function compileAnswers(mongodb, placeID, callback){
 		})
 		// .filter(doc => doc.questionID === 'age')
 
-		const answerCountsByValue = docs.reduce((obj,doc)=>{
+		const answerCountsByValue = docs
+		.reduce((obj,doc)=>{
 			if (!obj[doc.value_id]) {
 				obj[doc.value_id] = 0
 			}
@@ -354,7 +358,8 @@ function compileAnswers(mongodb, placeID, callback){
 			return obj
 		}, {})
 
-		docs = docs.map(doc => {
+		docs = docs
+		.map(doc => {
 			doc.confidence = answerCountsByValue[doc.value_id] / Math.max(__last_n_answers__, doc.all_answers_count)
 			delete doc.all_answers_count
 			delete doc.value_id
@@ -386,7 +391,8 @@ function compileAnswers(mongodb, placeID, callback){
 
 		// merge lat and lng values
 		const shiftBy = 180 // Use a higher number than 180 when accepting number other than geo-lat-lng (eg.: 10000)
-		docs = Object.keys(docs).reduce((obj,key_id) => {
+		docs = Object.keys(docs)
+		.reduce((obj,key_id) => {
 			obj[key_id] = docs[key_id].doc
 			delete obj[key_id].key_id
 
@@ -409,7 +415,8 @@ function compileAnswers(mongodb, placeID, callback){
 			return obj
 		}, {})
 		
-		docs = Object.values(docs).map(doc=>{
+		docs = Object.values(docs)
+		.map(doc=>{
 			const question_doc = questionsInSchemaById[doc.questionID]
 
 			if (!!question_doc && !!question_doc.properties && !!question_doc.properties.possibleAnswers) {
