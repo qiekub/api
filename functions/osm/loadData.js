@@ -19,8 +19,8 @@ async function getOverpassResult(mongodb) {
 		method: 'get',
 		headers: {
 			'Content-Type': 'application/json',
-			'Referer': 'queer.qiekub.com',
-			'User-Agent': 'queer.qiekub.com',
+			'Referer': 'qiekub.com',
+			'User-Agent': 'qiekub.com',
 		},
 	})
 	.then(res => res.json())
