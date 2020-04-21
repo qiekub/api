@@ -13,7 +13,7 @@ async function getOverpassResult(mongodb) {
 	// [bbox:-33.9443568006265,151.17616653442383,-33.8339199536547,151.31195068359375]
 	// [bbox:48.795330416333336,2.217864990234375,48.970301503721316,2.4894332885742188]
 	
-	const url = 'https://overpass-api.de/api/interpreter?data=[bbox:90,-180,-90,180][out:json][timeout:25];(node[~"^community_centre.*$"~"(lgbt|homosexual|gay)"];(node[~"^lgbtq.*$"~"."];-node[~"^lgbtq.*$"~"(welcome|no)"];);(node[~"^gay.*$"~"."];-node[~"^gay.*$"~"(welcome|no)"];);(node[~"^fetish.*$"~"."];-node[~"^fetish.*$"~"(welcome|no)"];););out;'
+	const url = 'https://overpass-api.de/api/interpreter?data=[bbox:90,-180,-90,180][out:json][timeout:25];(node[~"^community_centre.*$"~"(lgbt|homosexual|gay)"];(node[~"^lgbtq.*$"~"."];-node[~"^lgbtq.*$"~"(welcome|no)"];);(node[~"^gay.*$"~"."];-node[~"^gay.*$"~"(welcome|no)"];);(node[~"^fetish.*$"~"."];-node[~"^fetish.*$"~"(welcome|no)"];););out qt;'
 
 	const result = await fetch(encodeURI(url), {
 		method: 'get',
