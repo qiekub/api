@@ -11,7 +11,7 @@ const questionsInSchemaById = questionsInSchema.reduce((obj,question)=>{
 
 
 function upsertOne(collection,doc,callack){
-	if (doc.properties.__typename) {
+	if (doc && doc.properties && doc.properties.__typename) {
 		collection.findOne({
 			_id: doc._id,
 			'properties.__typename': doc.properties.__typename,
