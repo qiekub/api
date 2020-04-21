@@ -10,7 +10,7 @@ const schema = gql`
 		search(query: String): GeoSearchResult
 		isGeoCoordinateLegal(lat: Float, lng: Float): Boolean
 
-		getPlace(_id: String): Doc
+		getPlace(_id: ID): Doc
 		getPlaces: [Doc]
 		getMarkers: [Marker]
 		getQuestions: [Doc]
