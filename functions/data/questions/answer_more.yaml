@@ -5,6 +5,7 @@ question:
   de: Möchtest du mehr Fragen beantworten?
 possibleAnswers:
   yes:
+    inputtype: boolean
     icon:
     title:
       en: "Yes"
@@ -14,6 +15,7 @@ possibleAnswers:
       - website
       - age
   no:
+    inputtype: boolean
     title:
       en: "No"
       de: Nein

@@ -5,6 +5,7 @@ question:
   de: Ist dieser Ort mit einem Rollstuhl erreichbar?
 possibleAnswers:
   yes:
+    inputtype: boolean
     icon: check
     title: 
       en: Yes
@@ -12,6 +13,7 @@ possibleAnswers:
     tags:
       wheelchair: yes
   no:
+    inputtype: boolean
     icon: clear
     title: 
       en: No

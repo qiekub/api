@@ -4,6 +4,7 @@ question:
   en: What do you want to improve?
 possibleAnswers:
   edit_infos:
+    inputtype: boolean
     icon: edit_location
     title:
       en: Edit information
@@ -15,6 +16,7 @@ possibleAnswers:
       - website
       # - answer_more
   typo:
+    inputtype: boolean
     icon: short_text
     title:
       en: Typo
@@ -24,6 +26,7 @@ possibleAnswers:
       - name
       - answer_more
   wrong_location:
+    inputtype: boolean
     icon: pin_drop
     title:
       en: Wrong location
@@ -33,6 +36,7 @@ possibleAnswers:
       - geo_pos
       - answer_more
   closed:
+    inputtype: boolean
     icon: location_off
     title:
       en: Closed
@@ -43,6 +47,7 @@ possibleAnswers:
     followUpQuestions:
       - answer_more
   spam:
+    inputtype: boolean
     icon: report
     title:
       en: Spam
