@@ -590,7 +590,197 @@ function compileAnswers(mongodb, placeIDs, callback){
 }
 
 function compile_places_from_changesets(mongodb, placeIDs, callback){
-	callback([])
+	// TODO: This can probably be improved as it's just a modified copy of compileAnswers().
+
+	const __last_n_answers__ = 5
+	mongodb.Changesets_collection
+	.aggregate([
+		// START get answers
+		...(!!placeIDs ? [{$match:{
+			"properties.forID": {$in: placeIDs},
+		}}] : []),
+
+		{$sort:{
+			"metadata.lastModified": -1
+		}},
+		{$set:{
+			"properties.answer": { $objectToArray: "$properties.tags" },
+		}},
+		{$unset:[ "properties.tags" ]},
+		{$unwind: "$properties.answer"},
+		{$group:{
+			_id: {$concat:[
+				{$toString:"$properties.forID"},
+				"_",
+				// {$toString:"$properties.questionID"},
+				// "_",
+				{$toString:"$properties.answer.k"},
+			]},
+			docs: {$push:"$$ROOT"},
+		}},
+		{$set:{
+			docs: {$slice:["$docs",0,__last_n_answers__]}
+		}},
+		{$set:{
+			all_answers_count: {$size:"$docs"}
+		}},
+		{$unwind:"$docs"},
+		// END get answers
+	])
+	.toArray((error,docs)=>{
+
+		docs = docs
+		.map(doc => {
+			const newDoc = {
+				forID: doc.docs.properties.forID,
+				// answerID: doc.docs._id,
+				// answer: doc.docs.properties.answer,
+				all_answers_count: doc.all_answers_count,
+
+				answerKey: doc.docs.properties.answer.k,
+				answerValue: doc.docs.properties.answer.v,
+			}
+			newDoc.key_id = newDoc.forID+'|'+newDoc.answerKey
+			const answerValueAsJSON = JSON.stringify(newDoc.answerValue)
+			newDoc.value_id = newDoc.key_id+'|'+answerValueAsJSON
+
+			return newDoc
+		})
+
+		const answerCountsByValue = docs
+		.reduce((obj,doc)=>{
+			if (!obj[doc.value_id]) {
+				obj[doc.value_id] = 0
+			}
+			obj[doc.value_id] += 1
+			return obj
+		}, {})
+
+		docs = docs
+		.map(doc => {
+			doc.confidence = answerCountsByValue[doc.value_id] / Math.max(__last_n_answers__, doc.all_answers_count)
+			delete doc.all_answers_count
+			delete doc.value_id
+			return doc
+		})
+		.sort((a,b) => b.confidence - a.confidence)
+		.reduce((obj,doc)=>{
+			if (
+				!isNaN(doc.answerValue)
+				&& typeof doc.answerValue !== 'boolean'
+				&& (doc.answerKey === 'lat' || doc.answerKey === 'lng')
+			) {
+				if (!obj[doc.key_id]) {
+					obj[doc.key_id] = {
+						doc,
+						values: [],
+					}
+				}
+				obj[doc.key_id].values.push(doc.answerValue*1)
+			}else if (!obj[doc.key_id]) {
+				obj[doc.key_id] = {
+					doc,
+					values: [doc.answerValue],
+				}
+			}
+
+
+		
+			return obj
+		},{})
+
+		// merge lat and lng values
+		const shiftBy = 180 // Use a higher number than 180 when accepting number other than geo-lat-lng (eg.: 10000)
+		docs = Object.keys(docs)
+		.reduce((obj,key_id) => {
+			obj[key_id] = docs[key_id].doc
+			delete obj[key_id].key_id
+
+			let this_values = docs[key_id].values
+			if (this_values.length > 1) {
+				this_values = filterOutliers(this_values)
+				
+				// // geometric-mean:
+				// const value = this_values.reduce((n,v)=>n*(shiftBy+v),1)
+				// const new_value = (value ** (1/this_values.length)) - shiftBy
+				
+				// average:
+				const value = this_values.reduce((n,v)=>n+v,0)
+				const new_value = (value / this_values.length)
+
+				obj[key_id].answerValue = Number.parseFloat(new_value.toFixed(6)) // https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
+			}else{
+			 	obj[key_id].answerValue = this_values[0]
+			}
+			return obj
+		}, {})
+		
+		docs = Object.values(docs)
+		.reduce((obj,doc) => {
+			if (!obj[doc.forID]) {
+				obj[doc.forID] = {
+					__typename: 'Doc',
+					_id: doc.forID,
+					properties: {
+						__typename: 'Place',
+						tags: {},
+						confidences: {},
+					}
+				}
+			}
+
+			obj[doc.forID].properties.tags = {
+				...obj[doc.forID].properties.tags,
+				...{
+					[doc.answerKey]: doc.answerValue,
+				}
+			}
+
+			obj[doc.forID].properties.confidences = {
+				...obj[doc.forID].properties.confidences,
+				...{
+					[doc.answerKey]: doc.confidence,
+				}
+			}
+
+			return obj
+		}, {})
+
+		docs = Object.values(docs)
+		.map(doc => {
+			// add geometry
+
+			doc.properties.name = []
+			if (doc.properties.tags.name) {
+				doc.properties.name.push({
+					__typename: 'Text',
+					language: null,
+					text: doc.properties.tags.name,
+				})
+			}
+			if (doc.properties.tags['name:en']) {
+				doc.properties.name.push({
+					__typename: 'Text',
+					language: 'en',
+					text: doc.properties.tags['name:en'],
+				})
+			}
+
+			doc.properties.geometry = {
+				__typename: 'GeoData',
+			}
+			if (doc.properties.tags.lat && doc.properties.tags.lng) {
+				doc.properties.geometry.location = {
+					__typename: 'GeoCoordinate',
+					lat: doc.properties.tags.lat,
+					lng: doc.properties.tags.lng,
+				}
+			}
+			return doc
+		})
+
+		callback(null,docs)
+	})
 }
 
 
