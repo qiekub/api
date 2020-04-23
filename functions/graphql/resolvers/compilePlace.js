@@ -9,14 +9,8 @@ module.exports = async (parent, args, context, info) => {
 		}else if (!mongodb.ObjectID.isValid(args._id)) {
 			reject('_id is not a correct ObjectID')
 		}else{
-			
-			console.log('args._id', args._id)
-
 			const docID = new mongodb.ObjectID(args._id)
-
 			compileAnswers(mongodb, docID, (error,docs)=>{
-				
-
 				if (error) {
 					reject(error)
 				}else{
@@ -24,13 +18,7 @@ module.exports = async (parent, args, context, info) => {
 					if (!!docs && docs.length > 0) {
 						doc = docs[0]
 					}
-					
-				console.log('doc', JSON.stringify(doc, null,4))
-
 					upsertOne(mongodb.CompiledPlaces_collection, doc, (docID)=>{
-
-						console.log('docID', docID)
-
 						if (!!docID) {
 							resolve(true)
 						}else{
