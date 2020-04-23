@@ -255,7 +255,7 @@ async function saveAsChangeset(mongodb, element, finished_callback){
 		...element.tags,
 		lat: element.lat,
 		lng: element.lon,
-		osm_id: 'node/'+element.id,
+		osm_id: element.type+'/'+element.id,
 	}
 
 	// add tag synonyms
@@ -268,7 +268,16 @@ async function saveAsChangeset(mongodb, element, finished_callback){
 
 	const forID = await getExistingID(mongodb, tags)
 
-
+	addChangeset(mongodb, {
+		forID,
+		tags,
+		sources: `https://www.openstreetmap.org/${element.type}/${element.id} https://www.openstreetmap.org/changeset/${element.changeset}`,
+		fromBot: true,
+		dataset: 'osm',
+		antiSpamUserIdentifier: 'osm-uid-'+element.uid, // `https://www.openstreetmap.org/user/${element.user}`,
+	}, changesetID=>{
+		finished_callback(forID)
+	}, ()=>{
 		finished_callback(forID)
 	})
 }
