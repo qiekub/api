@@ -9,9 +9,11 @@ possibleAnswers:
     parsers:
       - urls
       - socialmedia
+      - wikidata
+      - wikipedia
     title:
-      en: Link...
-      de: Links...
+      en: Links to their website, facebook-page, ...
+      de: Links zur Webseite, Facebook-Seite, ...
   urls:
     hidden: true
     inputtype: text
@@ -37,4 +39,28 @@ possibleAnswers:
     tags:
       contact:twitter: ''
       twitter: ''
+  youtube:
+    hidden: true
+    inputtype: text
+    tags:
+      contact:youtube: ''
+      youtube: ''
+  pinterest:
+    hidden: true
+    inputtype: text
+    tags:
+      contact:pinterest: ''
+      pinterest: ''
+  flickr:
+    hidden: true
+    inputtype: text
+    tags:
+      contact:flickr: ''
+      flickr: ''
+  yelp:
+    hidden: true
+    inputtype: text
+    tags:
+      contact:yelp: ''
+      yelp: ''
 ...

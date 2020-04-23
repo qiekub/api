@@ -14,6 +14,9 @@ possibleAnswers:
       - wheelchair_accessible
       - age
       - website
+      - contact_options
+      - find_out_more_links
+      - preset
       # - answer_more
   typo:
     inputtype: boolean

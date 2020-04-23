@@ -12,8 +12,11 @@ possibleAnswers:
       de: Ja
     followUpQuestions:
       - wheelchair_accessible
-      - website
       - age
+      - website
+      - contact_options
+      - find_out_more_links
+      - preset
   'no':
     inputtype: boolean
     title:

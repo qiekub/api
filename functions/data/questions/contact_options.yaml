@@ -10,7 +10,7 @@ possibleAnswers:
       - phone
       - email
     title:
-      en: Enter phonenumbers and email-addresses...
+      en: Phonenumbers and email-addresses
       de: Gib hier Telephonenummern und Email-Adressen ein...
   phone:
     hidden: true
