@@ -2,7 +2,7 @@ const async = require('async')
 const fetch = require('node-fetch')
 
 const getMongoDbContext = require('../getMongoDbContext.js')
-const { addAnswer, compileAnswers, upsertOne, getPreset } = require('../modules.js')
+const { addChangeset, compileAnswers_from_changesets, upsertOne, getPreset } = require('../modules.js')
 
 const _presets_ = require('../data/dist/presets.json')
 const questionsInSchema = require('../data/dist/questionsInSchema.json')
@@ -250,7 +250,7 @@ async function getExistingID(mongodb, tags){
 	})
 }
 
-async function convert_to_answers(mongodb, element, finished_callback){
+async function saveAsChangeset(mongodb, element, finished_callback){
 	const tags = {
 		...element.tags,
 		lat: element.lat,
@@ -304,7 +304,7 @@ async function loadChangesFromOverpass() {
 }
 
 function compileAndUpsertPlace(mongodb, docIDs, finished_callback) {
-	compileAnswers(mongodb, docIDs, (error,docs)=>{
+	compileAnswers_from_changesets(mongodb, docIDs, (error,docs)=>{
 		if (error) {
 			console.error(error)
 			finished_callback()
@@ -329,7 +329,7 @@ function start(){
 	
 		const placeIDsToRebuild = new Set()
 		async.each(changes.elements, (element, callback) => {
-			convert_to_answers(mongodb, element, placeID => {
+			saveAsChangeset(mongodb, element, placeID => {
 				placeIDsToRebuild.add(placeID)
 				callback()
 			})
