@@ -4,8 +4,8 @@ question:
   en: What is this place?
   de: Was ist dies für ein Ort?
 possibleAnswers:
-  input:
-    inputtype: chooser
+  preset:
+    inputtype: preset
     title:
       en: Choose a location type...
       de: Wähl die Art des Ortes aus...
