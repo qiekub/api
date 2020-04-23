@@ -19,7 +19,28 @@ const questionsInSchemaById = questionsInSchema.reduce((obj,question)=>{
 // 	return obj
 // }
 
+function addAnswer(mongodb, properties, resolve, reject){
+	mongodb.Answers_collection.insertOne({
+		__typename: 'Doc',
+		properties: {
+			...properties,
+			__typename: 'Answer',
+		},
+		metadata: {
+			created: new Date(),
+			lastModified: new Date(),
+			__typename: 'Metadata',
+		},
+	}).then(result => {
+		if (!!result.insertedId) {
+			resolve(result.insertedId)
+		}else{
+			reject(null)
+		}
 
+		// TODO: calc new place doc
+	}).catch(reject)
+}
 
 function upsertOne(collection,doc,callack){
 	if (doc && doc.properties && doc.properties.__typename) {
@@ -535,6 +556,7 @@ function compileAnswers(mongodb, placeID, callback){
 
 
 module.exports = {
+	addAnswer,
 	upsertOne,
 	compileAnswers,
 	isGeoCoordinateLegalPromise,

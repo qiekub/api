@@ -1,31 +1,9 @@
-// const {upsertOne} = require('../../modules.js')
+const { addAnswer } = require('../../modules.js')
 
 // const flatten = require('flat')
 // also look at https://jsperf.com/flatten-un-flatten/16
 // and at https://stackoverflow.com/questions/19098797/fastest-way-to-flatten-un-flatten-nested-json-objects
 
-function addAnswer(mongodb, properties, resolve, reject){
-	mongodb.Answers_collection.insertOne({
-		__typename: 'Doc',
-		properties: {
-			...properties,
-			__typename: 'Answer',
-		},
-		metadata: {
-			created: new Date(),
-			lastModified: new Date(),
-			__typename: 'Metadata',
-		},
-	}).then(result => {
-		if (!!result.insertedId) {
-			resolve(result.insertedId)
-		}else{
-			reject(null)
-		}
-
-		// TODO: calc new place doc
-	}).catch(reject)
-}
 
 const string2objectID = (mongodb,string) => (mongodb.ObjectID.isValid(string) ? new mongodb.ObjectID(string) : undefined)
 
