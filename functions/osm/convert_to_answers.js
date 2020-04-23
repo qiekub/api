@@ -272,7 +272,6 @@ async function convert_to_answers(mongodb, element, finished_callback){
 
 	const answerDocs = []
 	for (const entry of tag_entries) {
-
 		const answers = answersByTag[entry[0]]
 		.map(answer => {
 			answer.value = value2(answer.inputtype, entry[1])
@@ -308,13 +307,9 @@ async function convert_to_answers(mongodb, element, finished_callback){
 		}, ()=>{
 			callback()
 		})
-		// callback()
 	}, error => {
 		finished_callback(forID)
 	})
-
-
-	// console.log(JSON.stringify(answerDocs,null,4))
 }
 
 async function loadChangesFromOverpass() {
