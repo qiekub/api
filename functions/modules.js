@@ -11,7 +11,7 @@ const questionsInSchemaById = questionsInSchema.reduce((obj,question)=>{
 
 
 function ObjectFromEntries(entries) {
-	// Should be replaced with Objec.fromEntries() when available
+	// Should be replaced with Object.fromEntries() when available
 	const obj = {}
 	for (const entry of entries) {
 		obj[entry[0]] = entry[1]
