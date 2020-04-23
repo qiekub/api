@@ -4,19 +4,19 @@ question:
   en: Do want to answer more questions?
   de: Möchtest du mehr Fragen beantworten?
 possibleAnswers:
-  yes:
+  'yes':
     inputtype: boolean
     icon:
     title:
-      en: "Yes"
+      en: 'Yes'
       de: Ja
     followUpQuestions:
       - wheelchair_accessible
       - website
       - age
-  no:
+  'no':
     inputtype: boolean
     title:
-      en: "No"
+      en: 'No'
       de: Nein
 ...

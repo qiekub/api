@@ -4,20 +4,20 @@ question:
   en: Is this place wheelchair accessible?
   de: Ist dieser Ort mit einem Rollstuhl erreichbar?
 possibleAnswers:
-  yes:
+  'yes':
     inputtype: boolean
     icon: check
     title: 
-      en: Yes
+      en: 'Yes'
       de: Ja
     tags:
-      wheelchair: yes
-  no:
+      wheelchair: 'yes'
+  'no':
     inputtype: boolean
     icon: clear
     title: 
-      en: No
+      en: 'No'
       de: Nein
     tags:
-      wheelchair: no
+      wheelchair: 'no'
 ...
