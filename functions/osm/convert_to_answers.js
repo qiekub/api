@@ -2,8 +2,9 @@ const async = require('async')
 const fetch = require('node-fetch')
 
 const getMongoDbContext = require('../getMongoDbContext.js')
-const { addAnswer, compileAnswers, upsertOne } = require('../modules.js')
+const { addAnswer, compileAnswers, upsertOne, getPreset } = require('../modules.js')
 
+const _presets_ = require('../data/dist/presets.json')
 const questionsInSchema = require('../data/dist/questionsInSchema.json')
 const sample_response = require('./sample_response.json')
 
@@ -267,10 +268,24 @@ async function convert_to_answers(mongodb, element, finished_callback){
 
 	const forID = await getExistingID(mongodb, tags)
 
+	const answerDocs = []
+
+	// get the preset and add it as an answer
+	const preset = getPreset(tags, _presets_)
+	answerDocs.push({
+		properties: {
+			forID: forID,
+			questionID: 'preset',
+			answer: {
+				preset: preset.key
+			},
+		}
+	})
+
+	// get all other answers
 	const tag_entries = Object.entries(tags)
 	.filter(entry => answersByTag[entry[0]])
 
-	const answerDocs = []
 	for (const entry of tag_entries) {
 		const answers = answersByTag[entry[0]]
 		.map(answer => {
