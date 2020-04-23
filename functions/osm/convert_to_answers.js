@@ -9,7 +9,6 @@ const value_to_functions = {
 	text: value => value+'',
 	number: value => value*1.0,
 	boolean: value => value === 'yes',
-	// url: value => value+'',
 }
 function value2(inputtype, value) {
 	if (value_to_functions[inputtype]) {
