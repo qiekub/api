@@ -783,6 +783,23 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 	})
 }
 
+function compileAndUpsertPlace(mongodb, docIDs, finished_callback) {
+	compile_places_from_changesets(mongodb, docIDs, (error,docs)=>{
+		if (error) {
+			console.error(error)
+			finished_callback()
+		}else{
+			async.each(docs, (doc, callback) => {
+				upsertOne(mongodb.CompiledPlaces_collection, doc, docID=>{
+					callback()
+				})
+			}, error => {
+				finished_callback()
+			})
+		}
+	})
+}
+
 
 function getPreset(tags, presets) {
 	const tags_keys = Object.keys(tags)
@@ -823,5 +840,6 @@ module.exports = {
 	compileAnswers,
 	compile_places_from_changesets,
 	isGeoCoordinateLegalPromise,
+	compileAndUpsertPlace,
 	getPreset,
 }

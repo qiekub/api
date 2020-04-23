@@ -2,7 +2,7 @@ const async = require('async')
 const fetch = require('node-fetch')
 
 const getMongoDbContext = require('../getMongoDbContext.js')
-const { addChangeset, compile_places_from_changesets, upsertOne, getPreset } = require('../modules.js')
+const { addChangeset, compile_places_from_changesets, upsertOne, compileAndUpsertPlace, getPreset } = require('../modules.js')
 
 const _presets_ = require('../data/dist/presets.json')
 const questionsInSchema = require('../data/dist/questionsInSchema.json')
@@ -310,23 +310,6 @@ async function loadChangesFromOverpass() {
 	// .catch(error => null)
 
 	// return new Promise(resolve => resolve(result))
-}
-
-function compileAndUpsertPlace(mongodb, docIDs, finished_callback) {
-	compile_places_from_changesets(mongodb, docIDs, (error,docs)=>{
-		if (error) {
-			console.error(error)
-			finished_callback()
-		}else{
-			async.each(docs, (doc, callback) => {
-				upsertOne(mongodb.CompiledPlaces_collection, doc, docID=>{
-					callback()
-				})
-			}, error => {
-				finished_callback()
-			})
-		}
-	})
 }
 
 
