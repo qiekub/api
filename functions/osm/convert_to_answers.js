@@ -1,5 +1,8 @@
+const async = require('async')
+const fetch = require('node-fetch')
 
 const getMongoDbContext = require('../getMongoDbContext.js')
+const { addAnswer, compileAnswers, upsertOne } = require('../modules.js')
 
 const questionsInSchema = require('../data/dist/questionsInSchema.json')
 const sample_response = require('./sample_response.json')
@@ -57,9 +60,7 @@ key_synonyms = {
 
 
 
-async function getIdFromOSM(tags){
-	const mongodb = await getMongoDbContext()
-
+async function getIdFromOSM(mongodb, tags){
 	const tagKeys = Object.keys(tags)
 
 	let scoreStages = []
@@ -248,8 +249,7 @@ async function getIdFromOSM(tags){
 	})
 }
 
-async function convert_to_answers(element){
-
+async function convert_to_answers(mongodb, element, finished_callback){
 	const tags = {
 		...element.tags,
 		lat: element.lat,
@@ -265,11 +265,14 @@ async function convert_to_answers(element){
 		}
 	}
 
-	const forID = await getIdFromOSM(tags)
+	const forID = await getIdFromOSM(mongodb, tags)
 
-	const answerDocs = Object.entries(element.tags)
+	const tag_entries = Object.entries(tags)
 	.filter(entry => answersByTag[entry[0]])
-	.reduce((answerDocs,entry) => {
+
+	const answerDocs = []
+	for (const entry of tag_entries) {
+
 		const answers = answersByTag[entry[0]]
 		.map(answer => {
 			answer.value = value2(answer.inputtype, entry[1])
@@ -279,22 +282,127 @@ async function convert_to_answers(element){
 
 		for (const answer of answers) {
 			answerDocs.push({
-				__typename: 'Answer',
-				forID: null,
-				questionID: answer._id,
-				answer: {
-					[answer.key]: answer.value
+				// _id: new mongodb.ObjectID(),
+				// __typename: 'Doc',
+				properties: {
+					// __typename: 'Answer',
+					forID: forID,
+					questionID: answer._id,
+					answer: {
+						[answer.key]: answer.value
+					},
 				},
+				// metadata: {
+				// 	__typename: 'Metadata',
+				// 	created: new Date(),
+				// 	lastModified: new Date(),
+				// }
 			})
 		}
+	}
 
-		return answerDocs
-	}, [])
+	
+	async.each(answerDocs, (answerDoc, callback) => {
+		addAnswer(mongodb, answerDoc.properties, ()=>{
+			callback()
+		}, ()=>{
+			callback()
+		})
+		// callback()
+	}, error => {
+		finished_callback(forID)
+	})
+
 
 	// console.log(JSON.stringify(answerDocs,null,4))
 }
 
-convert_to_answers(sample_response.elements[0])
+async function loadChangesFromOverpass() {
+
+	const d = new Date()
+	d.setDate(d.getDate()-1) // no minus one day
+	d.setUTCHours(0,0,0,0) // Set the time to midnight. So the script is independent of the exact time it gets started.
+
+	const currentDateMinusOneDay = d.toISOString() // 2020-04-20T00:00:00Z
+
+	const url = `https://overpass-api.de/api/interpreter?data=[bbox:90,-180,-90,180][out:json][timeout:240];(node[~"^community_centre.*$"~"(lgbt|homosexual|gay)"](newer:"${currentDateMinusOneDay}");node[~"^lgbtq.*$"~"."](newer:"${currentDateMinusOneDay}");node[~"^gay.*$"~"."](newer:"${currentDateMinusOneDay}");node[~"^fetish.*$"~"."](newer:"${currentDateMinusOneDay}"););out qt;`
+
+	return fetch(encodeURI(url), {
+		method: 'get',
+		headers: {
+			'Content-Type': 'application/json',
+			'Referer': 'qiekub.com',
+			'User-Agent': 'qiekub.com',
+		},
+	})
+	.then(res => res.json())
+	.then(data => {
+		console.log(`finished loading ${data.elements.length} elements`)
+		return data
+	})
+	// .catch(error => null)
+
+	// return new Promise(resolve => resolve(result))
+}
+
+function compileAndUpsertPlace(mongodb, docIDs, finished_callback) {
+	compileAnswers(mongodb, docIDs, (error,docs)=>{
+		if (error) {
+			console.error(error)
+			finished_callback()
+		}else{
+			async.each(docs, (doc, callback) => {
+				upsertOne(mongodb.CompiledPlaces2_collection, doc, docID=>{
+					callback()
+				})
+			}, error => {
+				finished_callback()
+			})
+		}
+	})
+}
+
+async function start(){
+	const mongodb = await getMongoDbContext()
+	
+	const placeIDsToRebuild = new Set()
+	async.each(sample_response.elements, (element, callback) => {
+		convert_to_answers(mongodb, element, placeID => {
+			placeIDsToRebuild.add(placeID)
+			callback()
+		})
+	}, error => {
+		console.log([...placeIDsToRebuild])
+
+		mongodb.client.close()
+	})
+}
+
+function start2(){
+	console.log('started loading...')
+
+	loadChangesFromOverpass().then(async changes=>{
+		const mongodb = await getMongoDbContext()
+	
+		const placeIDsToRebuild = new Set()
+		async.each(changes.elements, (element, callback) => {
+			convert_to_answers(mongodb, element, placeID => {
+				placeIDsToRebuild.add(placeID)
+				callback()
+			})
+		}, error => {
+			console.log([...placeIDsToRebuild])
+			compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], ()=>{
+				console.log('finished')
+				mongodb.client.close()
+			})
+		})
+	}, error=>{
+		console.error(error)
+	})
+}
+
+start2()
 
 /*
 
