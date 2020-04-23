@@ -69,6 +69,7 @@ function convert_to_answers(element){
 convert_to_answers(sample_response.elements[0])
 
 /*
+
 {
     "_id" : ObjectId("5e9dff852ceb4e19a35dcdc0"),
     "__typename" : "Doc",
@@ -86,4 +87,5 @@ convert_to_answers(sample_response.elements[0])
         "__typename" : "Metadata"
     }
 }
+
 */
