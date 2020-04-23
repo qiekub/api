@@ -10,6 +10,17 @@ const questionsInSchemaById = questionsInSchema.reduce((obj,question)=>{
 
 
 
+// function ObjectFromEntries(entries) {
+// 	// Should be replaced with Objec.fromEntries() when available
+// 	const obj = {}
+// 	for (const entry of entries) {
+// 		obj[entry[0]] = entry[1]
+// 	}
+// 	return obj
+// }
+
+
+
 function upsertOne(collection,doc,callack){
 	if (doc && doc.properties && doc.properties.__typename) {
 		collection.findOne({
