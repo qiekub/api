@@ -45,6 +45,29 @@ function addAnswer(mongodb, properties, resolve, reject){
 	})
 }
 
+function addChangeset(mongodb, properties, resolve, reject){
+	mongodb.Answers_collection.insertOne({
+		__typename: 'Doc',
+		properties: {
+			...properties,
+			__typename: 'Changeset',
+		},
+		metadata: {
+			created: new Date(),
+			lastModified: new Date(),
+			__typename: 'Metadata',
+		},
+	}).then(result => {
+		if (!!result.insertedId) {
+			resolve(result.insertedId)
+		}else{
+			reject(null)
+		}
+	}).catch(error=>{
+		console.error(error)
+	})
+}
+
 function upsertOne(collection,doc,callack){
 	if (doc && doc.properties && doc.properties.__typename) {
 		collection.findOne({
@@ -601,6 +624,7 @@ function getPreset(tags, presets) {
 
 module.exports = {
 	addAnswer,
+	addChangeset,
 	upsertOne,
 	compileAnswers,
 	isGeoCoordinateLegalPromise,
