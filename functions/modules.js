@@ -589,7 +589,7 @@ function compileAnswers(mongodb, placeIDs, callback){
 	})
 }
 
-function compileAnswers_from_changesets(mongodb, placeIDs, callback){
+function compile_places_from_changesets(mongodb, placeIDs, callback){
 	callback([])
 }
 
@@ -631,7 +631,7 @@ module.exports = {
 	addChangeset,
 	upsertOne,
 	compileAnswers,
-	compileAnswers_from_changesets,
+	compile_places_from_changesets,
 	isGeoCoordinateLegalPromise,
 	getPreset,
 }
