@@ -268,61 +268,7 @@ async function convert_to_answers(mongodb, element, finished_callback){
 
 	const forID = await getExistingID(mongodb, tags)
 
-	const answerDocs = []
 
-	// get the preset and add it as an answer
-	const preset = getPreset(tags, _presets_)
-	answerDocs.push({
-		properties: {
-			forID: forID,
-			questionID: 'preset',
-			answer: {
-				preset: preset.key
-			},
-		}
-	})
-
-	// get all other answers
-	const tag_entries = Object.entries(tags)
-	.filter(entry => answersByTag[entry[0]])
-
-	for (const entry of tag_entries) {
-		const answers = answersByTag[entry[0]]
-		.map(answer => {
-			answer.value = value2(answer.inputtype, entry[1])
-			return answer
-		})
-		.filter(answer => answer.value)
-
-		for (const answer of answers) {
-			answerDocs.push({
-				// _id: new mongodb.ObjectID(),
-				// __typename: 'Doc',
-				properties: {
-					// __typename: 'Answer',
-					forID: forID,
-					questionID: answer._id,
-					answer: {
-						[answer.key]: answer.value
-					},
-				},
-				// metadata: {
-				// 	__typename: 'Metadata',
-				// 	created: new Date(),
-				// 	lastModified: new Date(),
-				// }
-			})
-		}
-	}
-
-	
-	async.each(answerDocs, (answerDoc, callback) => {
-		addAnswer(mongodb, answerDoc.properties, ()=>{
-			callback()
-		}, ()=>{
-			callback()
-		})
-	}, error => {
 		finished_callback(forID)
 	})
 }
