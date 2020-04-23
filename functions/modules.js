@@ -46,7 +46,7 @@ function addAnswer(mongodb, properties, resolve, reject){
 }
 
 function addChangeset(mongodb, properties, resolve, reject){
-	mongodb.Answers_collection.insertOne({
+	mongodb.Changesets_collection.insertOne({
 		__typename: 'Doc',
 		properties: {
 			...properties,
