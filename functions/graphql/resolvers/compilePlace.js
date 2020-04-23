@@ -13,9 +13,8 @@ module.exports = async (parent, args, context, info) => {
 				if (error) {
 					reject(error)
 				}else{
-					let doc = {}
-					if (!!docs && docs.length > 0) {
-						doc = docs[0]
+					if (!!docs && docs.length > 0) {					
+						upsertOne(mongodb.CompiledPlaces_collection, docs[0], docID=>{
 					}
 					upsertOne(mongodb.CompiledPlaces_collection, doc, (docID)=>{
 						if (!!docID) {
