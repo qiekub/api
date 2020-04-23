@@ -1,4 +1,6 @@
 
+const getMongoDbContext = require('../getMongoDbContext.js')
+
 const questionsInSchema = require('../data/dist/questionsInSchema.json')
 const sample_response = require('./sample_response.json')
 
@@ -37,6 +39,97 @@ const answersByTag = questionsInSchema.reduce((answersByTag,q) => {
 
 // console.log(JSON.stringify(answersByTag,null,4))
 
+async function getIdFromOSM(tags){
+	const mongodb = await getMongoDbContext()
+
+	const tagKeys = Object.keys(tags)
+
+	let scoreStages = []
+
+	if (tags.osm_id) {
+		scoreStages.push({
+			score: Infinity,
+			if: {
+				$and: [
+					{$eq: ["$properties.osmID", 'node/'+osm_id]},
+				],
+			}
+		})
+	}
+
+	if (tags.lng && tags.lat) {
+		scoreStages.push({
+			score: 1,
+			if: {
+				$and: [
+					{$gt: ["$properties.geometry.location.lng", tags.lng - 0.00001]},
+					{$lt: ["$properties.geometry.location.lng", tags.lng + 0.00001]},
+					{$gt: ["$properties.geometry.location.lat", tags.lat - 0.00001]},
+					{$lt: ["$properties.geometry.location.lat", tags.lat + 0.00001]},
+				],
+			}
+		})
+	}
+
+	const addressKeys = tagKeys.filter(key => key.startsWith('addr:'))
+	if (addressKeys.length > 0) {
+		scoreStages.push({
+			score: 1,
+			if: {
+				$and: addressKeys.map(key => {
+					return {$eq: ["$properties.tags."+key, tags[key]]}
+				})
+			}
+		})
+	}
+
+	// wrap the stages in some mongodb stuff:
+	scoreStages = scoreStages.map(scoreStage => {
+		return {$addFields:{
+	        score: {
+	            $add: [
+	                "$score",
+	                {$cond:{
+	                    if: scoreStage.if,
+	                    then: scoreStage.score,
+	                    else: 0
+	                }}
+	            ]
+	        }
+	    }}
+	})
+
+	return new Promise( (resolve,reject) => {
+		// CompiledPlaces_collection
+		mongodb.OsmCache_collection.aggregate([
+			{$addFields:{score:0}},
+			...scoreStages,
+			{$match:{
+				score: {$gt:0}
+			}},
+			{$sort:{
+				score: -1
+			}}
+		]).toArray((error,docs) => {
+			if (error || docs.length === 0) {
+				resolve(docs[0]._id)
+			}else{
+				console.log('docs', JSON.stringify(docs, null,4))
+				resolve(new mongodb.ObjectID())
+			}
+		})
+	})
+}
+
+async function convert_to_answers(element){
+
+	const forID = await getIdFromOSM({
+		...element.tags,
+		lat: element.lat,
+		lng: element.lon,
+	})
+
+	console.log('forID', forID)
 
 function convert_to_answers(element){
 	const answerDocs = Object.entries(element.tags)
