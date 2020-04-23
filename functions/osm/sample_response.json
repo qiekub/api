@@ -6,7 +6,39 @@
     "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
   },
   "elements": [
-
+{
+  "type": "node",
+  "id": 937535734,
+  "lat": 50.9419605,
+  "lon": 6.9380905,
+  "timestamp": "2020-03-10T23:45:24Z",
+  "version": 7,
+  "changeset": 82027105,
+  "user": "Thomas Rosen",
+  "uid": 2804186,
+  "tags": {
+    "addr:city": "Köln",
+    "addr:country": "DE",
+    "addr:housenumber": "14",
+    "addr:postcode": "50672",
+    "addr:street": "Kamekestraße",
+    "amenity": "cafe",
+    "community_centre": "youth_centre;lgbtq",
+    "community_centre:for": "lgbtq",
+    "cuisine": "pizza;coffee_shop",
+    "description": "Youth centre for young lesbian, gay, bi, trans* and queer people.",
+    "internet_access": "wlan",
+    "internet_access:fee": "no",
+    "name": "anyway",
+    "opening_hours": "We 16:00-22:00; Th 17:00-23:00; Fr 19:00-23:59",
+    "outdoor_seating": "no",
+    "smoking": "no",
+    "start_date": "1998",
+    "toilets:wheelchair": "yes",
+    "website": "https://www.anyway-koeln.de/",
+    "wheelchair": "yes"
+  }
+},
 {
   "type": "node",
   "id": 2927795611,
