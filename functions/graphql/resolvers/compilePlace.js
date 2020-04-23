@@ -9,8 +9,7 @@ module.exports = async (parent, args, context, info) => {
 		}else if (!mongodb.ObjectID.isValid(args._id)) {
 			reject('_id is not a correct ObjectID')
 		}else{
-			const docID = new mongodb.ObjectID(args._id)
-			compileAnswers(mongodb, docID, (error,docs)=>{
+			compileAnswers(mongodb, [new mongodb.ObjectID(args._id)], (error,docs)=>{
 				if (error) {
 					reject(error)
 				}else{
