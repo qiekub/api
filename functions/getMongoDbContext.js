@@ -28,10 +28,8 @@ function getMongoDbContext(){
 						// collection: mongodb_client.db('Graph').collection('CompiledPlaces'),
 						CompiledPlaces_collection: mongodb_client.db('Graph').collection('CompiledPlaces'),
 						OsmCache_collection: mongodb_client.db('Graph').collection('OsmCache'),
-						Answers_collection: mongodb_client.db('Graph').collection('Answers4'),
+						Answers_collection: mongodb_client.db('Graph').collection('Answers'),
 						Sources_collection: mongodb_client.db('Graph').collection('Sources'),
-
-						CompiledPlaces2_collection: mongodb_client.db('Graph').collection('CompiledPlaces2'),
 					}
 	
 					resolve(_ContextChache_.mongodb)

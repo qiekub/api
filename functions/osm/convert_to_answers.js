@@ -362,7 +362,7 @@ function compileAndUpsertPlace(mongodb, docIDs, finished_callback) {
 			finished_callback()
 		}else{
 			async.each(docs, (doc, callback) => {
-				upsertOne(mongodb.CompiledPlaces2_collection, doc, docID=>{
+				upsertOne(mongodb.CompiledPlaces_collection, doc, docID=>{
 					callback()
 				})
 			}, error => {
