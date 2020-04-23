@@ -399,24 +399,4 @@ function start(){
 
 start()
 
-/*
 
-{
-    "_id" : ObjectId("5e9dff852ceb4e19a35dcdc0"),
-    "__typename" : "Doc",
-    "properties" : {
-        "forID" : ObjectId("5e9dff772ceb4e19a35dcdbb"),
-        "questionID" : "website",
-        "answer" : {
-            "url" : "test.test"
-        },
-        "__typename" : "Answer"
-    },
-    "metadata" : {
-        "created" : ISODate("2020-04-20T20:01:09.605Z"),
-        "lastModified" : ISODate("2020-04-20T20:01:09.605Z"),
-        "__typename" : "Metadata"
-    }
-}
-
-*/
