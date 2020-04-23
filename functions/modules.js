@@ -323,13 +323,15 @@ function filterOutliers(numbers){
 	return numbers.filter(number => number >= antenne_min && number <= antenne_max)
 }
 
-function compileAnswers(mongodb, placeID, callback){
+function compileAnswers(mongodb, placeIDs, callback){
+
+
 	const __last_n_answers__ = 5
 	mongodb.Answers_collection
 	.aggregate([
 		// START get answers
-		...(!!placeID ? [{$match:{
-			"properties.forID": placeID,
+		...(!!placeIDs ? [{$match:{
+			"properties.forID": {$in: placeIDs},
 			// "properties.questionID": "geo_pos",
 		}}] : []),
 
