@@ -372,23 +372,8 @@ function compileAndUpsertPlace(mongodb, docIDs, finished_callback) {
 	})
 }
 
-async function start(){
-	const mongodb = await getMongoDbContext()
-	
-	const placeIDsToRebuild = new Set()
-	async.each(sample_response.elements, (element, callback) => {
-		convert_to_answers(mongodb, element, placeID => {
-			placeIDsToRebuild.add(placeID)
-			callback()
-		})
-	}, error => {
-		console.log([...placeIDsToRebuild])
 
-		mongodb.client.close()
-	})
-}
-
-function start2(){
+function start(){
 	console.log('started loading...')
 
 	loadChangesFromOverpass().then(async changes=>{
@@ -412,7 +397,7 @@ function start2(){
 	})
 }
 
-start2()
+start()
 
 /*
 
