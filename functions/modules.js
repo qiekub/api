@@ -37,9 +37,9 @@ function addAnswer(mongodb, properties, resolve, reject){
 		}else{
 			reject(null)
 		}
-
-		// TODO: calc new place doc
-	}).catch(reject)
+	}).catch(error=>{
+		console.error(error)
+	})
 }
 
 function upsertOne(collection,doc,callack){
