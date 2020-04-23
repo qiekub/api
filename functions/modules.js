@@ -589,6 +589,10 @@ function compileAnswers(mongodb, placeIDs, callback){
 	})
 }
 
+function compileAnswers_from_changesets(mongodb, placeIDs, callback){
+	callback([])
+}
+
 
 function getPreset(tags, presets) {
 	const tags_keys = Object.keys(tags)
@@ -627,6 +631,7 @@ module.exports = {
 	addChangeset,
 	upsertOne,
 	compileAnswers,
+	compileAnswers_from_changesets,
 	isGeoCoordinateLegalPromise,
 	getPreset,
 }
