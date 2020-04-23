@@ -78,22 +78,20 @@ const schema = gql`
 	}
 
 	type Changeset {
-		forDoc: String
-		properties: Properties
-		sources: String
+		forID: ID
+		tags: JSONObject
 		comment: String
 		fromBot: Boolean
-		created_by: String
-		created_at: Timestamp
+		createdBy: ID
+		dataset: ID
 	}
 	input Changeset_Input {
-		forDoc: String
-		properties: JSONObject
-		sources: String
+		forID: ID
+		tags: JSONObject
 		comment: String
 		fromBot: Boolean
-		created_by: String
-		created_at: Timestamp
+		createdBy: ID
+		dataset: ID
 	}
 
 	type Question {
