@@ -80,18 +80,32 @@ const schema = gql`
 	type Changeset {
 		forID: ID
 		tags: JSONObject
-		comment: String
+
+		"Links and any other reference"
+		sources: String
+		
 		fromBot: Boolean
-		createdBy: ID
+
+		"osm / qiekub"
 		dataset: ID
+
+		"anything to identify the user who created the change"
+		antiSpamUserIdentifier: ID
 	}
 	input Changeset_Input {
 		forID: ID
 		tags: JSONObject
-		comment: String
+
+		"Links and any other reference"
+		sources: String
+		
 		fromBot: Boolean
-		createdBy: ID
+
+		"osm / qiekub"
 		dataset: ID
+
+		"anything to identify the user who created the change"
+		antiSpamUserIdentifier: ID
 	}
 
 	type Question {
