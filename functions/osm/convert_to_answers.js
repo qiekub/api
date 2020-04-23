@@ -131,7 +131,6 @@ async function convert_to_answers(element){
 
 	console.log('forID', forID)
 
-function convert_to_answers(element){
 	const answerDocs = Object.entries(element.tags)
 	.filter(entry => answersByTag[entry[0]])
 	.reduce((answerDocs,entry) => {
@@ -156,7 +155,7 @@ function convert_to_answers(element){
 		return answerDocs
 	}, [])
 
-	console.log(JSON.stringify(answerDocs,null,4))
+	// console.log(JSON.stringify(answerDocs,null,4))
 }
 
 convert_to_answers(sample_response.elements[0])
