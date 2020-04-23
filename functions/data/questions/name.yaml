@@ -11,7 +11,7 @@ possibleAnswers:
       en: Name in the local language
       de: Name in der Orts-Sprache
     tags:
-      name: ""
+      name: ''
   name_en:
     icon: 
     inputtype: text
@@ -19,5 +19,5 @@ possibleAnswers:
       en: Name in English
       de: Name in Englisch
     tags:
-      name_en: ""
+      name_en: ''
 ...

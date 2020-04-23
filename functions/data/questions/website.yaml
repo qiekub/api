@@ -11,6 +11,6 @@ possibleAnswers:
       en: Link to the webseite
       de: Link zur Webseite
     tags:
-      contact:website: ""
-      website: ""
+      contact:website: ''
+      website: ''
 ...
