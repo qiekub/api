@@ -10,14 +10,14 @@ const questionsInSchemaById = questionsInSchema.reduce((obj,question)=>{
 
 
 
-// function ObjectFromEntries(entries) {
-// 	// Should be replaced with Objec.fromEntries() when available
-// 	const obj = {}
-// 	for (const entry of entries) {
-// 		obj[entry[0]] = entry[1]
-// 	}
-// 	return obj
-// }
+function ObjectFromEntries(entries) {
+	// Should be replaced with Objec.fromEntries() when available
+	const obj = {}
+	for (const entry of entries) {
+		obj[entry[0]] = entry[1]
+	}
+	return obj
+}
 
 function addAnswer(mongodb, properties, resolve, reject){
 	mongodb.Answers_collection.insertOne({
@@ -82,10 +82,10 @@ function upsertOne(collection,doc,callack){
 				}
 				if (toSet.length > 0) {
 					toSet.push(['metadata.lastModified',new Date()])
-					operations.$set = Object.fromEntries(toSet)
+					operations.$set = ObjectFromEntries(toSet)
 				}
 				if (toUnset.length > 0) {
-					operations.$unset = Object.fromEntries(toUnset)
+					operations.$unset = ObjectFromEntries(toUnset)
 				}
 
 				collection.updateOne({
