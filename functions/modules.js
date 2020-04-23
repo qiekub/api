@@ -8,6 +8,9 @@ const questionsInSchemaById = questionsInSchema.reduce((obj,question)=>{
 	return obj
 }, {})
 
+const _presets_ = require('./data/dist/presets.json')
+
+
 
 
 function ObjectFromEntries(entries) {
@@ -473,6 +476,14 @@ function compileAnswers(mongodb, placeIDs, callback){
 						} else {
 							for (const key in answer.tags) {
 								obj[key] = doc.answerValue
+							}
+						}
+
+						// add tags from the preset:
+						if (obj.preset && typeof obj.preset === 'string' && _presets_[obj.preset] && _presets_[obj.preset].tags) {
+							obj = {
+								..._presets_[obj.preset].tags,
+								...obj,
 							}
 						}
 					}
