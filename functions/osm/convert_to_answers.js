@@ -60,7 +60,7 @@ key_synonyms = {
 
 
 
-async function getIdFromOSM(mongodb, tags){
+async function getExistingID(mongodb, tags){
 	const tagKeys = Object.keys(tags)
 
 	let scoreStages = []
@@ -265,7 +265,7 @@ async function convert_to_answers(mongodb, element, finished_callback){
 		}
 	}
 
-	const forID = await getIdFromOSM(mongodb, tags)
+	const forID = await getExistingID(mongodb, tags)
 
 	const tag_entries = Object.entries(tags)
 	.filter(entry => answersByTag[entry[0]])
