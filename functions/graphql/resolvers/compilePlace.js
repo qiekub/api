@@ -15,14 +15,15 @@ module.exports = async (parent, args, context, info) => {
 				}else{
 					if (!!docs && docs.length > 0) {					
 						upsertOne(mongodb.CompiledPlaces_collection, docs[0], docID=>{
+							if (!!docID) {
+								resolve(true)
+							}else{
+								resolve(false)
+							}
+						})
+					}else{
+						resolve(false)
 					}
-					upsertOne(mongodb.CompiledPlaces_collection, doc, (docID)=>{
-						if (!!docID) {
-							resolve(true)
-						}else{
-							resolve(false)
-						}
-					})
 				}
 			})
 		}
