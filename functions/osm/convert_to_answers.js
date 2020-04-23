@@ -39,6 +39,25 @@ const answersByTag = questionsInSchema.reduce((answersByTag,q) => {
 
 // console.log(JSON.stringify(answersByTag,null,4))
 
+let key_synonyms = {
+	'website': 'contact:website',
+	'phone': 'contact:phone',
+	'email': 'contact:email',
+	'facebook': 'contact:facebook',
+	'twitter': 'contact:twitter',
+	'youtube': 'contact:youtube',
+	'instagram': 'contact:instagram',
+}
+key_synonyms = {
+	...key_synonyms,
+	...(Object.entries(key_synonyms).reduce((key_synonyms_swapped, entry) => {
+		key_synonyms_swapped[entry[1]] = entry[0]
+		return key_synonyms_swapped
+	}, {}))
+}
+
+
+
 async function getIdFromOSM(tags){
 	const mongodb = await getMongoDbContext()
 
@@ -46,20 +65,47 @@ async function getIdFromOSM(tags){
 
 	let scoreStages = []
 
+
+	// ## unique ids that can change very frequently but stay the same if nothing changed (unique!)
+	// (score: ∞)
+
 	if (tags.osm_id) {
 		scoreStages.push({
-			score: Infinity,
+			score: 1000, // could also be Infinity
 			if: {
 				$and: [
-					{$eq: ["$properties.osmID", 'node/'+osm_id]},
+					{$eq: ["$properties.osmID", tags.osm_id]},
 				],
 			}
 		})
 	}
 
+
+	// ## unique references that won't changed (unique!)
+	// (score: 6)
+
+	const refKeys = tagKeys.filter(key => (
+		['wikidata','iata','icao','fhrs:id'].includes(key) ||
+		key.startsWith('ref:')
+	))
+	if (refKeys.length > 0) {
+		scoreStages.push({
+			score: 6,
+			if: {
+				$or: refKeys.map(key => {
+					return {$eq: ["$properties.tags."+key, tags[key]]}
+				})
+			}
+		})
+	}
+
+
+	// ## geo information that change seldom
+	// (score: 5)
+
 	if (tags.lng && tags.lat) {
 		scoreStages.push({
-			score: 1,
+			score: 5,
 			if: {
 				$and: [
 					{$gt: ["$properties.geometry.location.lng", tags.lng - 0.00001]},
@@ -74,7 +120,7 @@ async function getIdFromOSM(tags){
 	const addressKeys = tagKeys.filter(key => key.startsWith('addr:'))
 	if (addressKeys.length > 0) {
 		scoreStages.push({
-			score: 1,
+			score: 5,
 			if: {
 				$and: addressKeys.map(key => {
 					return {$eq: ["$properties.tags."+key, tags[key]]}
@@ -82,6 +128,84 @@ async function getIdFromOSM(tags){
 			}
 		})
 	}
+
+
+	// ## urls that change rarely and are mostly unique (not neccessarly unique!)
+	// (score: 4)
+
+	if (tags.wikipedia) {
+		scoreStages.push({
+			score: 4,
+			if: {
+				$and: [
+					{$eq: ["$properties.tags.wikipedia", tags.wikipedia]},
+				],
+			}
+		})
+	}
+
+	const contactKeys = tagKeys.filter(key => key.startsWith('contact:'))
+	if (contactKeys.length > 0) {
+		scoreStages.push({
+			score: 4,
+			if: {
+				$or: contactKeys.map(key => {
+					if (key_synonyms[key]) {
+						return [
+							{$eq: ["$properties.tags."+key,               tags[key]]},
+							{$eq: ["$properties.tags."+key_synonyms[key], tags[key]]},
+						]
+					}else{
+						return [
+							{$eq: ["$properties.tags."+key,               tags[key]]},
+						]
+					}
+				})
+				.reduce((acc, array) => acc.concat(array), []) // TODO This should be replaced with flatMap when available.
+			}
+		})
+	}
+
+
+	// ## properties that can change but identify a place (not neccessarly unique!)
+	// (score: 3)
+	
+	const keys_that_represent_the_name = [
+		'official_name',
+		'long_name',
+		'name',
+		'short_name',
+		'alt_name',
+	]
+	const nameKeys = tagKeys.filter(key => (
+		keys_that_represent_the_name.includes(key) ||
+		keys_that_represent_the_name.some(nameKey => key.startsWith(nameKey+':'))
+	))
+	if (nameKeys.length > 0) {
+		scoreStages.push({
+			score: 3,
+			if: {
+				$or: nameKeys.map(key => {
+					return [
+						{$eq: ["$properties.tags."+key, tags[key]]},
+					]
+				})
+				.reduce((acc, array) => acc.concat(array), []) // TODO This should be replaced with flatMap when available.
+			}
+		})
+	}
+
+
+	// ## vague properties that can eventually identify (not neccessarly unique!)
+	// (score: 2)
+	// TODO see notes.md in the ideas repo for infos
+
+
+	// ## properties that identify a group of places (not unique but can narrow it down in combination!)
+	// (score: 1)
+	// TODO see notes.md in the ideas repo for infos
+
+
 
 	// wrap the stages in some mongodb stuff:
 	scoreStages = scoreStages.map(scoreStage => {
@@ -105,17 +229,21 @@ async function getIdFromOSM(tags){
 			{$addFields:{score:0}},
 			...scoreStages,
 			{$match:{
-				score: {$gt:0}
+				score: {$gte:6} // 6 is the score for wikidata. Which should be an exact match. (TODO: Is this number high enough?)
 			}},
 			{$sort:{
 				score: -1
-			}}
+			}},
+			{$limit: 1}
 		]).toArray((error,docs) => {
+			if (error) {
+				console.error(error)
+			}
+
 			if (error || docs.length === 0) {
-				resolve(docs[0]._id)
-			}else{
-				console.log('docs', JSON.stringify(docs, null,4))
 				resolve(new mongodb.ObjectID())
+			}else{
+				resolve(docs[0]._id)
 			}
 		})
 	})
@@ -123,13 +251,22 @@ async function getIdFromOSM(tags){
 
 async function convert_to_answers(element){
 
-	const forID = await getIdFromOSM({
+	const tags = {
 		...element.tags,
 		lat: element.lat,
 		lng: element.lon,
-	})
+		osm_id: 'node/'+element.id,
+	}
 
-	console.log('forID', forID)
+	// add tag synonyms
+	const tagKeys = Object.keys(tags)
+	for (const tagKey of tagKeys) {
+		if (key_synonyms[tagKey]) {
+			tags[key_synonyms[tagKey]] = tags[tagKey]
+		}
+	}
+
+	const forID = await getIdFromOSM(tags)
 
 	const answerDocs = Object.entries(element.tags)
 	.filter(entry => answersByTag[entry[0]])
