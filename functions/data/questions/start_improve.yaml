@@ -4,7 +4,7 @@ question:
   en: What do you want to improve?
 possibleAnswers:
   edit_infos:
-    inputtype: boolean
+    inputtype: button
     icon: edit_location
     title:
       en: Edit information
@@ -19,7 +19,7 @@ possibleAnswers:
       - preset
       # - answer_more
   typo:
-    inputtype: boolean
+    inputtype: button
     icon: short_text
     title:
       en: Typo
@@ -29,7 +29,7 @@ possibleAnswers:
       - name
       - answer_more
   wrong_location:
-    inputtype: boolean
+    inputtype: button
     icon: pin_drop
     title:
       en: Wrong location
@@ -39,7 +39,7 @@ possibleAnswers:
       - geo_pos
       - answer_more
   closed:
-    inputtype: boolean
+    inputtype: button
     icon: location_off
     title:
       en: Closed
