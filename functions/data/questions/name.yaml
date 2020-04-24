@@ -11,11 +11,11 @@ possibleAnswers:
       de: Name in der Orts-Sprache
     tags:
       name: ''
-  name_en:
+  'name:en':
     inputtype: text
     title: 
       en: Name in English
       de: Name in Englisch
     tags:
-      name_en: ''
+      'name:en': ''
 ...
