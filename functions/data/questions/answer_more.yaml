@@ -15,6 +15,8 @@ possibleAnswers:
       - website
       - contact_options
       - find_out_more_links
+      - end_date
+      - start_date
       - preset
   'no':
     inputtype: boolean

@@ -48,6 +48,8 @@ possibleAnswers:
     # tags:
     #   permanently_closed: yes
     followUpQuestions:
+      - end_date
+      - start_date
       - answer_more
   spam:
     inputtype: boolean
