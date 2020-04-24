@@ -45,8 +45,6 @@ possibleAnswers:
       en: Closed
     description:
       en: This place permanently closed, moved, or was replaced.
-    # tags:
-    #   permanently_closed: yes
     followUpQuestions:
       - end_date
       - start_date
