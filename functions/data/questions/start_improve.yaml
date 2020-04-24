@@ -55,8 +55,8 @@ possibleAnswers:
     title:
       en: Spam
       de: Spam
-    # description:
-    #   en: It's fake, offensize, or doesn't exist.
+    description:
+      en: It's fake, offensize, or doesn't exist.
     followUpQuestions:
       - spam
       - answer_more
