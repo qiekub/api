@@ -6,7 +6,6 @@ question:
 possibleAnswers:
   'yes':
     inputtype: boolean
-    icon:
     title:
       en: 'Yes'
       de: Ja

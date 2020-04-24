@@ -5,7 +5,6 @@ question:
   de: Wie lautet die Webseite?
 possibleAnswers:
   url:
-    icon: 
     inputtype: text
     title: 
       en: Link to the webseite
