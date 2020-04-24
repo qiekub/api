@@ -116,6 +116,7 @@ const schema = gql`
 	}
 	type Answer {
 		inputtype: String
+		parsers: [String]
 		key: String
 		icon: String
 		title(languages: [String]): [Text]
