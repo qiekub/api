@@ -56,10 +56,10 @@ possibleAnswers:
     icon: report
     title:
       en: Spam
-    description:
-      en: It's fake, offensize, or doesn't exist.
-    # tags:
-    #   spam: yes
+      de: Spam
+    # description:
+    #   en: It's fake, offensize, or doesn't exist.
     followUpQuestions:
+      - spam
       - answer_more
 ...

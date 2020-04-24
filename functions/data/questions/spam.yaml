@@ -1,0 +1,23 @@
+%YAML 1.2
+---
+question:
+  en: Is this place fake, offensize, or doesn't exist?
+  de: Ist dieser Ort fake, beleidigend, oder existiert er nicht?
+possibleAnswers:
+  'yes':
+    inputtype: boolean
+    icon: check
+    title: 
+      en: "Yes, it's spam!"
+      de: Ja, der Ort ist Spam
+    tags:
+      spam: 'yes'
+  'no':
+    inputtype: boolean
+    icon: clear
+    title: 
+      en: 'No'
+      de: Nein
+    tags:
+      spam: 'no'
+...
