@@ -1,4 +1,5 @@
 const flatten = require('flat')
+const async = require('async')
 
 const isGeoCoordinateLegalPromise = require('./modules/isGeoCoordinateLegalPromise.js')
 
