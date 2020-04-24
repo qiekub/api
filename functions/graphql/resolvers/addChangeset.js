@@ -4,12 +4,12 @@ module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
 
 	return new Promise((resolve,reject)=>{
-		const changeset = args.changeset
+		const properties = args.properties
 
-		if (mongodb.ObjectID.isValid(changeset.forID)) {
-			const forID = new mongodb.ObjectID(changeset.forID)
+		if (mongodb.ObjectID.isValid(properties.forID)) {
+			const forID = new mongodb.ObjectID(properties.forID)
 			addChangeset(mongodb, {
-				...changeset,
+				...properties,
 				forID,
 			}, changesetID=>{
 				compileAndUpsertPlace(mongodb, [forID], ()=>{
