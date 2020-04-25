@@ -2,14 +2,17 @@
 ---
 question:
   en: What do you want to improve?
+  de: Was möchtest du verbessern?
 possibleAnswers:
   edit_infos:
     inputtype: button
     icon: edit_location
     title:
       en: Edit information
+      de: Infos bearbeiten
     description:
       en: I want to contribute my knowledge!
+      de: Ich weiß etwas!
     followUpQuestions:
       - wheelchair_accessible
       - age
@@ -23,8 +26,10 @@ possibleAnswers:
     icon: short_text
     title:
       en: Typo
+      de: Tippfehler
     description:
-      en: There's a typo in the name but it's otherwise correct.
+      en: There's a typo in the name. # There's a typo in the name but it's otherwise correct.
+      de: Da ist ein Tippfehler im Namen.
     followUpQuestions:
       - name
       - answer_more
@@ -33,8 +38,10 @@ possibleAnswers:
     icon: pin_drop
     title:
       en: Wrong location
+      de: Falscher Ort
     description:
       en: The marker is in the wrong place or the address is incorrect.
+      de: Der Marker ist an der falschen Stelle oder die Adresse ist falsch.
     followUpQuestions:
       - geo_pos
       - answer_more
@@ -43,8 +50,10 @@ possibleAnswers:
     icon: location_off
     title:
       en: Closed
+      de: Geschlossen
     description:
       en: This place permanently closed, moved, or was replaced.
+      de: Dieser Ort wurde dauerhaft geschlossen, ist umgezogen oder wurde ersetzt.
     followUpQuestions:
       - end_date
       - start_date
@@ -57,6 +66,7 @@ possibleAnswers:
       de: Spam
     description:
       en: It's fake, offensize, or doesn't exist.
+      de: Der Ort ist fake, beleidigend oder existiert nicht.
     followUpQuestions:
       - spam
       - answer_more
