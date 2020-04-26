@@ -39,4 +39,17 @@ function gqlServer() {
 	return app
 }
 
-exports = module.exports = functions.region('europe-west3').https.onRequest(gqlServer())
+const runtimeOpts = {
+  timeoutSeconds: 20, // 20seconds
+  memory: '512MB',
+}
+
+
+
+exports = module.exports = functions
+// .region('europe-west3')
+.region('us-central1')
+// "Important: Firebase Hosting supports Cloud Functions in us-central1 only."
+// source: https://firebase.google.com/docs/hosting/full-config#rewrites
+.runWith(runtimeOpts)
+.https.onRequest(gqlServer())
