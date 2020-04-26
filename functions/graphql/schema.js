@@ -125,11 +125,6 @@ const schema = gql`
 		tags: JSONObject
 		hidden: Boolean
 	}
-	type Sources {
-		forIDs: [ID]
-		sources: String
-		dataset: String
-	}
 
 	type Metadata {
 		lastModified: Timestamp
@@ -141,7 +136,7 @@ const schema = gql`
 
 
 
-	union Properties = Error | Place | Changeset | Question | Answer | Sources | Text
+	union Properties = Error | Place | Changeset | Question | Text
 	type Doc {
 		_id: ID
 		properties: Properties
