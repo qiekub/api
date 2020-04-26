@@ -265,6 +265,20 @@ async function saveAsChangeset(mongodb, element, finished_callback){
 		}
 	}
 
+
+	// Get the preset and add it to the tags.
+	// If no preset is defined in the tags, or it isn't an okay preset.
+	if (
+		!(!!tags.preset)
+		|| !(!!_presets_[tags.preset])
+	) {
+		const preset = getPreset(tags, _presets_)
+		if (preset.key) {
+			tags.preset = preset.key
+		}
+	}
+
+
 	const forID = await getExistingID(mongodb, tags)
 
 	addChangeset(mongodb, {
