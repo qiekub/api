@@ -1,4 +1,4 @@
-const { compileAnswers, upsertOne } = require('../../modules.js')
+const { compileAndUpsertPlace, upsertOne } = require('../../modules.js')
 
 module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
@@ -9,21 +9,11 @@ module.exports = async (parent, args, context, info) => {
 		}else if (!mongodb.ObjectID.isValid(args._id)) {
 			reject('_id is not a correct ObjectID')
 		}else{
-			compileAnswers(mongodb, [new mongodb.ObjectID(args._id)], (error,docs)=>{
+			compileAndUpsertPlace(mongodb, [new mongodb.ObjectID(args._id)], (error,didItUpsert)=>{
 				if (error) {
 					reject(error)
 				}else{
-					if (!!docs && docs.length > 0) {					
-						upsertOne(mongodb.CompiledPlaces_collection, docs[0], docID=>{
-							if (!!docID) {
-								resolve(true)
-							}else{
-								resolve(false)
-							}
-						})
-					}else{
-						resolve(false)
-					}
+					resolve(didItUpsert)
 				}
 			})
 		}
