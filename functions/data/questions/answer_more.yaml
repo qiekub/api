@@ -13,11 +13,11 @@ possibleAnswers:
       - wheelchair_accessible
       - age
       - website
-      - contact_options
-      - find_out_more_links
-      - end_date
-      - start_date
-      - preset
+      # - contact_options
+      # - find_out_more_links
+      # - end_date
+      # - start_date
+      # - preset
   'no':
     inputtype: boolean
     title:
