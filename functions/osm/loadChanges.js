@@ -326,7 +326,7 @@ async function loadChangesFromOverpass() {
 }
 
 
-function start(){
+function loadChanges(){
 	console.log('started loading...')
 
 	loadChangesFromOverpass().then(async changes=>{
