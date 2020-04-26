@@ -30,9 +30,7 @@ const schema = gql`
 	}
 
 	type Mutation {
-		addSources(properties: Sources_Input): ID
 		addChangeset(properties: Changeset_Input): ID
-		answerQuestion(properties: JSONObject): ID
 		compilePlace(_id: ID): Boolean
 	}
 
@@ -126,11 +124,6 @@ const schema = gql`
 		hidden: Boolean
 	}
 	type Sources {
-		forIDs: [ID]
-		sources: String
-		dataset: String
-	}
-	input Sources_Input {
 		forIDs: [ID]
 		sources: String
 		dataset: String

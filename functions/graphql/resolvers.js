@@ -3,12 +3,12 @@ const {GraphQLScalarType} = require('graphql')
 const {Kind} = require('graphql/language')
 
 const compilePlace = require('./resolvers/compilePlace.js')
-const addSources = require('./resolvers/addSources.js')
+// const addSources = require('./resolvers/addSources.js')
 const getPlace = require('./resolvers/getPlace.js')
 const getPlaces = require('./resolvers/getPlaces.js')
 const search = require('./resolvers/search.js')
 const addChangeset = require('./resolvers/addChangeset.js')
-const answerQuestion = require('./resolvers/answerQuestion.js')
+// const answerQuestion = require('./resolvers/answerQuestion.js')
 const getQuestions = require('./resolvers/getQuestions.js')
 const isGeoCoordinateLegal = require('./resolvers/isGeoCoordinateLegal.js')
 
@@ -131,9 +131,9 @@ module.exports = {
 		getQuestions,
 	},
 	Mutation: {
-		addSources,
+		// addSources,
 		addChangeset,
-		answerQuestion,
+		// answerQuestion,
 		compilePlace,
 	},
 
