@@ -1,3 +1,5 @@
+const functions = require('firebase-functions')
+
 const async = require('async')
 const fetch = require('node-fetch')
 
@@ -352,6 +354,18 @@ function loadChanges(){
 	})
 }
 
-start()
+const runtimeOpts = {
+  timeoutSeconds: 540, // 540seconds = 9minutes
+  memory: '256MB',
+}
 
+exports = module.exports = functions
+.region('europe-west2')
+.runWith(runtimeOpts)
+.pubsub.schedule('1 0 * * *').onRun(context => {
+	// console.log('This will be run one minutes after midnight, every day!')
+	loadChanges()
+	return null
+})
 
+// exports = module.exports = functions.https.onRequest(loadChanges)
