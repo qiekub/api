@@ -7,11 +7,13 @@ possibleAnswers:
   geo:
     inputtype: geo
   lat:
+    inputtype: number
     hidden: true
     tags:
-      lat: ""
+      lat: ''
   lng:
+    inputtype: number
     hidden: true
     tags:
-      lng: ""
+      lng: ''
 ...

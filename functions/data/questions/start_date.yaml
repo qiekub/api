@@ -1,0 +1,14 @@
+%YAML 1.2
+---
+question:
+  en: When did this place open?
+  de: Wann wurde dieser Ort eröffnet?
+possibleAnswers:
+  start_date:
+    inputtype: text
+    title: 
+      en: Opening date
+      de: Eröffnungs Datum
+    tags:
+      start_date:
+...

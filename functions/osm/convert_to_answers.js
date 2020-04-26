@@ -1,10 +1,8 @@
-const functions = require('firebase-functions')
-
 const async = require('async')
 const fetch = require('node-fetch')
 
 const getMongoDbContext = require('../getMongoDbContext.js')
-const { addChangeset, compile_places_from_changesets, upsertOne, compileAndUpsertPlace, getPreset } = require('../modules.js')
+const { addAnswer, compileAnswers, upsertOne, getPreset } = require('../modules.js')
 
 const _presets_ = require('../data/dist/presets.json')
 const questionsInSchema = require('../data/dist/questionsInSchema.json')
@@ -77,7 +75,7 @@ async function getExistingID(mongodb, tags){
 			score: 1000, // could also be Infinity
 			if: {
 				$and: [
-					{$eq: ["$properties.tags.osm_id", tags.osm_id]},
+					{$eq: ["$properties.osmID", tags.osm_id]},
 				],
 			}
 		})
@@ -227,7 +225,8 @@ async function getExistingID(mongodb, tags){
 	})
 
 	return new Promise( (resolve,reject) => {
-		mongodb.CompiledPlaces_collection.aggregate([
+		// CompiledPlaces_collection
+		mongodb.OsmCache_collection.aggregate([
 			{$addFields:{score:0}},
 			...scoreStages,
 			{$match:{
@@ -251,12 +250,12 @@ async function getExistingID(mongodb, tags){
 	})
 }
 
-async function saveAsChangeset(mongodb, element, finished_callback){
+async function convert_to_answers(mongodb, element, finished_callback){
 	const tags = {
 		...element.tags,
 		lat: element.lat,
 		lng: element.lon,
-		osm_id: element.type+'/'+element.id,
+		osm_id: 'node/'+element.id,
 	}
 
 	// add tag synonyms
@@ -267,32 +266,63 @@ async function saveAsChangeset(mongodb, element, finished_callback){
 		}
 	}
 
+	const forID = await getExistingID(mongodb, tags)
 
-	// Get the preset and add it to the tags.
-	// If no preset is defined in the tags, or it isn't an okay preset.
-	if (
-		!(!!tags.preset)
-		|| !(!!_presets_[tags.preset])
-	) {
-		const preset = getPreset(tags, _presets_)
-		if (preset.key) {
-			tags.preset = preset.key
+	const answerDocs = []
+
+	// get the preset and add it as an answer
+	const preset = getPreset(tags, _presets_)
+	answerDocs.push({
+		properties: {
+			forID: forID,
+			questionID: 'preset',
+			answer: {
+				preset: preset.key
+			},
+		}
+	})
+
+	// get all other answers
+	const tag_entries = Object.entries(tags)
+	.filter(entry => answersByTag[entry[0]])
+
+	for (const entry of tag_entries) {
+		const answers = answersByTag[entry[0]]
+		.map(answer => {
+			answer.value = value2(answer.inputtype, entry[1])
+			return answer
+		})
+		.filter(answer => answer.value)
+
+		for (const answer of answers) {
+			answerDocs.push({
+				// _id: new mongodb.ObjectID(),
+				// __typename: 'Doc',
+				properties: {
+					// __typename: 'Answer',
+					forID: forID,
+					questionID: answer._id,
+					answer: {
+						[answer.key]: answer.value
+					},
+				},
+				// metadata: {
+				// 	__typename: 'Metadata',
+				// 	created: new Date(),
+				// 	lastModified: new Date(),
+				// }
+			})
 		}
 	}
 
-
-	const forID = await getExistingID(mongodb, tags)
-
-	addChangeset(mongodb, {
-		forID,
-		tags,
-		sources: `https://www.openstreetmap.org/${element.type}/${element.id} https://www.openstreetmap.org/changeset/${element.changeset}`,
-		fromBot: true,
-		dataset: 'osm',
-		antiSpamUserIdentifier: 'osm-uid-'+element.uid, // `https://www.openstreetmap.org/user/${element.user}`,
-	}, changesetID=>{
-		finished_callback(forID)
-	}, ()=>{
+	
+	async.each(answerDocs, (answerDoc, callback) => {
+		addAnswer(mongodb, answerDoc.properties, ()=>{
+			callback()
+		}, ()=>{
+			callback()
+		})
+	}, error => {
 		finished_callback(forID)
 	})
 }
@@ -305,9 +335,9 @@ async function loadChangesFromOverpass() {
 
 	const currentDateMinusOneDay = d.toISOString() // 2020-04-20T00:00:00Z
 
-	const url = `https://overpass-api.de/api/interpreter?data=[bbox:90,-180,-90,180][out:json][timeout:240];(node[~"^community_centre.*$"~"(lgbt|homosexual|gay)"](newer:"${currentDateMinusOneDay}");node[~"^lgbtq.*$"~"."](newer:"${currentDateMinusOneDay}");node[~"^gay.*$"~"."](newer:"${currentDateMinusOneDay}");node[~"^fetish.*$"~"."](newer:"${currentDateMinusOneDay}"););out meta;`
+	// const url = `https://overpass-api.de/api/interpreter?data=[bbox:90,-180,-90,180][out:json][timeout:240];(node[~"^community_centre.*$"~"(lgbt|homosexual|gay)"](newer:"${currentDateMinusOneDay}");node[~"^lgbtq.*$"~"."](newer:"${currentDateMinusOneDay}");node[~"^gay.*$"~"."](newer:"${currentDateMinusOneDay}");node[~"^fetish.*$"~"."](newer:"${currentDateMinusOneDay}"););out qt;`
 
-	// const url = `https://overpass-api.de/api/interpreter?data=[bbox:90,-180,-90,180][out:json][timeout:240];(node[~"^community_centre.*$"~"(lgbt|homosexual|gay)"];node[~"^lgbtq.*$"~"."];node[~"^gay.*$"~"."];node[~"^fetish.*$"~"."];);out meta;`
+	const url = `https://overpass-api.de/api/interpreter?data=[bbox:90,-180,-90,180][out:json][timeout:240];(node[~"^community_centre.*$"~"(lgbt|homosexual|gay)"];node[~"^lgbtq.*$"~"."];node[~"^gay.*$"~"."];node[~"^fetish.*$"~"."];);out qt;`
 
 	return fetch(encodeURI(url), {
 		method: 'get',
@@ -327,45 +357,48 @@ async function loadChangesFromOverpass() {
 	// return new Promise(resolve => resolve(result))
 }
 
-
-function loadChanges(){
-	console.log('started loading...')
-
-	loadChangesFromOverpass().then(async changes=>{
-		if (changes.elements.length > 0) {
-			const mongodb = await getMongoDbContext()
-		
-			const placeIDsToRebuild = new Set()
-			async.each(changes.elements, (element, callback) => {
-				saveAsChangeset(mongodb, element, placeID => {
-					placeIDsToRebuild.add(placeID)
+function compileAndUpsertPlace(mongodb, docIDs, finished_callback) {
+	compileAnswers(mongodb, docIDs, (error,docs)=>{
+		if (error) {
+			console.error(error)
+			finished_callback()
+		}else{
+			async.each(docs, (doc, callback) => {
+				upsertOne(mongodb.CompiledPlaces_collection, doc, docID=>{
 					callback()
 				})
 			}, error => {
-				console.log([...placeIDsToRebuild])
-				compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], (error,didItUpsert)=>{
-					console.log('finished')
-					mongodb.client.close()
-				})
+				finished_callback()
 			})
 		}
+	})
+}
+
+
+function start(){
+	console.log('started loading...')
+
+	loadChangesFromOverpass().then(async changes=>{
+		const mongodb = await getMongoDbContext()
+	
+		const placeIDsToRebuild = new Set()
+		async.each(changes.elements, (element, callback) => {
+			convert_to_answers(mongodb, element, placeID => {
+				placeIDsToRebuild.add(placeID)
+				callback()
+			})
+		}, error => {
+			console.log([...placeIDsToRebuild])
+			compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], ()=>{
+				console.log('finished')
+				mongodb.client.close()
+			})
+		})
 	}, error=>{
 		console.error(error)
 	})
 }
 
-const runtimeOpts = {
-  timeoutSeconds: 540, // 540seconds = 9minutes
-  memory: '256MB',
-}
+start()
 
-exports = module.exports = functions
-.region('europe-west2')
-.runWith(runtimeOpts)
-.pubsub.schedule('1 0 * * *').onRun(context => {
-	// console.log('This will be run one minutes after midnight, every day!')
-	loadChanges()
-	return null
-})
 
-// exports = module.exports = functions.https.onRequest(loadChanges)

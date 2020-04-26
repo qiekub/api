@@ -5,12 +5,11 @@ question:
   de: Wie lautet die Webseite?
 possibleAnswers:
   url:
-    icon: 
     inputtype: text
     title: 
       en: Link to the webseite
       de: Link zur Webseite
     tags:
-      contact:website: ""
-      website: ""
+      contact:website: ''
+      website: ''
 ...

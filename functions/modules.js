@@ -1,4 +1,5 @@
 const flatten = require('flat')
+const async = require('async')
 
 const isGeoCoordinateLegalPromise = require('./modules/isGeoCoordinateLegalPromise.js')
 
@@ -8,7 +9,65 @@ const questionsInSchemaById = questionsInSchema.reduce((obj,question)=>{
 	return obj
 }, {})
 
+const _presets_ = require('./data/dist/presets.json')
 
+
+
+
+function ObjectFromEntries(entries) {
+	// Should be replaced with Object.fromEntries() when available
+	const obj = {}
+	for (const entry of entries) {
+		obj[entry[0]] = entry[1]
+	}
+	return obj
+}
+
+function addAnswer(mongodb, properties, resolve, reject){
+	mongodb.Answers_collection.insertOne({
+		__typename: 'Doc',
+		properties: {
+			...properties,
+			__typename: 'Answer',
+		},
+		metadata: {
+			created: new Date(),
+			lastModified: new Date(),
+			__typename: 'Metadata',
+		},
+	}).then(result => {
+		if (!!result.insertedId) {
+			resolve(result.insertedId)
+		}else{
+			reject(null)
+		}
+	}).catch(error=>{
+		console.error(error)
+	})
+}
+
+function addChangeset(mongodb, properties, resolve, reject){
+	mongodb.Changesets_collection.insertOne({
+		__typename: 'Doc',
+		properties: {
+			...properties,
+			__typename: 'Changeset',
+		},
+		metadata: {
+			created: new Date(),
+			lastModified: new Date(),
+			__typename: 'Metadata',
+		},
+	}).then(result => {
+		if (!!result.insertedId) {
+			resolve(result.insertedId)
+		}else{
+			reject(null)
+		}
+	}).catch(error=>{
+		console.error(error)
+	})
+}
 
 function upsertOne(collection,doc,callack){
 	if (doc && doc.properties && doc.properties.__typename) {
@@ -50,10 +109,10 @@ function upsertOne(collection,doc,callack){
 				}
 				if (toSet.length > 0) {
 					toSet.push(['metadata.lastModified',new Date()])
-					operations.$set = Object.fromEntries(toSet)
+					operations.$set = ObjectFromEntries(toSet)
 				}
 				if (toUnset.length > 0) {
-					operations.$unset = Object.fromEntries(toUnset)
+					operations.$unset = ObjectFromEntries(toUnset)
 				}
 
 				collection.updateOne({
@@ -291,13 +350,15 @@ function filterOutliers(numbers){
 	return numbers.filter(number => number >= antenne_min && number <= antenne_max)
 }
 
-function compileAnswers(mongodb, placeID, callback){
+function compileAnswers(mongodb, placeIDs, callback){
+
+
 	const __last_n_answers__ = 5
 	mongodb.Answers_collection
 	.aggregate([
 		// START get answers
-		...(!!placeID ? [{$match:{
-			"properties.forID": placeID,
+		...(!!placeIDs ? [{$match:{
+			"properties.forID": {$in: placeIDs},
 			// "properties.questionID": "geo_pos",
 		}}] : []),
 
@@ -441,6 +502,14 @@ function compileAnswers(mongodb, placeID, callback){
 								obj[key] = doc.answerValue
 							}
 						}
+
+						// add tags from the preset:
+						if (obj.preset && typeof obj.preset === 'string' && _presets_[obj.preset] && _presets_[obj.preset].tags) {
+							obj = {
+								..._presets_[obj.preset].tags,
+								...obj,
+							}
+						}
 					}
 					return obj
 				},{})
@@ -521,10 +590,291 @@ function compileAnswers(mongodb, placeID, callback){
 	})
 }
 
+function compile_places_from_changesets(mongodb, placeIDs, callback){
+	// TODO: This can probably be improved as it's just a modified copy of compileAnswers().
+
+	const __last_n_answers__ = 5
+	mongodb.Changesets_collection
+	.aggregate([
+		// START get answers
+		...(!!placeIDs ? [{$match:{
+			"properties.forID": {$in: placeIDs},
+		}}] : []),
+
+
+		{$sort:{
+			"metadata.lastModified": -1
+		}},
+		{$set:{
+			"properties.answer": { $objectToArray: "$properties.tags" },
+		}},
+		{$unset:[ "properties.tags" ]},
+
+
+		// restrict to the latest answer per antiSpamUserIdentifier (and place and key).
+		{$unwind: "$properties.answer"},
+		{$group:{
+			_id: {$concat:[
+				{$toString:"$properties.antiSpamUserIdentifier"},
+				"_",
+				{$toString:"$properties.forID"},
+				"_",
+				{$toString:"$properties.answer.k"},
+			]},
+			doc: {$first:"$$ROOT"},
+		}},
+		{$replaceRoot:{newRoot:"$doc"}},
+
+
+		// restrict to the latest 5 (__last_n_answers__) answers per place and key.
+		{$unwind: "$properties.answer"},
+		{$group:{
+			_id: {$concat:[
+				{$toString:"$properties.forID"},
+				"_",
+				// {$toString:"$properties.questionID"},
+				// "_",
+				{$toString:"$properties.answer.k"},
+			]},
+			docs: {$push:"$$ROOT"},
+		}},
+		{$set:{
+			docs: {$slice:["$docs",0,__last_n_answers__]}
+		}},
+
+
+		{$set:{
+			all_answers_count: {$size:"$docs"}
+		}},
+		{$unwind:"$docs"},
+		// END get answers
+	])
+	.toArray((error,docs)=>{
+
+		docs = docs
+		.map(doc => {
+			const newDoc = {
+				forID: doc.docs.properties.forID,
+				// answerID: doc.docs._id,
+				// answer: doc.docs.properties.answer,
+				all_answers_count: doc.all_answers_count,
+
+				answerKey: doc.docs.properties.answer.k,
+				answerValue: doc.docs.properties.answer.v,
+
+				// source: {
+				// 	sources: doc.docs.properties.sources,
+				// 	fromBot: doc.docs.properties.fromBot,
+				// 	dataset: doc.docs.properties.dataset,
+				// },
+				changesetID: doc.docs._id,
+			}
+			newDoc.key_id = newDoc.forID+'|'+newDoc.answerKey
+			const answerValueAsJSON = JSON.stringify(newDoc.answerValue)
+			newDoc.value_id = newDoc.key_id+'|'+answerValueAsJSON
+
+			return newDoc
+		})
+
+
+		const answerCountsByValue = docs
+		.reduce((obj,doc)=>{
+			if (!obj[doc.value_id]) {
+				obj[doc.value_id] = 0
+			}
+			obj[doc.value_id] += 1
+			return obj
+		}, {})
+
+
+		docs = docs
+		.map(doc => {
+
+			doc.confidence = answerCountsByValue[doc.value_id] / Math.max(__last_n_answers__, doc.all_answers_count)
+			delete doc.all_answers_count
+			delete doc.value_id
+			return doc
+		})
+		.sort((a,b) => b.confidence - a.confidence)
+		.reduce((obj,doc)=>{
+			if (!obj[doc.key_id]) {
+				obj[doc.key_id] = {
+					...doc,
+					values: [],
+					changesetIDs: [],
+				}
+			}
+
+			if (
+				!isNaN(doc.answerValue)
+				&& typeof doc.answerValue !== 'boolean'
+				&& (doc.answerKey === 'lat' || doc.answerKey === 'lng')
+			) {
+				obj[doc.key_id].values.push(doc.answerValue*1)
+
+				if (!!doc.changesetID && doc.changesetID !== '') {
+					obj[doc.key_id].changesetIDs.push(doc.changesetID)
+				}
+			}else if (obj[doc.key_id].values.length === 0) { // only use the first value
+				obj[doc.key_id].values.push(doc.answerValue)
+
+				if (!!doc.changesetID && doc.changesetID !== '') {
+					obj[doc.key_id].changesetIDs.push(doc.changesetID)
+				}
+			}
+
+			return obj
+		},{})
+
+
+		// merge lat and lng values
+		const shiftBy = 180 // Use a higher number than 180 when accepting number other than geo-lat-lng (eg.: 10000)
+		docs = Object.keys(docs)
+		.reduce((obj,key_id) => {
+			obj[key_id] = docs[key_id]
+			delete obj[key_id].key_id
+
+			let this_values = docs[key_id].values
+			if (this_values.length > 1) {
+				this_values = filterOutliers(this_values)
+				
+				// // geometric-mean:
+				// const value = this_values.reduce((n,v)=>n*(shiftBy+v),1)
+				// const new_value = (value ** (1/this_values.length)) - shiftBy
+				
+				// average:
+				const value = this_values.reduce((n,v)=>n+v,0)
+				const new_value = (value / this_values.length)
+
+				obj[key_id].answerValue = Number.parseFloat(new_value.toFixed(6)) // https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
+			}else{
+			 	obj[key_id].answerValue = this_values[0]
+			}
+			return obj
+		}, {})
+
+		
+		docs = Object.values(docs)
+		.reduce((obj,doc) => {
+			if (!obj[doc.forID]) {
+				obj[doc.forID] = {
+					__typename: 'Doc',
+					_id: doc.forID,
+					properties: {
+						__typename: 'Place',
+						tags: {},
+						confidences: {},
+						changesetIDs: {},
+					}
+				}
+			}
+
+			obj[doc.forID].properties.tags[doc.answerKey] = doc.answerValue
+			obj[doc.forID].properties.confidences[doc.answerKey] = doc.confidence
+			obj[doc.forID].properties.changesetIDs[doc.answerKey] = doc.changesetIDs
+
+			return obj
+		}, {})
+
+		docs = Object.values(docs)
+		.map(doc => {
+			// add geometry
+
+			doc.properties.name = []
+			if (doc.properties.tags.name) {
+				doc.properties.name.push({
+					__typename: 'Text',
+					language: null,
+					text: doc.properties.tags.name,
+				})
+			}
+			if (doc.properties.tags['name:en']) {
+				doc.properties.name.push({
+					__typename: 'Text',
+					language: 'en',
+					text: doc.properties.tags['name:en'],
+				})
+			}
+
+			doc.properties.geometry = {
+				__typename: 'GeoData',
+			}
+			if (doc.properties.tags.lat && doc.properties.tags.lng) {
+				doc.properties.geometry.location = {
+					__typename: 'GeoCoordinate',
+					lat: doc.properties.tags.lat,
+					lng: doc.properties.tags.lng,
+				}
+			}
+			return doc
+		})
+
+		callback(null,docs)
+	})
+}
+
+function compileAndUpsertPlace(mongodb, docIDs, finished_callback) {
+	compile_places_from_changesets(mongodb, docIDs, (error,docs)=>{
+		if (error) {
+			console.error(error)
+			finished_callback(error, false)
+		}else{
+			async.each(docs, (doc, callback) => {
+				upsertOne(mongodb.CompiledPlaces_collection, doc, docID=>{
+					callback()
+				})
+			}, error => {
+				if (error) {
+					console.error(error)
+					finished_callback(error, false)					
+				}else{
+					finished_callback(null, true)
+				}
+			})
+		}
+	})
+}
+
+
+function getPreset(tags, presets) {
+	const tags_keys = Object.keys(tags)
+	for (const preset_key in presets) {
+		const preset_tags = presets[preset_key].tags
+		const preset_tags_keys = Object.keys(preset_tags)
+
+		const common_keys = preset_tags_keys.filter(key => tags_keys.includes(key))
+
+		if (common_keys.length === preset_tags_keys.length) {
+			const okay_keys = common_keys.filter(key => preset_tags[key] === '*' || tags[key].includes(preset_tags[key]))
+			if (okay_keys.length === preset_tags_keys.length) {
+				return {
+					key: preset_key,
+					...presets[preset_key],
+				}
+			}
+		}
+	}
+
+
+	return {
+		"key": "",
+		"tags_length": 0,
+		"max_tag_value_length": 0,
+		"tags": {},
+		"name": {},
+		"terms": {}
+	}
+	// return presets[Object.keys(presets)[0]]
+}
 
 
 module.exports = {
+	addAnswer,
+	addChangeset,
 	upsertOne,
 	compileAnswers,
+	compile_places_from_changesets,
 	isGeoCoordinateLegalPromise,
+	compileAndUpsertPlace,
+	getPreset,
 }

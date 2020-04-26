@@ -1,0 +1,14 @@
+%YAML 1.2
+---
+question:
+  en: What is this place?
+  de: Was ist dies für ein Ort?
+possibleAnswers:
+  preset:
+    inputtype: preset
+    title:
+      en: Choose a location type...
+      de: Wähl die Art des Ortes aus...
+    tags:
+      preset: ''
+...

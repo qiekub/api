@@ -11,6 +11,8 @@ const schema = gql`
 		isGeoCoordinateLegal(lat: Float, lng: Float): Boolean
 
 		getPlace(_id: ID): Doc
+		getChangeset(_id: ID): Doc
+
 		getPlaces: [Doc]
 		getMarkers: [Marker]
 		getQuestions: [Doc]
@@ -30,9 +32,7 @@ const schema = gql`
 	}
 
 	type Mutation {
-		addSources(properties: Sources_input): ID
-		addChangeset(changeset: Changeset_Input): Doc
-		answerQuestion(properties: JSONObject): ID
+		addChangeset(properties: Changeset_Input): ID
 		compilePlace(_id: ID): Boolean
 	}
 
@@ -74,26 +74,38 @@ const schema = gql`
 
 		tags(keys: [String]): JSONObject
 		confidences(keys: [String]): JSONObject
-		sources(keys: [String]): JSONObject
+		changesetIDs(keys: [String]): JSONObject
 	}
 
 	type Changeset {
-		forDoc: String
-		properties: Properties
+		forID: ID
+		tags: JSONObject
+
+		"Links and any other reference"
 		sources: String
-		comment: String
+		
 		fromBot: Boolean
-		created_by: String
-		created_at: Timestamp
+
+		"osm / qiekub"
+		dataset: ID
+
+		"anything to identify the user who created the change"
+		antiSpamUserIdentifier: ID
 	}
 	input Changeset_Input {
-		forDoc: String
-		properties: JSONObject
+		forID: ID
+		tags: JSONObject
+
+		"Links and any other reference"
 		sources: String
-		comment: String
+		
 		fromBot: Boolean
-		created_by: String
-		created_at: Timestamp
+
+		"osm / qiekub"
+		dataset: ID
+
+		"anything to identify the user who created the change"
+		antiSpamUserIdentifier: ID
 	}
 
 	type Question {
@@ -104,6 +116,7 @@ const schema = gql`
 	}
 	type Answer {
 		inputtype: String
+		parsers: [String]
 		key: String
 		icon: String
 		title(languages: [String]): [Text]
@@ -111,16 +124,6 @@ const schema = gql`
 		followUpQuestionIDs: [ID]
 		tags: JSONObject
 		hidden: Boolean
-	}
-	type Sources {
-		forIDs: [ID]
-		sources: String
-		dataset: String
-	}
-	input Sources_input {
-		forIDs: [ID]
-		sources: String
-		dataset: String
 	}
 
 	type Metadata {
@@ -133,7 +136,7 @@ const schema = gql`
 
 
 
-	union Properties = Error | Place | Changeset | Question | Answer | Sources | Text
+	union Properties = Error | Place | Changeset | Question | Text
 	type Doc {
 		_id: ID
 		properties: Properties

@@ -1,0 +1,66 @@
+%YAML 1.2
+---
+question:
+  en: Where can somebody find out more?
+  de: Wo kann man mehr erfahren?
+possibleAnswers:
+  input:
+    inputtype: text
+    parsers:
+      - urls
+      - socialmedia
+      - wikidata
+      - wikipedia
+    title:
+      en: Links to their website, facebook-page, ...
+      de: Links zur Webseite, Facebook-Seite, ...
+  urls:
+    hidden: true
+    inputtype: text
+    tags:
+      contact:website: ''
+      website: ''
+      url: ''
+  facebook:
+    hidden: true
+    inputtype: text
+    tags:
+      contact:facebook: ''
+      facebook: ''
+  instagram:
+    hidden: true
+    inputtype: text
+    tags:
+      contact:instagram: ''
+      instagram: ''
+  twitter:
+    hidden: true
+    inputtype: text
+    tags:
+      contact:twitter: ''
+      twitter: ''
+  youtube:
+    hidden: true
+    inputtype: text
+    tags:
+      contact:youtube: ''
+      youtube: ''
+  pinterest:
+    hidden: true
+    inputtype: text
+    tags:
+      contact:pinterest: ''
+      pinterest: ''
+  flickr:
+    hidden: true
+    inputtype: text
+    tags:
+      contact:flickr: ''
+      flickr: ''
+  yelp:
+    hidden: true
+    inputtype: text
+    tags:
+      contact:yelp: ''
+      yelp: ''
+...

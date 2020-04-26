@@ -1,5 +1,3 @@
-const { compileAndUpsertPlace, upsertOne } = require('../../modules.js')
-
 module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
 	
@@ -9,12 +7,13 @@ module.exports = async (parent, args, context, info) => {
 		}else if (!mongodb.ObjectID.isValid(args._id)) {
 			reject('_id is not a correct ObjectID')
 		}else{
-			compileAndUpsertPlace(mongodb, [new mongodb.ObjectID(args._id)], (error,didItUpsert)=>{
-				if (error) {
-					reject(error)
-				}else{
-					resolve(didItUpsert)
-				}
+			mongodb.Changesets_collection.findOne({
+				_id: new mongodb.ObjectID(args._id),
+				'properties.__typename': 'Changeset',
+			}).then(resultDoc => {
+				resolve(resultDoc)
+			}).catch(error=>{
+				reject(error)
 			})
 		}
 	})

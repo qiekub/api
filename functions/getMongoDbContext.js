@@ -25,11 +25,8 @@ function getMongoDbContext(){
 						client: mongodb_client,
 						ObjectID: ObjectID,
 	
-						// collection: mongodb_client.db('Graph').collection('CompiledPlaces'),
 						CompiledPlaces_collection: mongodb_client.db('Graph').collection('CompiledPlaces'),
-						OsmCache_collection: mongodb_client.db('Graph').collection('OsmCache'),
-						Answers_collection: mongodb_client.db('Graph').collection('Answers3'),
-						Sources_collection: mongodb_client.db('Graph').collection('Sources'),
+						Changesets_collection: mongodb_client.db('Graph').collection('Changesets'),
 					}
 	
 					resolve(_ContextChache_.mongodb)

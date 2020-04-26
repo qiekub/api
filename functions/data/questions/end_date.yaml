@@ -1,0 +1,21 @@
+%YAML 1.2
+---
+question:
+  en: When did this place close permanently?
+  de: Wann wurde dieser Ort geschlossen?
+possibleAnswers:
+  is_open:
+    inputtype: button
+    title: 
+      en: This place is open!
+      de: Der Ort ist nicht geschlossen!
+    tags:
+      end_date: false
+  end_date:
+    inputtype: text
+    title: 
+      en: Closing date
+      de: Schließungs Datum
+    tags:
+      end_date: ''
+...

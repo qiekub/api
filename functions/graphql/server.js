@@ -39,4 +39,4 @@ function gqlServer() {
 	return app
 }
 
-exports = module.exports = functions.https.onRequest(gqlServer())
+exports = module.exports = functions.region('europe-west3').https.onRequest(gqlServer())
