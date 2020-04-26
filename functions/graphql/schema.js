@@ -11,6 +11,8 @@ const schema = gql`
 		isGeoCoordinateLegal(lat: Float, lng: Float): Boolean
 
 		getPlace(_id: ID): Doc
+		getChangeset(_id: ID): Doc
+
 		getPlaces: [Doc]
 		getMarkers: [Marker]
 		getQuestions: [Doc]
@@ -72,7 +74,7 @@ const schema = gql`
 
 		tags(keys: [String]): JSONObject
 		confidences(keys: [String]): JSONObject
-		sources(keys: [String]): JSONObject
+		changesetIDs(keys: [String]): JSONObject
 	}
 
 	type Changeset {

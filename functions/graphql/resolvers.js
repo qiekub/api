@@ -5,6 +5,7 @@ const {Kind} = require('graphql/language')
 const compilePlace = require('./resolvers/compilePlace.js')
 // const addSources = require('./resolvers/addSources.js')
 const getPlace = require('./resolvers/getPlace.js')
+const getChangeset = require('./resolvers/getChangeset.js')
 const getPlaces = require('./resolvers/getPlaces.js')
 const search = require('./resolvers/search.js')
 const addChangeset = require('./resolvers/addChangeset.js')
@@ -127,6 +128,7 @@ module.exports = {
 				}
 			})
 		},
+		getChangeset,
 
 		getQuestions,
 	},
@@ -142,7 +144,7 @@ module.exports = {
 
 		tags: getFilterByKeysFunction('tags'),
 		confidences: getFilterByKeysFunction('confidences'),
-		sources: getFilterByKeysFunction('sources'),
+		changesetIDs: getFilterByKeysFunction('changesetIDs'),
 	},
 
 	Marker: {

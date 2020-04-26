@@ -661,6 +661,13 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 
 				answerKey: doc.docs.properties.answer.k,
 				answerValue: doc.docs.properties.answer.v,
+
+				// source: {
+				// 	sources: doc.docs.properties.sources,
+				// 	fromBot: doc.docs.properties.fromBot,
+				// 	dataset: doc.docs.properties.dataset,
+				// },
+				changesetID: doc.docs._id,
 			}
 			newDoc.key_id = newDoc.forID+'|'+newDoc.answerKey
 			const answerValueAsJSON = JSON.stringify(newDoc.answerValue)
@@ -668,6 +675,7 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 
 			return newDoc
 		})
+
 
 		const answerCountsByValue = docs
 		.reduce((obj,doc)=>{
@@ -678,8 +686,10 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 			return obj
 		}, {})
 
+
 		docs = docs
 		.map(doc => {
+
 			doc.confidence = answerCountsByValue[doc.value_id] / Math.max(__last_n_answers__, doc.all_answers_count)
 			delete doc.all_answers_count
 			delete doc.value_id
@@ -687,35 +697,41 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 		})
 		.sort((a,b) => b.confidence - a.confidence)
 		.reduce((obj,doc)=>{
+			if (!obj[doc.key_id]) {
+				obj[doc.key_id] = {
+					...doc,
+					values: [],
+					changesetIDs: [],
+				}
+			}
+
 			if (
 				!isNaN(doc.answerValue)
 				&& typeof doc.answerValue !== 'boolean'
 				&& (doc.answerKey === 'lat' || doc.answerKey === 'lng')
 			) {
-				if (!obj[doc.key_id]) {
-					obj[doc.key_id] = {
-						doc,
-						values: [],
-					}
-				}
 				obj[doc.key_id].values.push(doc.answerValue*1)
-			}else if (!obj[doc.key_id]) {
-				obj[doc.key_id] = {
-					doc,
-					values: [doc.answerValue],
+
+				if (!!doc.changesetID && doc.changesetID !== '') {
+					obj[doc.key_id].changesetIDs.push(doc.changesetID)
+				}
+			}else if (obj[doc.key_id].values.length === 0) { // only use the first value
+				obj[doc.key_id].values.push(doc.answerValue)
+
+				if (!!doc.changesetID && doc.changesetID !== '') {
+					obj[doc.key_id].changesetIDs.push(doc.changesetID)
 				}
 			}
 
-
-		
 			return obj
 		},{})
+
 
 		// merge lat and lng values
 		const shiftBy = 180 // Use a higher number than 180 when accepting number other than geo-lat-lng (eg.: 10000)
 		docs = Object.keys(docs)
 		.reduce((obj,key_id) => {
-			obj[key_id] = docs[key_id].doc
+			obj[key_id] = docs[key_id]
 			delete obj[key_id].key_id
 
 			let this_values = docs[key_id].values
@@ -736,6 +752,7 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 			}
 			return obj
 		}, {})
+
 		
 		docs = Object.values(docs)
 		.reduce((obj,doc) => {
@@ -747,23 +764,14 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 						__typename: 'Place',
 						tags: {},
 						confidences: {},
+						changesetIDs: {},
 					}
 				}
 			}
 
-			obj[doc.forID].properties.tags = {
-				...obj[doc.forID].properties.tags,
-				...{
-					[doc.answerKey]: doc.answerValue,
-				}
-			}
-
-			obj[doc.forID].properties.confidences = {
-				...obj[doc.forID].properties.confidences,
-				...{
-					[doc.answerKey]: doc.confidence,
-				}
-			}
+			obj[doc.forID].properties.tags[doc.answerKey] = doc.answerValue
+			obj[doc.forID].properties.confidences[doc.answerKey] = doc.confidence
+			obj[doc.forID].properties.changesetIDs[doc.answerKey] = doc.changesetIDs
 
 			return obj
 		}, {})
