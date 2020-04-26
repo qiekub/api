@@ -75,7 +75,7 @@ async function getExistingID(mongodb, tags){
 			score: 1000, // could also be Infinity
 			if: {
 				$and: [
-					{$eq: ["$properties.osmID", tags.osm_id]},
+					{$eq: ["$properties.tags.osm_id", tags.osm_id]},
 				],
 			}
 		})
@@ -225,8 +225,7 @@ async function getExistingID(mongodb, tags){
 	})
 
 	return new Promise( (resolve,reject) => {
-		// CompiledPlaces_collection
-		mongodb.OsmCache_collection.aggregate([
+		mongodb.CompiledPlaces_collection.aggregate([
 			{$addFields:{score:0}},
 			...scoreStages,
 			{$match:{
