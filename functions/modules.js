@@ -601,6 +601,7 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 			"properties.forID": {$in: placeIDs},
 		}}] : []),
 
+
 		{$sort:{
 			"metadata.lastModified": -1
 		}},
@@ -608,6 +609,24 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 			"properties.answer": { $objectToArray: "$properties.tags" },
 		}},
 		{$unset:[ "properties.tags" ]},
+
+
+		// restrict to the latest answer per antiSpamUserIdentifier (and place and key).
+		{$unwind: "$properties.answer"},
+		{$group:{
+			_id: {$concat:[
+				{$toString:"$properties.antiSpamUserIdentifier"},
+				"_",
+				{$toString:"$properties.forID"},
+				"_",
+				{$toString:"$properties.answer.k"},
+			]},
+			doc: {$first:"$$ROOT"},
+		}},
+		{$replaceRoot:{newRoot:"$doc"}},
+
+
+		// restrict to the latest 5 (__last_n_answers__) answers per place and key.
 		{$unwind: "$properties.answer"},
 		{$group:{
 			_id: {$concat:[
@@ -622,6 +641,8 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 		{$set:{
 			docs: {$slice:["$docs",0,__last_n_answers__]}
 		}},
+
+
 		{$set:{
 			all_answers_count: {$size:"$docs"}
 		}},
