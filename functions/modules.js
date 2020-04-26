@@ -817,14 +817,19 @@ function compileAndUpsertPlace(mongodb, docIDs, finished_callback) {
 	compile_places_from_changesets(mongodb, docIDs, (error,docs)=>{
 		if (error) {
 			console.error(error)
-			finished_callback()
+			finished_callback(error, false)
 		}else{
 			async.each(docs, (doc, callback) => {
 				upsertOne(mongodb.CompiledPlaces_collection, doc, docID=>{
 					callback()
 				})
 			}, error => {
-				finished_callback()
+				if (error) {
+					console.error(error)
+					finished_callback(error, false)					
+				}else{
+					finished_callback(null, true)
+				}
 			})
 		}
 	})
