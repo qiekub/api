@@ -327,7 +327,7 @@ function start(){
 			})
 		}, error => {
 			console.log([...placeIDsToRebuild])
-			compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], ()=>{
+			compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], (error,didItUpsert)=>{
 				console.log('finished')
 				mongodb.client.close()
 			})
