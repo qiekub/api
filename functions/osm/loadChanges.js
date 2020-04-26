@@ -330,21 +330,23 @@ function start(){
 	console.log('started loading...')
 
 	loadChangesFromOverpass().then(async changes=>{
-		const mongodb = await getMongoDbContext()
-	
-		const placeIDsToRebuild = new Set()
-		async.each(changes.elements, (element, callback) => {
-			saveAsChangeset(mongodb, element, placeID => {
-				placeIDsToRebuild.add(placeID)
-				callback()
+		if (changes.elements.length > 0) {
+			const mongodb = await getMongoDbContext()
+		
+			const placeIDsToRebuild = new Set()
+			async.each(changes.elements, (element, callback) => {
+				saveAsChangeset(mongodb, element, placeID => {
+					placeIDsToRebuild.add(placeID)
+					callback()
+				})
+			}, error => {
+				console.log([...placeIDsToRebuild])
+				compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], (error,didItUpsert)=>{
+					console.log('finished')
+					mongodb.client.close()
+				})
 			})
-		}, error => {
-			console.log([...placeIDsToRebuild])
-			compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], (error,didItUpsert)=>{
-				console.log('finished')
-				mongodb.client.close()
-			})
-		})
+		}
 	}, error=>{
 		console.error(error)
 	})
