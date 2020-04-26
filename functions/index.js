@@ -6,9 +6,9 @@ if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'graphql') {
 	exports.graphql = require('./graphql/server.js')
 }
 
-if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'loadOsmData') {
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'loadChanges') {
 	// TODO this should be timed
-	exports.loadOsmData = require('./osm/loadData.js')
+	exports.loadChanges = require('./osm/loadChanges.js')
 
 	// exports.loadOsmData = functions.https.onRequest((req, res) => {	
 	// 	loadOsmData(()=>{
