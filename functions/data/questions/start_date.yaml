@@ -5,7 +5,7 @@ question:
   de: Wann wurde dieser Ort eröffnet?
 possibleAnswers:
   start_date:
-    inputtype: text
+    inputtype: date
     title: 
       en: Opening date
       de: Eröffnungs Datum
