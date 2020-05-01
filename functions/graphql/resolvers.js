@@ -7,6 +7,7 @@ const compilePlace = require('./resolvers/compilePlace.js')
 const getPlace = require('./resolvers/getPlace.js')
 const getChangeset = require('./resolvers/getChangeset.js')
 const getPlaces = require('./resolvers/getPlaces.js')
+const getMarkers = require('./resolvers/getMarkers.js')
 const search = require('./resolvers/search.js')
 const addChangeset = require('./resolvers/addChangeset.js')
 // const answerQuestion = require('./resolvers/answerQuestion.js')
@@ -117,19 +118,8 @@ module.exports = {
 
 		getPlace,
 		getPlaces,
-		getMarkers: async (parent, args, context, info) => {
-			return (await getPlaces(parent, args, context, info)).map(doc=>{
-				return {
-					_id: doc._id,
-					name: doc.properties.name,
-					lng: doc.properties.geometry.location.lng,
-					lat: doc.properties.geometry.location.lat,
-					tags: doc.properties.tags,
-				}
-			})
-		},
+		getMarkers,
 		getChangeset,
-
 		getQuestions,
 	},
 	Mutation: {
@@ -147,11 +137,11 @@ module.exports = {
 		changesetIDs: getFilterByKeysFunction('changesetIDs'),
 	},
 
-	Marker: {
-		name: getFilterByLanguageFunction('name'),
+	// Marker: {
+	// 	name: getFilterByLanguageFunction('name'),
 
-		tags: getFilterByKeysFunction('tags'),
-	},
+	// 	// tags: getFilterByKeysFunction('tags'),
+	// },
 
 	Question: {
 		question: getFilterByLanguageFunction('question'),
