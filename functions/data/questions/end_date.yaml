@@ -12,7 +12,7 @@ possibleAnswers:
     tags:
       end_date: false
   end_date:
-    inputtype: text
+    inputtype: date
     title: 
       en: Closing date
       de: Schließungs Datum

@@ -28,7 +28,7 @@ const schema = gql`
 		name(languages: [String]): [Text]
 		lng: Float
 		lat: Float
-		tags(keys: [String]): JSONObject
+		preset: String
 	}
 
 	type Mutation {
