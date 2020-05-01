@@ -45,19 +45,19 @@ possibleAnswers:
     followUpQuestions:
       - geo_pos
       - answer_more
-  # closed:
-  #   inputtype: button
-  #   icon: location_off
-  #   title:
-  #     en: Closed
-  #     de: Geschlossen
-  #   description:
-  #     en: This place permanently closed, moved, or was replaced.
-  #     de: Dieser Ort wurde dauerhaft geschlossen, ist umgezogen oder wurde ersetzt.
-  #   followUpQuestions:
-  #     - end_date
-  #     - start_date
-  #     - answer_more
+  closed:
+    inputtype: button
+    icon: location_off
+    title:
+      en: Closed
+      de: Geschlossen
+    description:
+      en: This place permanently closed, moved, or was replaced.
+      de: Dieser Ort wurde dauerhaft geschlossen, ist umgezogen oder wurde ersetzt.
+    followUpQuestions:
+      - end_date
+      - start_date
+      - answer_more
   spam:
     inputtype: boolean
     icon: report
