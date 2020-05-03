@@ -9,7 +9,11 @@ module.exports = async (parent, args, context, info) => {
 				lng: "$properties.geometry.location.lng",
 				lat: "$properties.geometry.location.lat",
 				preset: "$properties.tags.preset",
-			}}
+				tags: {
+					min_age: "$properties.tags.min_age",
+					max_age: "$properties.tags.max_age",
+				},
+			}},
 		]).toArray((error,docs)=>{
 			if (error) {
 				reject(error)
