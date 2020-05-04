@@ -55,6 +55,7 @@ const schema = gql`
 	}
 
 	type GeoSearchResult {
+		placeID: ID
 		preset: String
 		name: [Text]
 		address: String

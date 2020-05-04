@@ -86,6 +86,7 @@ function searchCompiledPlaces(mongodb, queryString){
 
 					return {
 						__typename: 'GeoSearchResult',
+						placeID: doc._id,
 						preset: doc.properties.tags.preset,
 						name: doc.properties.name,
 						address: address,
@@ -116,6 +117,7 @@ function gecodeQuery(queryString, options){
 			if (results && Array.isArray(results) && results.length > 0) {
 				resolve(results.map(result => ({
 					__typename: 'GeoSearchResult',
+					placeID: undefined,
 					preset: undefined,
 					name: [{
 						__typename: 'Text',
@@ -173,6 +175,7 @@ function gecodeQuery(queryString, options){
 
 						return {
 							__typename: 'GeoSearchResult',
+							placeID: undefined,
 							preset: undefined,
 							name: [{
 								__typename: 'Text',
