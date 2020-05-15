@@ -1,5 +1,9 @@
 const {gql} = require('apollo-server-express')
 
+// scalar Date
+// scalar Time
+// scalar DateTime
+
 const schema = gql`
 	scalar JSON
 	scalar JSONObject

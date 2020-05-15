@@ -2,6 +2,12 @@ const { GraphQLJSON, GraphQLJSONObject } = require('graphql-type-json')
 const {GraphQLScalarType} = require('graphql')
 const {Kind} = require('graphql/language')
 
+// import {
+// 	GraphQLDate,
+// 	GraphQLTime,
+// 	GraphQLDateTime,
+// } from 'graphql-iso-date'
+
 const compilePlace = require('./resolvers/compilePlace.js')
 // const addSources = require('./resolvers/addSources.js')
 const getPlace = require('./resolvers/getPlace.js')
@@ -82,6 +88,7 @@ function getFilterByLanguageFunction(graphqlKey){
 module.exports = {
 	JSON: GraphQLJSON,
 	JSONObject: GraphQLJSONObject,
+
 	Timestamp: new GraphQLScalarType({
 		name: 'Timestamp',
 		description: 'Timestamp custom scalar type',
@@ -98,6 +105,10 @@ module.exports = {
 			return null
 		},
 	}),
+
+	// Date: GraphQLDate,
+	// Time: GraphQLTime,
+	// DateTime: GraphQLDateTime,
 
 	Properties: {
 		__resolveType(obj, context, info){
