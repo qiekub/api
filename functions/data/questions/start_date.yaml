@@ -6,6 +6,7 @@ question:
 possibleAnswers:
   start_date:
     inputtype: date
+    namespace: start_date
     title: 
       en: Opening date
       de: Eröffnungs Datum

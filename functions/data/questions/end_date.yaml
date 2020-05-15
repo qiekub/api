@@ -13,6 +13,7 @@ possibleAnswers:
       end_date: false
   end_date:
     inputtype: date
+    namespace: end_date
     title: 
       en: Closing date
       de: Schließungs Datum
