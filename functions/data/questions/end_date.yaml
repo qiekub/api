@@ -4,19 +4,15 @@ question:
   en: When did this place close permanently?
   de: Wann wurde dieser Ort geschlossen?
 possibleAnswers:
-  is_open:
-    inputtype: button
-    title: 
-      en: This place is open!
-      de: Der Ort ist nicht geschlossen!
-    tags:
-      end_date: false
   end_date:
     inputtype: date
     namespace: end_date
     title: 
       en: Closing date
       de: Schließungs Datum
+    description:
+      en: Clear the fields if it's not closed.
+      de: Lösch die Felder, wenn der Ort nicht geschlossen ist.
     tags:
       end_date: ''
 ...
