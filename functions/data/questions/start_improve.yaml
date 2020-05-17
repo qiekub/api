@@ -27,7 +27,7 @@ possibleAnswers:
       # - answer_more
   typo:
     inputtype: button
-    icon: short_text
+    icon: title # short_text
     title:
       en: Typo
       de: Tippfehler
