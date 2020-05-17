@@ -36,7 +36,16 @@ async function tryToFetchJson(url, mapping) {
 
 function searchCompiledPlaces(mongodb, queryString){
 	return new Promise(async (resolve,reject) => {
-		const regexQuery = `(${queryString.replace(/,/g, ' ').replace(/\s+/g, ' ').trim('').replace(/\s/g, '|')})`
+		const regexQuery = `(${
+			queryString
+			.replace(/,/g, ' ')			// remove commas
+			.replace(/\s+/g, ' ')		// squash multiple spaces into a single space
+			.trim('')					// remove trailing whitespace
+			.replace(/\s/g, '|')		// replace whitespace with a pipe
+			.split('|')					// use pipe to split into words
+			.filter(v => v.length > 1)	// only allow word longer than 1 character
+			.join('|')					// merge back together for regex
+		})`
 	
 		mongodb.CompiledPlaces_collection.aggregate([
 			{$addFields:{
