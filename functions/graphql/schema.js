@@ -119,8 +119,6 @@ const schema = gql`
 
 	type Question {
 		question(languages: [String]): [Text]
-
-		condition: JSONObject
 		possibleAnswers: [Answer]
 	}
 	type Answer {
