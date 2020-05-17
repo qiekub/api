@@ -52,12 +52,12 @@ function searchCompiledPlaces(mongodb, queryString){
 				score: {$sum:[
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.addr:postcode"}}, 1,0]},
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.addr:country"}}, 1,0]},
-					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.addr:city"}}, 1,0]},
+					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.addr:city"}}, 2,0]},
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.addr:housenumber"}}, 1,0]},
-					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.addr:street"}}, 1,0]},
-					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.name"}}, 1,0]},
-					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.name:en"}}, 1,0]},
-					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.name:de"}}, 1,0]},
+					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.addr:street"}}, 2,0]},
+					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.name"}}, 3,0]},
+					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.name:en"}}, 3,0]},
+					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.name:de"}}, 3,0]},
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.short_name"}}, 1,0]},
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.operator"}}, 1,0]},
 				]}
