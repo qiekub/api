@@ -111,14 +111,16 @@ function searchCompiledPlaces(mongodb, queryString){
 function gecodeQuery(queryString, options){
 	const optionsLanguage = (options.language ? options.language : null)
 
+	const types = 'country,region,postcode,district,place,locality,neighborhood,address' // ,poi
+
 	return new Promise(async (resolve,reject) => {
-		tryToFetchJson(`https://api.mapbox.com/geocoding/v5/mapbox.places/${queryString}.json?limit=3&fuzzyMatch=true&autocomplete=true${options.language ? '&language='+options.language : ''}&access_token=${await getSecretAsync('api_key_mapbox')}`, data => {
+		tryToFetchJson(`https://api.mapbox.com/geocoding/v5/mapbox.places/${queryString}.json?limit=3&fuzzyMatch=true&autocomplete=true&types=${types}${options.language ? '&language='+options.language : ''}&access_token=${await getSecretAsync('api_key_mapbox')}`, data => {
 			const results = data.features
 			if (results && Array.isArray(results) && results.length > 0) {
 				resolve(results.map(result => ({
 					__typename: 'GeoSearchResult',
 					placeID: undefined,
-					preset: undefined,
+					preset: 'address',
 					name: [{
 						__typename: 'Text',
 						text: result.text,
@@ -176,7 +178,7 @@ function gecodeQuery(queryString, options){
 						return {
 							__typename: 'GeoSearchResult',
 							placeID: undefined,
-							preset: undefined,
+							preset: 'address',
 							name: [{
 								__typename: 'Text',
 								text: name,
