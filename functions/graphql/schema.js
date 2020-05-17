@@ -12,7 +12,7 @@ const schema = gql`
 	type Query {
 		getID: ID
 
-		search(query: String, languages: [String]): [GeoSearchResult]
+		search(query: String, languages: [String]): SearchInfo
 		isGeoCoordinateLegal(lat: Float, lng: Float): Boolean
 
 		getPlace(_id: ID): Doc
@@ -57,7 +57,11 @@ const schema = gql`
 		boundingbox: Boundingbox
 		_viewport: Boundingbox
 	}
-
+	
+	type SearchInfo {
+		query: String
+		results: [GeoSearchResult]
+	}
 	type GeoSearchResult {
 		placeID: ID
 		preset: String

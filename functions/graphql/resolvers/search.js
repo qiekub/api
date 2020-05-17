@@ -351,10 +351,14 @@ module.exports = async (parent, args, context, info) => {
 					})
 				}
 			}, (error, results) => {
-				resolve([
-					...results.db,
-					...results.geocoder,
-				])
+				resolve({
+					__typename: 'SearchInfo',
+					query: queryString,
+					results: [
+						...results.db,
+						...results.geocoder,
+					],
+				})
 			})
 		})
 	}
