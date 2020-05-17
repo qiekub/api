@@ -18,12 +18,14 @@ const supported_langs = ['en','de'] // ,'es','fr'
 const categories = [
 	// This is not used in the backend. It's here as a reference for the frontend. Copy it to where it's needed.
 	{
-		name: 'Community Centers',
+		name: {
+			en: 'Community Centers',
+			de: 'Gemeinde Zentren',
+		},
 		presets: [
 			'amenity/community_centre',
-			'amenity/social_facility',
 			'amenity/social_centre',
-			'healthcare',
+			'amenity/social_facility',
 		],
 		color: {
 			key: 'purple',
@@ -36,13 +38,15 @@ const categories = [
 		},
 	},
 	{
-		name: 'Going Out',
+		name: {
+			en: 'Going Out',
+		},
 		presets: [
 			'amenity/bar',
 			'amenity/pub',
 			'amenity/nightclub',
 			'leisure/dance',
-			'club',
+			// 'club',
 		],
 		color: {
 			key: 'red',
@@ -55,14 +59,19 @@ const categories = [
 		},
 	},
 	{
-		name: 'Culture',
+		name: {
+			en: 'Culture',
+			de: 'Kultur',
+		},
 		presets: [
+			'amenity/cinema',
 			'tourism/museum',
 			'amenity/theatre',
 			'amenity/library',
 			'amenity/arts_centre',
 			'tourism/gallery',
 			'historic',
+			'tourism/artwork/statue',
 		],
 		color: {
 			key: 'cyan',
@@ -75,11 +84,15 @@ const categories = [
 		},
 	},
 	{
-		name: 'Eating',
+		name: {
+			en: 'Eating',
+			de: 'Essen',
+		},
 		presets: [
 			'amenity/cafe',
 			'amenity/restaurant',
 			'amenity/ice_cream',
+			'amenity/marketplace',
 		],
 		color: {
 			key: 'orange',
@@ -90,7 +103,10 @@ const categories = [
 		},
 	},
 	{
-		name: 'Fun', // "Fun"
+		name: {
+			en: 'Fun', // "Fun"
+			de: 'Fun',
+		},
 		presets: [
 			'shop/erotic',
 			'amenity/swingerclub',
@@ -110,15 +126,23 @@ const categories = [
 		},
 	},
 	{
-		name: 'Tourism',
+		name: {
+			en: 'Tourism',
+			de: 'Tourismus',
+		},
 		presets: [
 			'tourism/hotel',
 			'tourism/hostel',
 			'tourism/apartment',
 			'tourism/camp_site',
+			'tourism/camp_pitch',
+			'tourism/caravan_site',
+
 			'tourism/picnic_site',
 			'tourism/guest_house',
 			'tourism/information',
+			// 'attraction/train',
+			// 'tourism/theme_park',
 		],
 		color: {
 			key: 'indigo',
@@ -131,6 +155,14 @@ const categories = [
 		},
 	},
 ]
+
+
+// 'healthcare',
+// 'amenity/dentist',
+// 'leisure/fitness_centre/yoga',
+// 'leisure/pitch/volleyball',
+// 'amenity/place_of_worship/taoist'
+
 
 const colors = {
 	default: {
@@ -148,6 +180,7 @@ const colors = {
 			'shop',
 			'office',
 			'amenity/place_of_worship',
+			'address',
 		]
 	},
 
@@ -301,6 +334,10 @@ for (const filename of files) {
 }
 
 const preset_overwrites = {
+	'address': {
+		icon: 'place',
+	},
+
 	'office': {
 		icon: 'business_center',
 	},
@@ -399,7 +436,7 @@ const preset_overwrites = {
 	// 	},
 	// },
 	'amenity/ice_cream': {
-		icon: 'storefront',
+		icon: 'restaurant',
 	},
 
 	'leisure/sauna': {
@@ -455,7 +492,10 @@ const preset_overwrites = {
 		icon: 'hotel',
 	},
 	'tourism/camp_site': {
-		icon: 'fireplace',
+		icon: 'outdoor_grill', // 'fireplace',
+	},
+	'amenity/bbq': {
+		icon: 'outdoor_grill',
 	},
 	'tourism/picnic_site': {
 		icon: 'deck',
@@ -508,6 +548,7 @@ for (const preset_key in id_presets) {
 
 	if (
 		(
+			preset_key.includes('address') ||
 			preset_key.includes('amenity') ||
 			preset_key.includes('attraction') ||
 			preset_key.includes('club') ||
@@ -554,6 +595,16 @@ for (const preset_key in preset_overwrites) {
 	}
 }
 
+presets.default = {
+	key: 'default',
+	tags_length: 0,
+	max_tag_value_length: 0,
+	tags: {},
+	name: {},
+	terms: {},
+	icon: '',
+}
+
 const presets_sorted = Object.entries(presets).map(pair=>{
 	return {
     	key: pair[0],
@@ -588,7 +639,7 @@ fs.writeFileSync(distPath+'categories.json', JSON.stringify(categories))
 	
 	https://taginfo.openstreetmap.org/api/4/key/values?key=amenity&lang=de&page=1&rp=10&sortname=count_ways&sortorder=desc
 	
-	Categories for queer.qiekub.com
+	Categories for map.qiekub.org
 		Food & Drink
 			Bars					(amenity=bar)
 			Restaurants				(amenity=restaurant)
