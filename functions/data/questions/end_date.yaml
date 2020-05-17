@@ -3,6 +3,9 @@
 question:
   en: When did this place close permanently?
   de: Wann wurde dieser Ort geschlossen?
+in_one_word: 
+  en: Closing Date
+  de: Schließungs Datum
 possibleAnswers:
   end_date:
     inputtype: date

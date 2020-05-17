@@ -3,6 +3,9 @@
 question:
   en: How can this place be contacted?
   de: Wie kann man diesen Ort kontaktieren?
+in_one_word: 
+  en: Phone and Email
+  de: Telephone und Email
 possibleAnswers:
   input:
     inputtype: text

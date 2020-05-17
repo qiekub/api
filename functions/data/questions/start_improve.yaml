@@ -3,6 +3,9 @@
 question:
   en: What do you want to improve?
   de: Was möchtest du verbessern?
+in_one_word: 
+  en: Improve Menu
+  de: Verbessern Start Auswahl
 possibleAnswers:
   edit_infos:
     inputtype: button

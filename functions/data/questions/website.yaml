@@ -3,6 +3,9 @@
 question:
   en: What's its website?
   de: Wie lautet die Webseite?
+in_one_word: 
+  en: Website
+  de: Webseite
 possibleAnswers:
   url:
     inputtype: text

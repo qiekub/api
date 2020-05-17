@@ -3,6 +3,9 @@
 question:
   en: Is this place fake, offensize, or doesn't exist?
   de: Ist dieser Ort fake, beleidigend, oder existiert er nicht?
+in_one_word: 
+  en: Spam
+  de: Spam
 possibleAnswers:
   'yes':
     inputtype: boolean

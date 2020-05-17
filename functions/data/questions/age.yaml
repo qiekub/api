@@ -3,6 +3,9 @@
 question:
   en: Is there an age-restriction?
   de: Gibt es ein Altersbeschränkung?
+in_one_word: 
+  en: Age Restriction
+  de: Altersbeschränkung
 possibleAnswers:
   min_age:
     inputtype: number

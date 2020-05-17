@@ -3,6 +3,9 @@
 question:
   en: Is this place wheelchair accessible?
   de: Ist dieser Ort mit einem Rollstuhl erreichbar?
+in_one_word: 
+  en: Wheelchair Accessibility
+  de: Rollstuhl Erreichbarkeit
 possibleAnswers:
   'yes':
     inputtype: boolean

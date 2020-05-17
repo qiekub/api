@@ -3,6 +3,9 @@
 question:
   en: Where can somebody find out more?
   de: Wo kann man mehr erfahren?
+in_one_word: 
+  en: More Links
+  de: Mehr Links
 possibleAnswers:
   input:
     inputtype: text

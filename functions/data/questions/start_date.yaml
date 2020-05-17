@@ -3,6 +3,9 @@
 question:
   en: When did this place open?
   de: Wann wurde dieser Ort eröffnet?
+in_one_word: 
+  en: Opening Date
+  de: Eröffnungs Datum
 possibleAnswers:
   start_date:
     inputtype: date

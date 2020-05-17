@@ -3,6 +3,9 @@
 question:
   en: What's the name of this place?
   de: Wie heißt der Ort?
+in_one_word: 
+  en: Name
+  de: Name
 possibleAnswers:
   name:
     inputtype: text

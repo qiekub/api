@@ -3,6 +3,9 @@
 question:
   en: Do want to answer more questions?
   de: Möchtest du mehr Fragen beantworten?
+in_one_word: 
+  en: More Questions
+  de: Mehr Fragen
 possibleAnswers:
   'yes':
     inputtype: boolean

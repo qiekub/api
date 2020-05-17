@@ -3,6 +3,9 @@
 question:
   en: What is this place?
   de: Was ist dies für ein Ort?
+in_one_word: 
+  en: Type of Place
+  de: Art des Ortes
 possibleAnswers:
   preset:
     inputtype: preset

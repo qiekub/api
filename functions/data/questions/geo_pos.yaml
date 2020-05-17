@@ -3,6 +3,9 @@
 question:
   en: Where is this place?
   de: Wo liegt der Ort?
+in_one_word: 
+  en: Geo-Location
+  de: Geo-Position
 possibleAnswers:
   geo:
     inputtype: geo
