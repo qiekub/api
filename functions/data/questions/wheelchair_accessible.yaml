@@ -6,6 +6,7 @@ question:
 in_one_word: 
   en: Wheelchair Accessibility
   de: Rollstuhl Erreichbarkeit
+icon: accessible_forward
 possibleAnswers:
   'yes':
     inputtype: boolean

@@ -6,6 +6,7 @@ question:
 in_one_word: 
   en: Name
   de: Name
+icon: title # short_text
 possibleAnswers:
   name:
     inputtype: text

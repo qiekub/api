@@ -6,6 +6,7 @@ question:
 in_one_word: 
   en: More Links
   de: Mehr Links
+icon: link
 possibleAnswers:
   input:
     inputtype: text

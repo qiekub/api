@@ -6,6 +6,7 @@ question:
 in_one_word: 
   en: Website
   de: Webseite
+icon: link
 possibleAnswers:
   url:
     inputtype: text

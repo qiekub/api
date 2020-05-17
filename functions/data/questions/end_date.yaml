@@ -6,6 +6,7 @@ question:
 in_one_word: 
   en: Closing Date
   de: Schließungs Datum
+icon: today
 possibleAnswers:
   end_date:
     inputtype: date

@@ -6,6 +6,7 @@ question:
 in_one_word: 
   en: More Questions
   de: Mehr Fragen
+icon: more_horiz
 possibleAnswers:
   'yes':
     inputtype: boolean

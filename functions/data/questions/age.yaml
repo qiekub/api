@@ -6,6 +6,7 @@ question:
 in_one_word: 
   en: Age Restriction
   de: Altersbeschränkung
+icon: check
 possibleAnswers:
   min_age:
     inputtype: number

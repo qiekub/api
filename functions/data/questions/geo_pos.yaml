@@ -6,6 +6,7 @@ question:
 in_one_word: 
   en: Geo-Location
   de: Geo-Position
+icon: place
 possibleAnswers:
   geo:
     inputtype: geo

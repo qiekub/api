@@ -6,6 +6,7 @@ question:
 in_one_word: 
   en: Spam
   de: Spam
+icon: report
 possibleAnswers:
   'yes':
     inputtype: boolean

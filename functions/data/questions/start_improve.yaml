@@ -6,6 +6,7 @@ question:
 in_one_word: 
   en: Improve Menu
   de: Verbessern Start Auswahl
+icon: question_answer # widgets menu
 possibleAnswers:
   edit_infos:
     inputtype: button
