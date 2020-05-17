@@ -11,7 +11,7 @@ possibleAnswers:
     inputtype: date
     namespace: end_date
     title: 
-      en: Closing date
+      en: Closing Date
       de: Schließungs Datum
     description:
       en: Clear the fields if it's not closed.

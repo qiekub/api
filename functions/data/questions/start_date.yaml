@@ -11,7 +11,7 @@ possibleAnswers:
     inputtype: date
     namespace: start_date
     title: 
-      en: Opening date
+      en: Opening Date
       de: Eröffnungs Datum
     tags:
       start_date:
