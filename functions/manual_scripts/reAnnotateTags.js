@@ -74,3 +74,24 @@ async function startReAnnotation(){
 startReAnnotation()
 
 
+
+// async function reCompileEverything(){
+// 	const mongodb = await getMongoDbContext()
+
+// 	mongodb.Changesets_collection.find().toArray((error,docs)=>{
+// 		if (error) {
+// 			console.error(error)
+// 		}else{
+// 			let placeIDsToRebuild = new Set(docs.map(doc => doc.properties.forID))
+
+// 			console.log([...placeIDsToRebuild])
+// 			compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], (error,didItUpsert)=>{
+// 				console.log('finished')
+// 				mongodb.client.close()
+// 			})
+// 		}
+// 	})
+// }
+// reCompileEverything()
+
+
