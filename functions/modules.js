@@ -1011,6 +1011,48 @@ function getDateTags(tags) {
 	return newTags
 }
 
+let key_synonyms = {
+	'website': 'contact:website',
+	'phone': 'contact:phone',
+	'email': 'contact:email',
+	'facebook': 'contact:facebook',
+	'twitter': 'contact:twitter',
+	'youtube': 'contact:youtube',
+	'instagram': 'contact:instagram',
+	'yelp': 'contact:yelp',
+}
+key_synonyms = {
+	...key_synonyms,
+	...(Object.entries(key_synonyms).reduce((key_synonyms_swapped, entry) => {
+		key_synonyms_swapped[entry[1]] = entry[0]
+		return key_synonyms_swapped
+	}, {}))
+}
+function annotateTags(tags){	
+	// add tag synonyms
+	const tagKeys = Object.keys(tags)
+	for (const tagKey of tagKeys) {
+		if (key_synonyms[tagKey]) {
+			tags[key_synonyms[tagKey]] = tags[tagKey]
+		}
+	}
+
+	let newTags = {
+		...getAudienceTags(tags),
+		...getDateTags(tags),
+	}
+
+	const preset = getPreset(tags)
+	if (preset.key) {
+		newTags.preset = preset.key
+	}
+
+	return {
+		...newTags,
+		...tags,
+	}
+}
+
 module.exports = {
 	ObjectFromEntries,
 	addAnswer,
@@ -1023,4 +1065,6 @@ module.exports = {
 	getPreset,
 	getAudienceTags,
 	getDateTags,
+	annotateTags,
+	key_synonyms,
 }
