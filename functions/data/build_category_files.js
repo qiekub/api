@@ -400,6 +400,10 @@ const preset_overwrites = {
 
 	'amenity/community_centre': {
 		icon: 'people',
+		name: {
+			"en": "Community Centre",
+			"de": "Gemeinschaftszentrum",
+		},
 	},
 	'amenity/social_facility': {
 		icon: 'people',
