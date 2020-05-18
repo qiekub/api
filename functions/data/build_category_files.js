@@ -605,7 +605,15 @@ presets.default = {
 	icon: '',
 }
 
-const presets_sorted = Object.entries(presets).map(pair=>{
+const presets_sorted = Object.entries(presets)
+.filter(pair => !pair[0].endsWith('/lgbtq'))
+// Filter out lgbtq specific tags. The frontend should show this information based on "audience:queer". 
+// amenity/community_centre/lgbtq
+// amenity/nightclub/lgbtq
+// amenity/pub/lgbtq
+// shop/erotic/lgbtq
+// amenity/bar/lgbtq
+.map(pair=>{
 	return {
     	key: pair[0],
         tags_length: Object.keys(pair[1].tags).length,
