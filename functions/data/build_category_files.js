@@ -370,6 +370,7 @@ const preset_overwrites = {
 		},
 		terms: {
 			"en": "",
+			'de': '',
 		},
 	},
 	'amenity/brothel': {
@@ -383,6 +384,7 @@ const preset_overwrites = {
 		},
 		terms: {
 			"en": "",
+			'de': '',
 		},
 	},
 	'amenity/cruising_area': {
@@ -396,6 +398,7 @@ const preset_overwrites = {
 		},
 		terms: {
 			"en": "",
+			'de': '',
 		},
 	},
 
@@ -465,6 +468,7 @@ const preset_overwrites = {
 		},
 		terms: {
 			"en": "",
+			'de': '',
 		},
 	},
 
