@@ -4,7 +4,7 @@ const async = require('async')
 const fetch = require('node-fetch')
 
 const getMongoDbContext = require('../getMongoDbContext.js')
-const { addChangeset, compile_places_from_changesets, upsertOne, compileAndUpsertPlace, getPreset } = require('../modules.js')
+const { addChangeset, compile_places_from_changesets, upsertOne, compileAndUpsertPlace, annotateTags, key_synonyms } = require('../modules.js')
 
 const _presets_ = require('../data/dist/presets.json')
 const questionsInSchema = require('../data/dist/questionsInSchema.json')
@@ -42,24 +42,6 @@ const answersByTag = questionsInSchema.reduce((answersByTag,q) => {
 	return answersByTag
 },{})
 
-// console.log(JSON.stringify(answersByTag,null,4))
-
-let key_synonyms = {
-	'website': 'contact:website',
-	'phone': 'contact:phone',
-	'email': 'contact:email',
-	'facebook': 'contact:facebook',
-	'twitter': 'contact:twitter',
-	'youtube': 'contact:youtube',
-	'instagram': 'contact:instagram',
-}
-key_synonyms = {
-	...key_synonyms,
-	...(Object.entries(key_synonyms).reduce((key_synonyms_swapped, entry) => {
-		key_synonyms_swapped[entry[1]] = entry[0]
-		return key_synonyms_swapped
-	}, {}))
-}
 
 
 
@@ -259,26 +241,9 @@ async function saveAsChangeset(mongodb, element, finished_callback){
 		osm_id: element.type+'/'+element.id,
 	}
 
-	// add tag synonyms
-	const tagKeys = Object.keys(tags)
-	for (const tagKey of tagKeys) {
-		if (key_synonyms[tagKey]) {
-			tags[key_synonyms[tagKey]] = tags[tagKey]
-		}
-	}
 
-
-	// Get the preset and add it to the tags.
-	// If no preset is defined in the tags, or it isn't an okay preset.
-	if (
-		!(!!tags.preset)
-		|| !(!!_presets_[tags.preset])
-	) {
-		const preset = getPreset(tags, _presets_)
-		if (preset.key) {
-			tags.preset = preset.key
-		}
-	}
+	// Derive new tags from the existing tags (preset, audience, opening_date, ...)
+	tags = annotateTags(tags)
 
 
 	const forID = await getExistingID(mongodb, tags)
