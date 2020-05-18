@@ -1,5 +1,5 @@
 const getMongoDbContext = require('../getMongoDbContext.js')
-const { ObjectFromEntries, annotateTags } = require('../modules.js')
+const { ObjectFromEntries, annotateTags, addChangeset, compileAndUpsertPlace } = require('../modules.js')
 
 const async = require('async')
 
@@ -30,12 +30,12 @@ function reAnnotateTags(mongodb, doc, finished_callback){
 			dataset: 'CompiledPlaces',
 			antiSpamUserIdentifier: 'ReAnnotationScript',
 		}, changesetID=>{
-			finished_callback()
+			finished_callback(doc._id)
 		}, ()=>{
-			finished_callback()
+			finished_callback(null)
 		})
 	}else{
-		finished_callback()
+		finished_callback(null)
 	}
 }
 
@@ -46,15 +46,23 @@ async function startReAnnotation(){
 		if (error) {
 			console.error(error)
 		}else{
+			let placeIDsToRebuild = new Set()
 			async.each(docs, (doc, each_callback)=>{
-				reAnnotateTags(mongodb, doc, ()=>{
+				reAnnotateTags(mongodb, doc, placeID => {
+					if (!!placeID) {
+						placeIDsToRebuild.add(placeID)
+					}
 					each_callback()
 				})
 			}, error=>{
 				if (error) {
 					console.error(error)
 				}else{
-					console.log('done')
+					console.log([...placeIDsToRebuild])
+					compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], (error,didItUpsert)=>{
+						console.info('finished')
+						mongodb.client.close()
+					})
 				}
 			})
 		}
