@@ -379,7 +379,7 @@ const preset_overwrites = {
 		},
 		name: {
 			"en": "Brothel",
-			"en": "Bordel",
+			"de": "Bordel",
 		},
 		terms: {
 			"en": "",
