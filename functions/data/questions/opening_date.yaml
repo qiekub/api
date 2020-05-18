@@ -8,12 +8,10 @@ in_one_word:
   de: Eröffnungs Datum
 icon: today
 possibleAnswers:
-  start_date:
+  opening_date:
     inputtype: date
-    namespace: start_date
+    namespace: opening_date
     title: 
       en: Opening Date
       de: Eröffnungs Datum
-    tags:
-      start_date:
 ...
