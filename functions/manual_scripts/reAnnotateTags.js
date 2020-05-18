@@ -39,7 +39,7 @@ function reAnnotateTags(mongodb, doc, finished_callback){
 	}
 }
 
-async function startReAnnotation(req, res){
+async function startReAnnotation(){
 	const mongodb = await getMongoDbContext()
 
 	mongodb.CompiledPlaces_collection.find().toArray((error,docs)=>{
