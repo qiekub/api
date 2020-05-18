@@ -869,6 +869,7 @@ function getPreset(tags) {
 
 
 module.exports = {
+	ObjectFromEntries,
 	addAnswer,
 	addChangeset,
 	upsertOne,
