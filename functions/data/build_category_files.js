@@ -392,6 +392,7 @@ const preset_overwrites = {
 		},
 		name: {
 			"en": "Cruising Area",
+			"de": "Cruising Gebiet",
 		},
 		terms: {
 			"en": "",
