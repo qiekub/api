@@ -1048,8 +1048,8 @@ function annotateTags(tags){
 	}
 
 	return {
-		...newTags,
 		...tags,
+		...newTags,
 	}
 }
 
