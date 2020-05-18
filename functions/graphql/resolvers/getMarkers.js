@@ -12,6 +12,7 @@ module.exports = async (parent, args, context, info) => {
 				tags: {
 					min_age: "$properties.tags.min_age",
 					max_age: "$properties.tags.max_age",
+					audience_queer: "$properties.tags.audience:queer",
 				},
 			}},
 		]).toArray((error,docs)=>{
