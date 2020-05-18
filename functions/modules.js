@@ -998,6 +998,18 @@ function getAudienceTags(tags){
 	// }
 }
 
+function getDateTags(tags) {
+	const newTags = {}
+
+	if (!tags['opening_date'] && tags['start_date']) {
+		newTags['opening_date'] = tags['start_date']
+	}
+	if (!tags['closing_date'] && tags['end_date']) {
+		newTags['closing_date'] = tags['end_date']
+	}
+
+	return newTags
+}
 
 module.exports = {
 	ObjectFromEntries,
@@ -1010,4 +1022,5 @@ module.exports = {
 	compileAndUpsertPlace,
 	getPreset,
 	getAudienceTags,
+	getDateTags,
 }
