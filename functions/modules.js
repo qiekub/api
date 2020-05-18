@@ -836,10 +836,10 @@ function compileAndUpsertPlace(mongodb, docIDs, finished_callback) {
 }
 
 
-function getPreset(tags, presets) {
+function getPreset(tags) {
 	const tags_keys = Object.keys(tags)
-	for (const preset_key in presets) {
-		const preset_tags = presets[preset_key].tags
+	for (const preset_key in _presets_) {
+		const preset_tags = _presets_[preset_key].tags
 		const preset_tags_keys = Object.keys(preset_tags)
 
 		const common_keys = preset_tags_keys.filter(key => tags_keys.includes(key))
@@ -849,7 +849,7 @@ function getPreset(tags, presets) {
 			if (okay_keys.length === preset_tags_keys.length) {
 				return {
 					key: preset_key,
-					...presets[preset_key],
+					..._presets_[preset_key],
 				}
 			}
 		}
@@ -864,7 +864,7 @@ function getPreset(tags, presets) {
 		"name": {},
 		"terms": {}
 	}
-	// return presets[Object.keys(presets)[0]]
+	// return _presets_[Object.keys(_presets_)[0]]
 }
 
 
