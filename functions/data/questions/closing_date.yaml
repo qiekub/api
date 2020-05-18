@@ -8,15 +8,13 @@ in_one_word:
   de: Schließungs Datum
 icon: today
 possibleAnswers:
-  end_date:
+  closing_date:
     inputtype: date
-    namespace: end_date
+    namespace: closing_date
     title: 
       en: Closing Date
       de: Schließungs Datum
     description:
       en: Clear the fields if it's not closed.
       de: Lösch die Felder, wenn der Ort nicht geschlossen ist.
-    tags:
-      end_date: ''
 ...
