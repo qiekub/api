@@ -20,6 +20,7 @@ possibleAnswers:
       # - contact_options
       # - find_out_more_links
       - start_date
+      - audience
       - preset
   'no':
     inputtype: boolean

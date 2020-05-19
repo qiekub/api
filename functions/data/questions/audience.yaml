@@ -1,0 +1,14 @@
+%YAML 1.2
+---
+question:
+  en: For whom is this place?
+  de: Für wen ist dieser Ort?
+in_one_word: 
+  en: Audience
+  de: Zielpublikum
+icon: people
+possibleAnswers:
+  input:
+    inputtype: audience
+    namespace: audience
+...
