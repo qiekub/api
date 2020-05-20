@@ -70,8 +70,13 @@ async function getExistingID(mongodb, tags){
 	// (score: 6)
 
 	const refKeys = tagKeys.filter(key => (
-		['wikidata','iata','icao','fhrs:id'].includes(key) ||
-		key.startsWith('ref:')
+		[
+			'wikidata',
+			'iata',
+			'icao',
+			'fhrs:id',
+		].includes(key)
+		|| key.startsWith('ref:')
 	))
 	if (refKeys.length > 0) {
 		scoreStages.push({
