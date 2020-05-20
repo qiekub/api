@@ -81,6 +81,8 @@ possibleAnswers:
     inputtype: text
     title:
       en: Wikipedia ID
+    description:
+      en: The language of the wiki, a colon, followed by the title of the page. Multiple pages get separated by semicolons.
     tags:
       wikipedia: ''
   wikidata:
@@ -88,6 +90,8 @@ possibleAnswers:
     inputtype: text
     title:
       en: Wikidata ID
+    description:
+      en: A "Q" with some numbers behind it. This is the part after "https://www.wikidata.org/wiki/".
     tags:
       wikidata: ''
   osm:
@@ -95,6 +99,8 @@ possibleAnswers:
     inputtype: text
     title:
       en: OpenStreetMap ID
+    description:
+      en: (osm-type/osm-changeset-id) The part after "https://osm.org/".
     tags:
       osm_id: ''
 ...
