@@ -75,6 +75,10 @@ async function getExistingID(mongodb, tags){
 			'iata',
 			'icao',
 			'fhrs:id',
+			'gnis:feature_id', // "A GNIS feature ID is a permanent, unique identifier for a feature in the Geographic Names Information Service (GNIS) database. GNIS is the U.S. federal government's authoritative gazetteer." (source: OSM-Wiki)
+			'gnis:id', // same as gnis:feature_id
+			'osak:identifier', // Present on all Danish address nodes.
+			'GNS:id', // "The GEOnet Names Server (GNS) is a database for locations outside the United States and Antarctica." (source: OSM-Wiki)
 		].includes(key)
 		|| key.startsWith('ref:')
 	))
