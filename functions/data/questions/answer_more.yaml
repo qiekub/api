@@ -14,14 +14,14 @@ possibleAnswers:
       en: 'Yes'
       de: Ja
     followUpQuestions:
-      - wheelchair_accessible
-      - age
       - website
       - find_out_more_links
-      - opening_date
       - phone
       - email
+      - wheelchair_accessible
+      - age
       - audience
+      - opening_date
       - preset
   'no':
     inputtype: boolean

@@ -18,14 +18,14 @@ possibleAnswers:
       en: I want to contribute my knowledge!
       de: Ich weiß etwas!
     followUpQuestions:
-      - wheelchair_accessible
-      - age
       - website
       - find_out_more_links
-      - opening_date
       - phone
       - email
+      - wheelchair_accessible
+      - age
       - audience
+      - opening_date
       - preset
       # - answer_more # Copy everything from answer more into these followUpQuestions.
   typo:
