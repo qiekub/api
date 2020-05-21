@@ -95,13 +95,13 @@ possibleAnswers:
       en: A "Q" with some numbers behind it. # This is the part after "https://www.wikidata.org/wiki/".
     tags:
       wikidata: ''
-  osm:
-    # hidden: true
-    inputtype: text
-    title:
-      en: OpenStreetMap ID
-    description:
-      en: The part after "https://osm.org/". # (osm-type/osm-changeset-id)
-    tags:
-      osm_id: ''
+  # osm:
+  #   # hidden: true
+  #   inputtype: text
+  #   title:
+  #     en: OpenStreetMap ID
+  #   description:
+  #     en: The part after "https://osm.org/". # (osm-type/osm-changeset-id)
+  #   tags:
+  #     osm_id: ''
 ...
