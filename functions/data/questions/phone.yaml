@@ -1,0 +1,21 @@
+%YAML 1.2
+---
+question:
+  en: What's its phonenumber?
+  de: Wie lautet die Telephonenummer?
+in_one_word: 
+  en: Phone
+  de: Telephone
+icon: phone
+possibleAnswers:
+  phone:
+    inputtype: text
+    title: 
+      en: Phonenumber
+      de: Telephonenummer
+    description: 
+      en: Use the international format
+      de: Verwende das internationale Format
+    tags:
+      contact:phone: ''
+...

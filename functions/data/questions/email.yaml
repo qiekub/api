@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+question:
+  en: What's its email address?
+  de: Wie lautet die Email-Adresse?
+in_one_word: 
+  en: Email
+  de: Email
+icon: mail
+possibleAnswers:
+  email:
+    inputtype: text
+    title: 
+      en: Email Address
+      de: Email-Adresse
+    tags:
+      contact:email: ''
+...

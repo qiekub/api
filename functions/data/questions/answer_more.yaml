@@ -17,9 +17,10 @@ possibleAnswers:
       - wheelchair_accessible
       - age
       - website
-      # - contact_options
       - find_out_more_links
       - opening_date
+      - phone
+      - email
       - audience
       - preset
   'no':
