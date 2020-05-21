@@ -23,6 +23,7 @@ possibleAnswers:
       - audience
       - opening_date
       - preset
+      - spam
   'no':
     inputtype: boolean
     title:
