@@ -20,6 +20,7 @@ const questionsInSchema = Object.entries(questions).map(entry => {
 
 	properties.question = expandTranslations(properties.question || {})
 	properties.in_one_word = expandTranslations(properties.in_one_word || {})
+	properties.description = expandTranslations(properties.description || {})
 	properties.possibleAnswers = Object.entries(properties.possibleAnswers || []).map(entry => {
 		return {
 			...entry[1],

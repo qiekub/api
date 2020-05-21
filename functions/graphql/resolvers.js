@@ -157,6 +157,7 @@ module.exports = {
 	Question: {
 		question: getFilterByLanguageFunction('question'),
 		in_one_word: getFilterByLanguageFunction('in_one_word'),
+		description: getFilterByLanguageFunction('description'),
 	},
 
 	Answer: {

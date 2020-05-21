@@ -124,6 +124,7 @@ const schema = gql`
 	type Question {
 		question(languages: [String]): [Text]
 		in_one_word(languages: [String]): [Text]
+		description(languages: [String]): [Text]
 		icon: String
 		possibleAnswers: [Answer]
 	}
