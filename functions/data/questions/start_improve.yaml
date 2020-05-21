@@ -79,6 +79,6 @@ possibleAnswers:
     tags:
       spam: true
     followUpQuestions:
-      - spam
+      # - spam
       - answer_more
 ...
