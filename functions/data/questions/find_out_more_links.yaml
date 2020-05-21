@@ -6,6 +6,9 @@ question:
 in_one_word: 
   en: Social Media Links
   de: Social Media Links
+description:
+  en: Use links if not otherwise specified.
+  de: Verwende Links, sofern nicht anders angegeben.
 icon: link
 possibleAnswers:
   # input:
@@ -30,8 +33,6 @@ possibleAnswers:
     inputtype: text
     title:
       en: Facebook
-    description:
-      en: Link or Username
     tags:
       contact:facebook: ''
   instagram:
