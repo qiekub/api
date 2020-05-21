@@ -84,6 +84,7 @@ possibleAnswers:
       en: Wikipedia ID
     description:
       en: Language:Title ; Language:Title ; … # Multiple pages get separated by semicolons." # The language of the wiki, a colon, followed by the title of the page. Multiple pages get separated by semicolons.
+      de: Sprache:Titel ; Sprache:Titel ; …
     tags:
       wikipedia: ''
   wikidata:
@@ -93,6 +94,7 @@ possibleAnswers:
       en: Wikidata ID
     description:
       en: A "Q" with some numbers behind it. # This is the part after "https://www.wikidata.org/wiki/".
+      de: Ein "Q" mit ein paar Zahlen dahinter.
     tags:
       wikidata: ''
   # osm:
@@ -102,6 +104,7 @@ possibleAnswers:
   #     en: OpenStreetMap ID
   #   description:
   #     en: The part after "https://osm.org/". # (osm-type/osm-changeset-id)
+  #     de: Der Teil hinter "https://osm.org/".
   #   tags:
   #     osm_id: ''
 ...
