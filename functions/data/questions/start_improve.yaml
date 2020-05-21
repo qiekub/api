@@ -61,6 +61,8 @@ possibleAnswers:
     description:
       en: This place permanently closed, moved, or was replaced.
       de: Dieser Ort wurde dauerhaft geschlossen, ist umgezogen oder wurde ersetzt.
+    tags:
+      closed: true
     followUpQuestions:
       - closing_date
       - opening_date
@@ -74,6 +76,8 @@ possibleAnswers:
     description:
       en: It's fake, offensize, or doesn't exist.
       de: Der Ort ist fake, beleidigend oder existiert nicht.
+    tags:
+      spam: true
     followUpQuestions:
       - spam
       - answer_more
