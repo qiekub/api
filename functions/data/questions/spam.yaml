@@ -15,7 +15,7 @@ possibleAnswers:
       en: Yes, it's spam!
       de: Ja, der Ort ist Spam
     tags:
-      spam: 'yes'
+      spam: true
   'no':
     inputtype: boolean
     icon: clear
@@ -23,5 +23,5 @@ possibleAnswers:
       en: 'No'
       de: Nein
     tags:
-      spam: 'no'
+      spam: false
 ...
