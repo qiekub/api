@@ -18,16 +18,16 @@ const questionsInSchema = Object.entries(questions).map(entry => {
 		__typename: 'Question',
 	}
 
-	properties.question = expandTranslations(properties.question)
-	properties.in_one_word = expandTranslations(properties.in_one_word)
-	properties.possibleAnswers = Object.entries(properties.possibleAnswers).map(entry => {
+	properties.question = expandTranslations(properties.question || {})
+	properties.in_one_word = expandTranslations(properties.in_one_word || {})
+	properties.possibleAnswers = Object.entries(properties.possibleAnswers || []).map(entry => {
 		return {
 			...entry[1],
 			__typename: 'Answer',
 			key: entry[0],
 			title: expandTranslations(entry[1].title || {}),
 			description: expandTranslations(entry[1].description || {}),
-			followUpQuestionIDs: entry[1].followUpQuestions,
+			followUpQuestionIDs: entry[1].followUpQuestions || [],
 		}
 	})
 
