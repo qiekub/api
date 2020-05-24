@@ -9,3 +9,7 @@ if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'graphql') {
 if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'loadChanges') {
 	exports.loadChanges = require('./osm/loadChanges.js')
 }
+
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'account') {
+	exports.account = require('./account/server.js')
+}

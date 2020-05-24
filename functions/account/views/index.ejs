@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Your Qiekub Profile</title>
+	</head>
+	<body style="background:black; color:white;">
+		<% if (user) { %>
+			<h1>Your Qiekub Profile</h1>
+			<p>
+				<a href="./logout/">Log Out</a>
+			</p>
+			<p>ID: <%= user %></p>
+
+			<a href="./auth/github/">Add GitHub Account to this Profile</a>
+			<a href="./auth/twitter/">Add Twitter Account to this Profile</a>
+		<% } else { %>
+			<h1>Login to your Qiekub Profile</h1>
+			<a href="./auth/github/">Login with GitHub</a>
+			<a href="./auth/twitter/">Login with Twitter</a>
+		<% } %>
+	</body>
+</html>

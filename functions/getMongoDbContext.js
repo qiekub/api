@@ -27,6 +27,9 @@ function getMongoDbContext(){
 	
 						CompiledPlaces_collection: mongodb_client.db('Graph').collection('CompiledPlaces'),
 						Changesets_collection: mongodb_client.db('Graph').collection('Changesets'),
+
+						Accounts_collection: mongodb_client.db('Graph').collection('Accounts'),
+						Profiles_collection: mongodb_client.db('Graph').collection('Profiles'),
 					}
 	
 					resolve(_ContextChache_.mongodb)

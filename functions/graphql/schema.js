@@ -141,6 +141,17 @@ const schema = gql`
 		hidden: Boolean
 	}
 
+	type Profile {
+        displayName: String
+	}
+	type Account {
+        uid: String
+        provider: String
+        username: String
+        displayName: String
+        forProfileID: ID
+	}
+
 	type Metadata {
 		lastModified: Timestamp
 		created: Timestamp
