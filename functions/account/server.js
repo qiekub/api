@@ -232,6 +232,7 @@ async function session_middleware(req, res, next) {
 	})
 
 	session({
+		name: '__session',
 		secret: await getSecretAsync('express_session_secret'),
 		cookie: {
 			maxAge: 1000 * sessionTTL,
