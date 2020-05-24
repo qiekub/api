@@ -28,7 +28,8 @@ const GitHubStrategy = require('passport-github2').Strategy
 const TwitterStrategy = require('passport-twitter').Strategy
 const partials = require('express-partials')
 
-const url_path = '/qiekub/us-central1/account'
+const listen_path = ''
+const url_path = '' // '/qiekub/us-central1/account'
 
 
 
@@ -271,7 +272,8 @@ async function passport_middleware(req, res, next) {
 	passport.use(new GitHubStrategy({
 		clientID: await getSecretAsync('GITHUB_CLIENT_ID'),
 		clientSecret: await getSecretAsync('GITHUB_CLIENT_SECRET'),
-		callbackURL: url_path+'/auth/github/callback/',
+		// callbackURL: url_path+'/auth/github/callback/',
+		callbackURL: 'https://account.qiekub.org/auth/github/callback/',
 	}, (accessToken, refreshToken, profile, done)=>{
 		getProfileFromStrategyResult(profile, currentProfileID)
 		.then(profileDoc => done(null, profileDoc))
@@ -281,7 +283,8 @@ async function passport_middleware(req, res, next) {
 	passport.use(new TwitterStrategy({
 		consumerKey: await getSecretAsync('TWITTER_CONSUMER_KEY'),
 		consumerSecret: await getSecretAsync('TWITTER_CONSUMER_SECRET'),
-		callbackURL: url_path+'/auth/twitter/callback/',
+		// callbackURL: url_path+'/auth/twitter/callback/',
+		callbackURL: 'https://account.qiekub.org/auth/twitter/callback/',
 	}, (token, tokenSecret, profile, done)=>{
 		getProfileFromStrategyResult(profile, currentProfileID)
 		.then(profileDoc => done(null, profileDoc))
@@ -339,28 +342,28 @@ function server() {
 	// app.use(express.static(__dirname + '/public'))
 
 
-	app.get('/', function(req, res){
+	app.get(listen_path+'/', function(req, res){
 		res.render('index', { user: req.user })
 	})
 
-	app.get('/auth/github/', passport.authenticate('github', {
+	app.get(listen_path+'/auth/github/', passport.authenticate('github', {
 		scope: ['user:email'],
 	}))
-	app.get('/auth/github/callback/', passport.authenticate('github', {
+	app.get(listen_path+'/auth/github/callback/', passport.authenticate('github', {
 		failureRedirect: url_path+'/',
 	}), (req, res)=>{
 		res.redirect(url_path+'/')
 	})
 
-	app.get('/auth/twitter/', passport.authenticate('twitter'))
-	app.get('/auth/twitter/callback/', passport.authenticate('twitter', {
+	app.get(listen_path+'/auth/twitter/', passport.authenticate('twitter'))
+	app.get(listen_path+'/auth/twitter/callback/', passport.authenticate('twitter', {
 		failureRedirect: url_path+'/',
 	}), (req, res)=>{
 		res.redirect(url_path+'/')
 	})
 
 
-	app.get('/logout/', function(req, res){
+	app.get(listen_path+'/logout/', function(req, res){
 		req.session.cookie.maxAge = 0 // set the maxAge to zero, to delete the cookie
 		req.logout() // also forget the login-state
 		req.session.save(error=>{ // save the above setting
