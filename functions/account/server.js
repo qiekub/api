@@ -30,6 +30,11 @@ const partials = require('express-partials')
 
 const listen_path = ''
 const url_path = '' // '/qiekub/us-central1/account'
+const callbackURL_prefix = (
+	process.env.FUNCTIONS_EMULATOR
+	? 'http://192.168.2.102:5000/qiekub/us-central1/account/'
+	: 'https://account.qiekub.org/'
+)
 
 
 
@@ -276,8 +281,7 @@ async function passport_middleware(req, res, next) {
 	passport.use(new GitHubStrategy({
 		clientID: await getSecretAsync('GITHUB_CLIENT_ID'),
 		clientSecret: await getSecretAsync('GITHUB_CLIENT_SECRET'),
-		// callbackURL: url_path+'/auth/github/callback/',
-		callbackURL: 'https://account.qiekub.org/auth/github/callback/',
+		callbackURL: callbackURL_prefix+'auth/github/callback/',
 	}, (accessToken, refreshToken, profile, done)=>{
 		getProfileFromStrategyResult(profile, currentProfileID)
 		.then(profileDoc => done(null, profileDoc))
@@ -287,8 +291,7 @@ async function passport_middleware(req, res, next) {
 	passport.use(new TwitterStrategy({
 		consumerKey: await getSecretAsync('TWITTER_CONSUMER_KEY'),
 		consumerSecret: await getSecretAsync('TWITTER_CONSUMER_SECRET'),
-		// callbackURL: url_path+'/auth/twitter/callback/',
-		callbackURL: 'https://account.qiekub.org/auth/twitter/callback/',
+		callbackURL: callbackURL_prefix+'auth/twitter/callback/',
 	}, (token, tokenSecret, profile, done)=>{
 		getProfileFromStrategyResult(profile, currentProfileID)
 		.then(profileDoc => done(null, profileDoc))
