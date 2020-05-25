@@ -2,6 +2,7 @@ const functions = require('firebase-functions')
 const getMongoDbContext = require('../getMongoDbContext.js')
 
 const express = require('express')
+const { session_middleware, add_userID_middleware } = require('../modules.js')
 
 const compression = require('../github.com-patrickmichalina-compression/index.js') // https://github.com/patrickmichalina/compression
 // const shrinkRay = require('shrink-ray')
@@ -20,6 +21,9 @@ function gqlServer() {
 	// app.use(shrinkRay({ brotli: { quality: 4 }}))
 	// app.use(shrinkRay())
 
+	app.use(session_middleware)
+	app.use(add_userID_middleware)
+
 	const apolloServer = new ApolloServer({
 		typeDefs: schema,
 		resolvers,
@@ -35,6 +39,7 @@ function gqlServer() {
 			try{
 				return {
 					mongodb: await getMongoDbContext(),
+					userID: req.userID,
 				}
 			}catch (error) {
 				console.error(error)
