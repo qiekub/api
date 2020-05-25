@@ -235,6 +235,8 @@ async function session_middleware(req, res, next) {
 		name: '__session',
 		secret: await getSecretAsync('express_session_secret'),
 		cookie: {
+			domain: 'qiekub.org',
+			sameSite: 'lax',
 			maxAge: 1000 * sessionTTL,
 		},
 		store,
