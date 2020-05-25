@@ -11,6 +11,7 @@ const schema = gql`
 
 	type Query {
 		getID: ID
+		whoami: ID
 
 		search(query: String, languages: [String]): SearchInfo
 		isGeoCoordinateLegal(lat: Float, lng: Float): Boolean

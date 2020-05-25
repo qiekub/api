@@ -123,6 +123,7 @@ module.exports = {
 		// hello: (parent, args, context, info) => 'world',
 
 		getID: (parent, args, context, info) => (new context.mongodb.ObjectID())+'',
+		whoami: (parent, args, context, info) => (!!context.userID ? context.userID+'' : null),
 
 		search,
 		isGeoCoordinateLegal,
