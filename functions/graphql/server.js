@@ -10,6 +10,8 @@ const ApolloServer = require('apollo-server-express').ApolloServer
 const schema = require('./schema')
 const resolvers = require('./resolvers')
 
+
+
 function gqlServer() {
 	const app = express() // this seams faster in a function
 
