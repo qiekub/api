@@ -12,7 +12,7 @@ const compression = require('../github.com-patrickmichalina-compression/index.js
 // const argon2 = require('argon2')
 // const secret = speakeasy.generateSecret()
 // argon2.hash(secret.base32).then(hash => {
-// 	console.log('hash', hash)
+// 	console.info('hash', hash)
 // })
 
 const express = require('express')
