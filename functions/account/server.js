@@ -29,7 +29,11 @@ const TwitterStrategy = require('passport-twitter').Strategy
 const partials = require('express-partials')
 
 const listen_path = ''
-const url_path = '' // '/qiekub/us-central1/account'
+const url_path = (
+	process.env.FUNCTIONS_EMULATOR
+	? '/qiekub/us-central1/account'
+	: ''
+)
 const callbackURL_prefix = (
 	process.env.FUNCTIONS_EMULATOR
 	? 'http://192.168.2.102:5000/qiekub/us-central1/account/'
