@@ -31,6 +31,9 @@ function gqlServer() {
 		introspection: true, // (process.env.FUNCTIONS_EMULATOR ? true : false),
 		tracing: (process.env.FUNCTIONS_EMULATOR ? true : false),
 		playground: {
+			settings: {
+				'request.credentials': 'same-origin',
+			},
 			endpoint: '/graphql/v1',
 			// endpoint: 'https://us-central1-queercenters.cloudfunctions.net/graphql/',
 			// endpoint: 'http://localhost:5001/queercenters/us-central1/graphql/',
