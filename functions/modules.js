@@ -11,6 +11,11 @@ const questionsInSchemaById = questionsInSchema.reduce((obj,question)=>{
 
 const _presets_ = require('./data/dist/presets.json')
 
+const getMongoDbContext = require('./getMongoDbContext.js')
+const secretManager = require('./secretManager.js')
+const getSecretAsync = secretManager.getSecretAsync
+const session = require('express-session')
+const MongoStore = require('connect-mongo')(session)
 
 
 
@@ -1053,6 +1058,63 @@ function annotateTags(tags){
 	}
 }
 
+
+
+async function session_middleware(req, res, next) {
+
+	const mongodb = await getMongoDbContext()
+
+	const sessionTTL = 60 * 60 * 24 * 14 // = 14 days
+
+	const store = new MongoStore({
+		client: mongodb.client,
+		dbName: 'Auth',
+		collection: 'Sessions',
+		autoRemove: 'native', // Default
+		autoRemoveInterval: 1,
+		ttl: sessionTTL,
+		touchAfter: 24 * 3600, // time period in seconds
+		secret: false,
+		stringify: false,
+	})
+
+	const cookie_domain = (
+		process.env.FUNCTIONS_EMULATOR
+		? false // '192.168.2.102'
+		: 'qiekub.org'
+	)
+
+	session({
+		name: '__session',
+		secret: await getSecretAsync('express_session_secret'),
+		cookie: {
+			httpOnly: false,
+			domain: cookie_domain,
+			sameSite: 'lax',
+			secure: false, // somehow doesnt work when its true
+			maxAge: 1000 * sessionTTL,
+		},
+		store,
+		saveUninitialized: false, // don't create session until something stored
+		resave: false, // don't save session if unmodified
+		unset: 'destroy',
+	})(req, res, next)
+}
+async function add_userID_middleware(req, res, next) {
+	const currentProfileID = (
+		   !!req.session
+		&& !!req.session.passport
+		&& !!req.session.passport.user
+		? req.session.passport.user
+		: null
+	)
+
+	req.userID = currentProfileID
+	next()
+}
+
+
+
 module.exports = {
 	ObjectFromEntries,
 	addAnswer,
@@ -1067,4 +1129,7 @@ module.exports = {
 	getDateTags,
 	annotateTags,
 	key_synonyms,
+
+	session_middleware,
+	add_userID_middleware,
 }

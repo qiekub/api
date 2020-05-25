@@ -18,9 +18,7 @@ const compression = require('../github.com-patrickmichalina-compression/index.js
 const express = require('express')
 const passport = require('passport')
 
-const session = require('express-session')
-const MongoStore = require('connect-mongo')(session);
-// const MongoDBStore = require('connect-mongodb-session')(session)
+const { session_middleware, add_userID_middleware } = require('../modules.js')
 
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
@@ -222,49 +220,9 @@ function ensureAuthenticated(req, res, next) {
 
 
 
-async function session_middleware(req, res, next) {
-
-	const mongodb = await getMongoDbContext()
-
-	const sessionTTL = 60 * 60 * 24 * 14 // = 14 days
-
-	const store = new MongoStore({
-		client: mongodb.client,
-		dbName: 'Auth',
-		collection: 'Sessions',
-		autoRemove: 'native', // Default
-		autoRemoveInterval: 1,
-		ttl: sessionTTL,
-		touchAfter: 24 * 3600, // time period in seconds
-		secret: false,
-		stringify: false,
-	})
-
-	session({
-		name: '__session',
-		secret: await getSecretAsync('express_session_secret'),
-		cookie: {
-			domain: 'qiekub.org',
-			sameSite: 'lax',
-			secure: false, // somehow doesnt work when its true
-			maxAge: 1000 * sessionTTL,
-		},
-		store,
-		saveUninitialized: false, // don't create session until something stored
-		resave: false, // don't save session if unmodified
-		unset: 'destroy',
-	})(req, res, next)
-}
-
 async function passport_middleware(req, res, next) {
 
-	const currentProfileID = (
-		   !!req.session
-		&& !!req.session.passport
-		&& !!req.session.passport.user
-		? req.session.passport.user
-		: null
-	)
+	const currentProfileID = req.userID
 
 
 	// Passport session setup.
@@ -344,6 +302,7 @@ function server() {
 	app.use(methodOverride())
 
 	app.use(session_middleware)
+	app.use(add_userID_middleware)
 
 	app.use(passport_middleware)
 	app.use(passport.session())
