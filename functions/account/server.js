@@ -237,6 +237,7 @@ async function session_middleware(req, res, next) {
 		cookie: {
 			domain: 'qiekub.org',
 			sameSite: 'lax',
+			secure: false, // somehow doesnt work when its true
 			maxAge: 1000 * sessionTTL,
 		},
 		store,
