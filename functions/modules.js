@@ -1100,7 +1100,7 @@ async function session_middleware(req, res, next) {
 		unset: 'destroy',
 	})(req, res, next)
 }
-async function add_userID_middleware(req, res, next) {
+async function add_profileID_middleware(req, res, next) {
 	const currentProfileID = (
 		   !!req.session
 		&& !!req.session.passport
@@ -1109,7 +1109,7 @@ async function add_userID_middleware(req, res, next) {
 		: null
 	)
 
-	req.userID = currentProfileID
+	req.profileID = currentProfileID
 	next()
 }
 
@@ -1131,5 +1131,5 @@ module.exports = {
 	key_synonyms,
 
 	session_middleware,
-	add_userID_middleware,
+	add_profileID_middleware,
 }

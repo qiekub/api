@@ -18,7 +18,7 @@ const compression = require('../github.com-patrickmichalina-compression/index.js
 const express = require('express')
 const passport = require('passport')
 
-const { session_middleware, add_userID_middleware } = require('../modules.js')
+const { session_middleware, add_profileID_middleware } = require('../modules.js')
 
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
@@ -222,7 +222,7 @@ function ensureAuthenticated(req, res, next) {
 
 async function passport_middleware(req, res, next) {
 
-	const currentProfileID = req.userID
+	const currentProfileID = req.profileID
 
 
 	// Passport session setup.
@@ -302,7 +302,7 @@ function server() {
 	app.use(methodOverride())
 
 	app.use(session_middleware)
-	app.use(add_userID_middleware)
+	app.use(add_profileID_middleware)
 
 	app.use(passport_middleware)
 	app.use(passport.session())
