@@ -13,6 +13,10 @@
 			{
 				"source": "/graphql/**",
 				"function": "graphql"
+			},
+			{
+				"source": "/account/**",
+				"function": "account"
 			}
 		]
 	}
