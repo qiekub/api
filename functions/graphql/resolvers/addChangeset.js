@@ -12,9 +12,7 @@ module.exports = async (parent, args, context, info) => {
 				...properties,
 				forID,
 			}, changesetID=>{
-				compileAndUpsertPlace(mongodb, [forID], ()=>{
-					resolve(changesetID)
-				})
+				resolve(changesetID)
 			}, ()=>{
 				reject("Could not add changeset.")
 			})
