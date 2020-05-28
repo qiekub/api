@@ -19,6 +19,9 @@ const addChangeset = require('./resolvers/addChangeset.js')
 // const answerQuestion = require('./resolvers/answerQuestion.js')
 const getQuestions = require('./resolvers/getQuestions.js')
 const isGeoCoordinateLegal = require('./resolvers/isGeoCoordinateLegal.js')
+const sessions = require('./resolvers/sessions.js')
+const accounts = require('./resolvers/accounts.js')
+const changesets = require('./resolvers/changesets.js')
 
 const { negotiateLanguages } = require('@fluent/langneg')
 
@@ -133,6 +136,10 @@ module.exports = {
 		getMarkers,
 		getChangeset,
 		getQuestions,
+
+		sessions,
+		accounts,
+		changesets,
 	},
 	Mutation: {
 		// addSources,

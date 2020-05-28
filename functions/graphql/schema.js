@@ -24,6 +24,10 @@ const schema = gql`
 		getPlaces: [Doc]
 		getMarkers: [Marker]
 		getQuestions: [Doc]
+
+		sessions: [Doc]
+		accounts: [Doc]
+		changesets(forID: ID): [Doc]
 	}
 
 	type Text {
@@ -154,6 +158,13 @@ const schema = gql`
         displayName: String
         forProfileID: ID
 	}
+	type Session {
+		profileID: ID
+		user_agent: String
+		started: DateTime
+		expires: DateTime
+		lastModified: DateTime
+	}
 
 	type Metadata {
 		lastModified: DateTime
@@ -165,7 +176,7 @@ const schema = gql`
 
 
 
-	union Properties = Error | Place | Changeset | Question | Text
+	union Properties = Error | Place | Changeset | Question | Text | Session | Account
 	type Doc {
 		_id: ID
 		properties: Properties

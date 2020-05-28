@@ -30,6 +30,8 @@ function getMongoDbContext(){
 
 						Accounts_collection: mongodb_client.db('Graph').collection('Accounts'),
 						Profiles_collection: mongodb_client.db('Graph').collection('Profiles'),
+						
+						Sessions_collection: mongodb_client.db('Auth').collection('Sessions'),
 					}
 	
 					resolve(_ContextChache_.mongodb)
