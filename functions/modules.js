@@ -1062,6 +1062,13 @@ function annotateTags(tags){
 
 async function session_middleware(req, res, next) {
 
+	if (
+		!(!!req.headers.cookie)
+		&& !!req.headers['-x-session']
+	) {
+		req.headers.cookie = '__session='+req.headers['-x-session']
+	}
+
 	const mongodb = await getMongoDbContext()
 
 	const sessionTTL = 60 * 60 * 24 * 14 // = 14 days
