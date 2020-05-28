@@ -2,11 +2,11 @@ const { GraphQLJSON, GraphQLJSONObject } = require('graphql-type-json')
 const {GraphQLScalarType} = require('graphql')
 const {Kind} = require('graphql/language')
 
-// import {
-// 	GraphQLDate,
-// 	GraphQLTime,
-// 	GraphQLDateTime,
-// } from 'graphql-iso-date'
+const {
+	// GraphQLDate,
+	// GraphQLTime,
+	GraphQLDateTime,
+} = require('graphql-iso-date')
 
 const compilePlace = require('./resolvers/compilePlace.js')
 // const addSources = require('./resolvers/addSources.js')
@@ -89,26 +89,26 @@ module.exports = {
 	JSON: GraphQLJSON,
 	JSONObject: GraphQLJSONObject,
 
-	Timestamp: new GraphQLScalarType({
-		name: 'Timestamp',
-		description: 'Timestamp custom scalar type',
-		parseValue(value) {
-			return new Date(value) // value from the client
-		},
-		serialize(value) {
-			return value*1 // .getTime() // value sent to the client
-		},
-		parseLiteral(ast) {
-			if (ast.kind === Kind.INT) {
-				return new Date(parseInt(ast.value, 10)) // ast value is always in string format
-			}
-			return null
-		},
-	}),
+	// Timestamp: new GraphQLScalarType({
+	// 	name: 'Timestamp',
+	// 	description: 'Timestamp custom scalar type',
+	// 	parseValue(value) {
+	// 		return new Date(value) // value from the client
+	// 	},
+	// 	serialize(value) {
+	// 		return value*1 // .getTime() // value sent to the client
+	// 	},
+	// 	parseLiteral(ast) {
+	// 		if (ast.kind === Kind.INT) {
+	// 			return new Date(parseInt(ast.value, 10)) // ast value is always in string format
+	// 		}
+	// 		return null
+	// 	},
+	// }),
 
 	// Date: GraphQLDate,
 	// Time: GraphQLTime,
-	// DateTime: GraphQLDateTime,
+	DateTime: GraphQLDateTime,
 
 	Properties: {
 		__resolveType(obj, context, info){

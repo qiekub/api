@@ -3,11 +3,13 @@ const {gql} = require('apollo-server-express')
 // scalar Date
 // scalar Time
 // scalar DateTime
+//
+// scalar Timestamp
 
 const schema = gql`
 	scalar JSON
 	scalar JSONObject
-	scalar Timestamp
+	scalar DateTime
 
 	type Query {
 		getID: ID
@@ -154,8 +156,8 @@ const schema = gql`
 	}
 
 	type Metadata {
-		lastModified: Timestamp
-		created: Timestamp
+		lastModified: DateTime
+		created: DateTime
 	}
 	type Error {
 		error: String
