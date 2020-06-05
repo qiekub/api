@@ -33,6 +33,8 @@ function gqlServer() {
 		playground: {
 			settings: {
 				'request.credentials': 'same-origin',
+				'prettier.tabWidth': 4,
+				'prettier.useTabs': true,
 			},
 			endpoint: '/graphql/v1',
 			// endpoint: 'https://us-central1-queercenters.cloudfunctions.net/graphql/',
