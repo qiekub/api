@@ -1,4 +1,4 @@
-const { addChangeset, compileAndUpsertPlace } = require('../../modules.js')
+const { addChangeset } = require('../../modules.js')
 
 module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
