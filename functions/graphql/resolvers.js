@@ -146,7 +146,7 @@ module.exports = {
 		// addSources,
 		addChangeset,
 		// answerQuestion,
-		compilePlace,
+		// compilePlace,
 
 		connect,
 	},

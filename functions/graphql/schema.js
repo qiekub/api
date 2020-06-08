@@ -46,7 +46,6 @@ const schema = gql`
 
 	type Mutation {
 		addChangeset(properties: Changeset_Input): ID
-		compilePlace(_id: ID): Boolean
 
 		connect(properties: Edge_Input): ID
 	}
