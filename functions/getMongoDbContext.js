@@ -25,6 +25,8 @@ function getMongoDbContext(){
 						client: mongodb_client,
 						ObjectID: ObjectID,
 	
+						Edges_collection: mongodb_client.db('Graph').collection('Edges'),
+
 						CompiledPlaces_collection: mongodb_client.db('Graph').collection('CompiledPlaces'),
 						Changesets_collection: mongodb_client.db('Graph').collection('Changesets'),
 

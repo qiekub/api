@@ -22,6 +22,7 @@ const isGeoCoordinateLegal = require('./resolvers/isGeoCoordinateLegal.js')
 const sessions = require('./resolvers/sessions.js')
 const accounts = require('./resolvers/accounts.js')
 const changesets = require('./resolvers/changesets.js')
+const connect = require('./resolvers/connect.js')
 
 const { negotiateLanguages } = require('@fluent/langneg')
 
@@ -146,6 +147,12 @@ module.exports = {
 		addChangeset,
 		// answerQuestion,
 		compilePlace,
+
+		connect,
+	},
+
+	Edge: {
+		tags: getFilterByKeysFunction('tags'),
 	},
 
 	Place: {

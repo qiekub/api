@@ -47,6 +47,8 @@ const schema = gql`
 	type Mutation {
 		addChangeset(properties: Changeset_Input): ID
 		compilePlace(_id: ID): Boolean
+
+		connect(properties: Edge_Input): ID
 	}
 
 	type GeoCoordinate {
@@ -166,6 +168,25 @@ const schema = gql`
 		lastModified: DateTime
 	}
 
+	type Edge {
+		edgeType: EdgeTypes
+		fromID: ID
+		toID: ID
+		tags(keys: [String]): JSONObject
+	}
+	input Edge_Input {
+		edgeType: EdgeTypes
+		fromID: ID
+		toID: ID
+		tags: JSONObject
+	}
+	enum EdgeTypes {
+		fully_approved
+		approved
+		rejected
+		skiped
+	}
+
 	type Metadata {
 		lastModified: DateTime
 		created: DateTime
@@ -176,7 +197,7 @@ const schema = gql`
 
 
 
-	union Properties = Error | Place | Changeset | Question | Text | Session | Account
+	union Properties = Error | Edge | Place | Changeset | Question | Text | Session | Account
 	type Doc {
 		_id: ID
 		properties: Properties
