@@ -180,10 +180,10 @@ const schema = gql`
 		tags: JSONObject
 	}
 	enum EdgeTypes {
-		fully_approved
+		fact_checked
 		approved
 		rejected
-		skiped
+		skipped
 	}
 
 	type Metadata {
