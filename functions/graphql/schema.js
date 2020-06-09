@@ -30,6 +30,12 @@ const schema = gql`
 		changesets(forID: ID): [Doc]
 	}
 
+	type Mutation {
+		addChangeset(properties: Changeset_Input): ID
+
+		connect(properties: Edge_Input): ID
+	}
+
 	type Text {
 		text: String
 		language: String
@@ -42,12 +48,6 @@ const schema = gql`
 		lat: Float
 		preset: String
 		tags: JSONObject
-	}
-
-	type Mutation {
-		addChangeset(properties: Changeset_Input): ID
-
-		connect(properties: Edge_Input): ID
 	}
 
 	type GeoCoordinate {
