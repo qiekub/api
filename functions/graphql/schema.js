@@ -32,7 +32,6 @@ const schema = gql`
 
 	type Mutation {
 		addChangeset(properties: Changeset_Input): ID
-
 		addEdge(properties: Edge_Input): ID
 	}
 

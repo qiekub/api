@@ -141,7 +141,6 @@ module.exports = {
 	},
 	Mutation: {
 		addChangeset,
-
 		addEdge,
 	},
 
