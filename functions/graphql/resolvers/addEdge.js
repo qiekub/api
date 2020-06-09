@@ -19,12 +19,13 @@ module.exports = async (parent, args, context, info) => {
 					p.toID+'' === context.profileID+''
 					|| p.fromID+'' === context.profileID+''
 				) {
+					const toID = new mongodb.ObjectID(p.toID)
 					mongodb.Edges_collection.insertOne({
 						__typename: 'Doc',
 						properties: {
 							__typename: 'Edge',
 							edgeType: p.edgeType,
-							toID: new mongodb.ObjectID(p.toID),
+							toID,
 							fromID: new mongodb.ObjectID(p.fromID),
 							tags: (p.tags && Object.keys(p.tags).length > 0 ? p.tags : {}),
 						},
@@ -37,6 +38,19 @@ module.exports = async (parent, args, context, info) => {
 					.then(result => {
 						if (!!result.insertedId) {
 							resolve(result.insertedId)
+
+							if (
+								// TODO: check if toID is a Changeset
+								p.edgeType === 'rejected'
+								|| p.edgeType === 'approved'
+								|| p.edgeType === 'fact_checked'
+							) {
+								compileAndUpsertPlace(mongodb, [toID], (error,didItUpsert) => {
+									if (error) {
+										console.error(error)
+									}
+								})
+							}
 						}else{
 							reject('Could not insert a new edge.')
 						}
