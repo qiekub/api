@@ -18,16 +18,17 @@ const schema = gql`
 		search(query: String, languages: [String]): SearchInfo
 		isGeoCoordinateLegal(lat: Float, lng: Float): Boolean
 
-		getPlace(_id: ID): Doc
-		getChangeset(_id: ID): Doc
+		place(_id: ID): Doc
+		places: [Doc]
 
-		getPlaces: [Doc]
-		getMarkers: [Marker]
-		getQuestions: [Doc]
+		changeset(_id: ID): Doc
+		changesets(forID: ID): [Doc]
+
+		markers: [Marker]
+		questions: [Doc]
 
 		sessions: [Doc]
 		accounts: [Doc]
-		changesets(forID: ID): [Doc]
 	}
 
 	type Mutation {

@@ -8,13 +8,13 @@ const {
 	GraphQLDateTime,
 } = require('graphql-iso-date')
 
-const getPlace = require('./resolvers/getPlace.js')
-const getChangeset = require('./resolvers/getChangeset.js')
-const getPlaces = require('./resolvers/getPlaces.js')
-const getMarkers = require('./resolvers/getMarkers.js')
+const place = require('./resolvers/place.js')
+const changeset = require('./resolvers/changeset.js')
+const places = require('./resolvers/places.js')
+const markers = require('./resolvers/markers.js')
 const search = require('./resolvers/search.js')
 const addChangeset = require('./resolvers/addChangeset.js')
-const getQuestions = require('./resolvers/getQuestions.js')
+const questions = require('./resolvers/questions.js')
 const isGeoCoordinateLegal = require('./resolvers/isGeoCoordinateLegal.js')
 const sessions = require('./resolvers/sessions.js')
 const accounts = require('./resolvers/accounts.js')
@@ -129,15 +129,17 @@ module.exports = {
 		search,
 		isGeoCoordinateLegal,
 
-		getPlace,
-		getPlaces,
-		getMarkers,
-		getChangeset,
-		getQuestions,
+		place,
+		places,
+
+		changeset,
+		changesets,
+
+		markers,
+		questions,
 
 		sessions,
 		accounts,
-		changesets,
 	},
 	Mutation: {
 		addChangeset,
