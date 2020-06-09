@@ -1,6 +1,6 @@
 const { GraphQLJSON, GraphQLJSONObject } = require('graphql-type-json')
-const {GraphQLScalarType} = require('graphql')
-const {Kind} = require('graphql/language')
+const { GraphQLScalarType } = require('graphql')
+const { Kind } = require('graphql/language')
 
 const {
 	// GraphQLDate,
