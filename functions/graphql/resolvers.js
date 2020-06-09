@@ -22,7 +22,7 @@ const isGeoCoordinateLegal = require('./resolvers/isGeoCoordinateLegal.js')
 const sessions = require('./resolvers/sessions.js')
 const accounts = require('./resolvers/accounts.js')
 const changesets = require('./resolvers/changesets.js')
-const connect = require('./resolvers/connect.js')
+const addEdge = require('./resolvers/addEdge.js')
 
 const { negotiateLanguages } = require('@fluent/langneg')
 
@@ -148,7 +148,7 @@ module.exports = {
 		// answerQuestion,
 		// compilePlace,
 
-		connect,
+		addEdge,
 	},
 
 	Edge: {
