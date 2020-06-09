@@ -12,7 +12,7 @@ const schema = gql`
 	scalar DateTime
 
 	type Query {
-		getID: ID
+		id: ID
 		whoami: ID
 
 		search(query: String, languages: [String]): SearchInfo
