@@ -17,6 +17,8 @@ const schema = gql`
 
 		search(query: String, languages: [String]): SearchInfo
 		isGeoCoordinateLegal(lat: Float, lng: Float): Boolean
+		placesWithUndecidedChangesets(forID: ID): [Doc]
+		undecidedChangesets(forID: ID): [Doc]
 
 		place(_id: ID): Doc
 		places: [Doc]

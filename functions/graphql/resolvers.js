@@ -20,6 +20,7 @@ const sessions = require('./resolvers/sessions.js')
 const accounts = require('./resolvers/accounts.js')
 const changesets = require('./resolvers/changesets.js')
 const addEdge = require('./resolvers/addEdge.js')
+const undecidedChangesets = require('./resolvers/undecidedChangesets.js')
 
 const { negotiateLanguages } = require('@fluent/langneg')
 
@@ -128,6 +129,14 @@ module.exports = {
 
 		search,
 		isGeoCoordinateLegal,
+		placesWithUndecidedChangesets: (parent, args, context, info) => {
+			args.whatIsRequested = 'places'
+			return undecidedChangesets(parent, args, context, info)
+		},
+		undecidedChangesets: (parent, args, context, info) => {
+			args.whatIsRequested = 'changesets'
+			return undecidedChangesets(parent, args, context, info)
+		},
 
 		place,
 		places,
