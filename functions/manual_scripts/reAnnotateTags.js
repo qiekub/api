@@ -71,7 +71,7 @@ async function startReAnnotation(){
 
 
 
-startReAnnotation()
+// startReAnnotation()
 
 
 
