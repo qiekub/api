@@ -595,7 +595,8 @@ function compileAnswers(mongodb, placeIDs, callback){
 	})
 }
 
-function compile_places_from_changesets(mongodb, placeIDs, callback){
+/*
+function OLD_compile_places_from_changesets(mongodb, placeIDs, callback){
 	// TODO: This can probably be improved as it's just a modified copy of compileAnswers().
 
 	const __last_n_answers__ = 5
@@ -784,6 +785,179 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 		docs = Object.values(docs)
 		.map(doc => {
 			// add geometry
+
+			doc.properties.name = []
+			if (doc.properties.tags.name) {
+				doc.properties.name.push({
+					__typename: 'Text',
+					language: null,
+					text: doc.properties.tags.name,
+				})
+			}
+			if (doc.properties.tags['name:en']) {
+				doc.properties.name.push({
+					__typename: 'Text',
+					language: 'en',
+					text: doc.properties.tags['name:en'],
+				})
+			}
+
+			doc.properties.geometry = {
+				__typename: 'GeoData',
+			}
+			if (doc.properties.tags.lat && doc.properties.tags.lng) {
+				doc.properties.geometry.location = {
+					__typename: 'GeoCoordinate',
+					lat: doc.properties.tags.lat,
+					lng: doc.properties.tags.lng,
+				}
+			}
+			return doc
+		})
+
+		callback(null,docs)
+	})
+}
+*/
+
+function compile_places_from_changesets(mongodb, placeIDs, callback){
+	// TODO: This can probably be improved as it's just a modified copy of compileAnswers().
+
+	mongodb.Changesets_collection
+	.aggregate([
+		...(
+			!!placeIDs
+			? [{$match:{
+				"properties.forID": {$in: placeIDs},
+			}}]
+			: []
+		),
+
+
+		// START filter for only approved changesets
+		{$lookup:{
+			from: "Edges",
+			localField: "_id",
+			foreignField: "properties.toID",
+			as: "edges",
+		}},
+		{$unwind:{
+			path: "$edges",
+			preserveNullAndEmptyArrays: false,
+		}},
+		{$match:{
+			"edges.properties.edgeType": "approved",
+		}},
+		{$group: {
+			_id: "$_id",
+			doc: {$first: "$$ROOT"},
+		}},
+		{$replaceRoot:{
+			newRoot: "$doc"
+		}},
+		{$unset: "edges"},
+		// END filter for only approved changesets
+
+
+		{$set:{
+			"properties.answer": { $objectToArray: "$properties.tags" },
+		}},
+		{$unset:[ "properties.tags" ]},
+
+
+		// START restrict to the latest answer per antiSpamUserIdentifier (and place and key).
+		{$unwind: "$properties.answer"},
+		{$sort:{
+			"metadata.lastModified": -1,
+			"metadata.created": -1,
+			"_id": -1,
+			"properties.answer.k": -1,
+			"properties.answer.v": -1,
+		}},
+		{$group:{
+			_id: {$concat:[
+				{$toString:"$properties.antiSpamUserIdentifier"},
+				"_",
+				{$toString:"$properties.forID"},
+				"_",
+				{$toString:"$properties.answer.k"},
+			]},
+			doc: {$first:"$$ROOT"},
+		}},
+		{$replaceRoot:{newRoot:"$doc"}},
+		// END restrict to the latest answer per antiSpamUserIdentifier (and place and key).
+
+
+		// START restrict to the latest answer
+		{$unwind: "$properties.answer"},
+		{$sort:{
+			"metadata.lastModified": -1,
+			"metadata.created": -1,
+			"_id": -1,
+			"properties.answer.k": -1,
+			"properties.answer.v": -1,
+		}},
+		{$group:{
+			_id: {$concat:[
+				{$toString:"$properties.forID"},
+				"_",
+				// {$toString:"$properties.questionID"},
+				// "_",
+				{$toString:"$properties.answer.k"},
+			]},
+			doc: {$first:"$$ROOT"},
+		}},
+		// END restrict to the latest answer
+
+
+		{$project:{
+			forID: '$doc.properties.forID',
+			answerKey: '$doc.properties.answer.k',
+			answerValue: '$doc.properties.answer.v',
+			// changesetID: '$doc._id',
+		}},
+	])
+	.toArray((error,docs)=>{
+
+		docs = docs
+		.reduce((obj,doc)=>{
+			const placeID = doc.forID
+			const key = doc.answerKey
+			const value = doc.answerValue
+
+			if (!obj[placeID]) {
+				obj[placeID] = {
+					_id: placeID,
+					__typename: 'Doc',
+					properties: {
+						__typename: 'Place',
+						tags: {},
+						// changesetIDs: {},
+					}
+				}
+			}
+
+			if (!(!!obj[placeID].properties.tags[key])) {
+				if (
+					!isNaN(value)
+					&& typeof value !== 'boolean'
+					&& (doc.answerKey === 'lat' || key === 'lng')
+				) {
+					obj[placeID].properties.tags[key] = value*1
+				}else{
+					obj[placeID].properties.tags[key] = value
+				}
+
+				// obj[placeID].properties.changesetIDs[key] = doc.changesetID || null
+			}
+
+			return obj
+		},{})
+
+
+		docs = Object.values(docs)
+		.map(doc => {
+			// Add name and geometry properties.
 
 			doc.properties.name = []
 			if (doc.properties.tags.name) {
