@@ -42,6 +42,9 @@ const project_queries = {
 		{$replaceRoot:{
 			newRoot: "$changesetDoc"
 		}},
+		{$sort:{
+			'metadata.lastModified': 1,
+		}},
 		{$limit: 100}, // 100 as these are probably displayed in a list.
 	],
 	places: [
