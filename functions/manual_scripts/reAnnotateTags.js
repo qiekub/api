@@ -77,8 +77,10 @@ async function startReAnnotation(){
 
 // async function reCompileEverything(){
 // 	const mongodb = await getMongoDbContext()
-
-// 	mongodb.Changesets_collection.find().toArray((error,docs)=>{
+//
+// 	mongodb.Changesets_collection.find(
+// 		// {'properties.forID': new mongodb.ObjectID('5ea54682dd301aacac336f0b')}
+// 	).toArray((error,docs)=>{
 // 		if (error) {
 // 			console.error(error)
 // 		}else{
