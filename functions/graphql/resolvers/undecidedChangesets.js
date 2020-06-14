@@ -1,3 +1,25 @@
+// [
+// 		{$lookup:{
+// 			from: "Edges",
+// 			localField: "_id",
+// 			foreignField: "properties.toID",
+// 			as: "edges",
+// 		}},
+// 		{$unwind:{
+// 			path: "$edges",
+// 			preserveNullAndEmptyArrays: false,
+// 		}},
+// 		{$match:{
+// 			"edges.properties.edgeType": {$eq: "approved"},
+// 		}},
+// 		{$group: {
+// 			_id: "$_id",
+// 			changesetDoc: {$first: "$$ROOT"},
+// 		}},
+// 		{$replaceRoot:{
+// 			newRoot: "$changesetDoc"
+// 		}},
+// 	]
 
 
 function getLimitChangesetQuery(){
