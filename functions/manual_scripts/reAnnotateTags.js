@@ -82,10 +82,15 @@ async function startReAnnotation(){
 // 		if (error) {
 // 			console.error(error)
 // 		}else{
-// 			let placeIDsToRebuild = new Set(docs.map(doc => doc.properties.forID))
-
-// 			console.log([...placeIDsToRebuild])
-// 			compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], (error,didItUpsert)=>{
+// 			let placeIDsToRebuild = [
+// 				...new Set(
+// 					docs.map(doc => doc.properties.forID+'')
+// 				)
+// 			]
+// 			.map(id => new mongodb.ObjectID(id))
+//
+// 			console.log(placeIDsToRebuild)
+// 			compileAndUpsertPlace(mongodb, placeIDsToRebuild, (error,didItUpsert)=>{
 // 				console.log('finished')
 // 				mongodb.client.close()
 // 			})
