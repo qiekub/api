@@ -150,7 +150,7 @@ function upsertOne(collection,doc,callack){
 }
 
 
-
+/*
 function OLD_compileAnswers(mongodb, placeID, callback){
 	const __last_n_answers__ = 5
 	mongodb.Answers_collection.aggregate([
@@ -339,6 +339,7 @@ function OLD_compileAnswers(mongodb, placeID, callback){
 		}},
 	]).toArray(callback)
 }
+*/
 
 function filterOutliers(numbers){
 	// https://clevercalcul.wordpress.com/2016/02/16/wie-du-ausreisser-in-deiner-datenreihe-findest/
