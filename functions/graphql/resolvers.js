@@ -163,8 +163,8 @@ module.exports = {
 		name: getFilterByLanguageFunction('name'),
 
 		tags: getFilterByKeysFunction('tags'),
-		confidences: getFilterByKeysFunction('confidences'),
-		changesetIDs: getFilterByKeysFunction('changesetIDs'),
+		// confidences: getFilterByKeysFunction('confidences'),
+		// changesetIDs: getFilterByKeysFunction('changesetIDs'),
 	},
 
 	// Marker: {
