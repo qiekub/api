@@ -3,6 +3,9 @@ module.exports = async (parent, args, context, info) => {
 
 	return new Promise((resolve,reject)=>{
 		mongodb.CompiledPlaces_collection.aggregate([
+			{$match:{
+				"properties.tags.preset": {$not: {$eq:"default"}},
+			}},
 			{$project:{
 				_id: "$_id",
 				name: "$properties.name",
