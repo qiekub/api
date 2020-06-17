@@ -1066,6 +1066,7 @@ function getAudienceTags(tags){
 		'lgbtq'					: 'queer',
 		'gay'					: 'queer',
 		'gay:women'				: 'women',
+		'lgbtq:women'			: 'women',
 		'lgbtq:female'			: 'women',
 		'gay:men'				: 'men',
 		'lgbtq:men'				: 'men',
@@ -1092,13 +1093,19 @@ function getAudienceTags(tags){
 			lgbtq:			{'queer': 'primary'},
 		},
 		'social_facility:for': {
+			homosexual:		{'queer': 'primary', 'sexuality:gay': 'primary'},
+			bisexual:		{'queer': 'primary', 'sexuality:bi': 'primary'},
+			transgender:	{'queer': 'primary', 'trans': 'primary'},
 			lgbtq:			{'queer': 'primary'},
+			juvenile:		{'youth': 'primary'},
 		},
 		'type': {
 			gay:			{'queer': 'primary'},
+			lgbtq:			{'queer': 'primary'},
 		},
 		'sauna': {
 			gay:			{'queer': 'primary'},
+			lgbtq:			{'queer': 'primary'},
 		},
 		'club': {
 			gay:			{'queer': 'primary'},
@@ -1113,10 +1120,17 @@ function getAudienceTags(tags){
 		},
 		'gay': {
 			men:			{'queer': 'welcome', 'men': 'primary'},
+			women:			{'queer': 'welcome', 'men': 'primary'},
 		},
 		'gay:men': {
+			welcome:		{'queer': 'welcome', 'men': 'welcome'},
 			yes:			{'queer': 'welcome', 'men': 'welcome'},
 			only:			{'queer': 'welcome', 'men': 'only'},
+		},
+		'gay:women': {
+			welcome:		{'queer': 'welcome', 'women': 'welcome'},
+			yes:			{'queer': 'welcome', 'women': 'welcome'},
+			only:			{'queer': 'welcome', 'women': 'only'},
 		},
 		'lgbtq': {
 			yes:			{'queer': 'primary'},
