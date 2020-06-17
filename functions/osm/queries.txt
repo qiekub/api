@@ -1,0 +1,80 @@
+// [out:json][timeout:240][bbox:50.6,7.0,50.8,7.3]; // bonn
+// [out:json][timeout:240][bbox:50.6299,6.8047,51.0833,7.2867]; // köln+bonn
+// [out:json][timeout:240][bbox:46.89,5.89,55.55,14.94]; // deutschland
+// [out:json][timeout:240][bbox:31.522,-124.409,39.555,-114.082]; // californien
+// [out:json][timeout:240][bbox:{{bbox}}]; // viewport
+[out:json][timeout:240][bbox:90,-180,-90,180]; // world
+(
+  node[~"^community_centre.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+  node[~"^social_facility.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+  node[~"^lgbtq.*$"~"."];
+  node[~"^gay.*$"~"."];
+  node[~"^lesbian.*$"~"."];
+  node[~"^fetish.*$"~"."];
+  
+  way[~"^community_centre.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+  way[~"^social_facility.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+  way[~"^lgbtq.*$"~"."];
+  way[~"^gay.*$"~"."];
+  way[~"^lesbian.*$"~"."];
+  way[~"^fetish.*$"~"."];
+  
+  relation[~"^community_centre.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+  relation[~"^social_facility.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+  relation[~"^lgbtq.*$"~"."];
+  relation[~"^gay.*$"~"."];
+  relation[~"^lesbian.*$"~"."];
+  relation[~"^fetish.*$"~"."];
+);
+(._;>;);
+out meta;
+// out qt;
+// out;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// [out:json][timeout:240][bbox:50.6,7.0,50.8,7.3]; // bonn
+// [out:json][timeout:240][bbox:50.6299,6.8047,51.0833,7.2867]; // köln+bonn
+// [out:json][timeout:240][bbox:46.89,5.89,55.55,14.94]; // deutschland
+// [out:json][timeout:240][bbox:31.522,-124.409,39.555,-114.082]; // californien
+// [out:json][timeout:240][bbox:{{bbox}}]; // viewport
+[out:json][timeout:240][bbox:90,-180,-90,180]; // world
+(
+  node(newer:"{{date:1Day}}")[~"^community_centre.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+  node(newer:"{{date:1Day}}")[~"^social_facility.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+  node(newer:"{{date:1Day}}")[~"^lgbtq.*$"~"."];
+  node(newer:"{{date:1Day}}")[~"^gay.*$"~"."];
+  node(newer:"{{date:1Day}}")[~"^lesbian.*$"~"."];
+  node(newer:"{{date:1Day}}")[~"^fetish.*$"~"."];
+  
+  way(newer:"{{date:1Day}}")[~"^community_centre.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+  way(newer:"{{date:1Day}}")[~"^social_facility.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+  way(newer:"{{date:1Day}}")[~"^lgbtq.*$"~"."];
+  way(newer:"{{date:1Day}}")[~"^gay.*$"~"."];
+  way(newer:"{{date:1Day}}")[~"^lesbian.*$"~"."];
+  way(newer:"{{date:1Day}}")[~"^fetish.*$"~"."];
+  
+  relation(newer:"{{date:1Day}}")[~"^community_centre.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+  relation(newer:"{{date:1Day}}")[~"^social_facility.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+  relation(newer:"{{date:1Day}}")[~"^lgbtq.*$"~"."];
+  relation(newer:"{{date:1Day}}")[~"^gay.*$"~"."];
+  relation(newer:"{{date:1Day}}")[~"^lesbian.*$"~"."];
+  relation(newer:"{{date:1Day}}")[~"^fetish.*$"~"."];
+);
+(._;>;);
+out meta;
+// out qt;
+// out;
