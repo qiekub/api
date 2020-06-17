@@ -3,6 +3,8 @@ const functions = require('firebase-functions')
 const async = require('async')
 const fetch = require('node-fetch')
 
+const turf = require('@turf/turf')
+
 const getMongoDbContext = require('../getMongoDbContext.js')
 const { addChangeset, compile_places_from_changesets, upsertOne, compileAndUpsertPlace, annotateTags, key_synonyms } = require('../modules.js')
 
@@ -206,17 +208,17 @@ async function getExistingID(mongodb, tags){
 	// wrap the stages in some mongodb stuff:
 	scoreStages = scoreStages.map(scoreStage => {
 		return {$addFields:{
-	        score: {
-	            $add: [
-	                "$score",
-	                {$cond:{
-	                    if: scoreStage.if,
-	                    then: scoreStage.score,
-	                    else: 0
-	                }}
-	            ]
-	        }
-	    }}
+					score: {
+							$add: [
+									"$score",
+									{$cond:{
+											if: scoreStage.if,
+											then: scoreStage.score,
+											else: 0
+									}}
+							]
+					}
+			}}
 	})
 
 	return new Promise( (resolve,reject) => {
@@ -245,7 +247,7 @@ async function getExistingID(mongodb, tags){
 }
 
 async function saveAsChangeset(mongodb, element, finished_callback){
-	const tags = {
+	let tags = {
 		...element.tags,
 		lat: element.lat,
 		lng: element.lon,
@@ -273,6 +275,138 @@ async function saveAsChangeset(mongodb, element, finished_callback){
 	})
 }
 
+
+
+function addMissingCenters(all_elements){
+	
+	if (all_elements.length === 0) {
+		return []
+	}
+	
+	const elements_by_id = all_elements.reduce((obj, element) => {
+		obj[element.type + '/' + element.id] = element
+		return obj
+	}, {})
+	
+	const with_tags = all_elements.filter(element => element.hasOwnProperty('tags'))
+	
+	if (with_tags.length === 0) {
+		return []
+	}
+	
+	
+	function node2geo(element) {
+		if (!(!!element)) {
+			return null
+		}
+	
+		return [element.lon,element.lat]
+	}
+	function way2geo(element) {
+		if (!(!!element)) {
+			return null
+		}
+	
+		let nodes = element.nodes.map(id => node2geo(elements_by_id['node/' + id]))
+	
+		nodes = nodes.filter(v => !!v)
+	
+		if (nodes.length === 0) {
+			return null
+		}
+	
+		return nodes
+	}
+	function relation2geo(element) {
+		if (!(!!element)) {
+			return null
+		}
+	
+		let ways = []
+	
+		for (const member of element.members) {
+			if (member.type === 'way') {
+				ways.push(
+					way2geo(elements_by_id['way/' + member.ref])
+				)
+			} else if (member.type === 'relation') {
+				ways = [
+					...ways,
+					...relation2geo(elements_by_id['relation/' + member.ref]),
+				]
+			}
+		}
+	
+		ways = ways.filter(v => !!v)
+	
+		if (ways.length === 0) {
+			return null
+		}
+	
+		return ways
+	}
+	
+	const nodes = with_tags
+	.filter(element => element.type === 'node')
+	
+	const ways = with_tags
+	.filter(element => element.type === 'way')
+	.map(element => {
+		const way = way2geo(element)
+		if (!(!!way)) {
+			return null
+		}
+	
+		const line = turf.lineString(way)
+		const poly = turf.lineToPolygon(line)
+		const center = turf.centerOfMass(poly)
+		return {
+			...element,
+			lat: center.geometry.coordinates[1],
+			lon: center.geometry.coordinates[0],
+		}
+	})
+	.filter(v => !!v)
+	
+	const relations = with_tags
+	.filter(element => element.type === 'relation')
+	.map(element => {
+		const ways = relation2geo(element)
+		if (!(!!ways)) {
+			return null
+		}
+	
+		const poly = turf.multiPolygon([
+			ways.map(way => {
+				const line = turf.lineString(way)
+				const poly = turf.lineToPolygon(line)
+				return poly.geometry.coordinates[0]
+			})
+		])
+		const center = turf.centerOfMass(poly)
+		return {
+			...element,
+			lat: center.geometry.coordinates[1],
+			lon: center.geometry.coordinates[0],
+		}
+	})
+	.filter(v => !!v)
+	
+	const new_with_tags = [
+		...nodes,
+		...ways,
+		...relations,
+	]
+	
+	if (new_with_tags.length === 0) {
+		return []
+	}
+	
+	return new_with_tags
+}
+
+
+
 async function loadChangesFromOverpass() {
 
 	const d = new Date()
@@ -281,11 +415,64 @@ async function loadChangesFromOverpass() {
 
 	const currentDateMinusOneDay = d.toISOString() // 2020-04-20T00:00:00Z
 
-	const url = `https://overpass-api.de/api/interpreter?data=[bbox:90,-180,-90,180][out:json][timeout:240];(node[~"^community_centre.*$"~"(lgbt|homosexual|gay)"](newer:"${currentDateMinusOneDay}");node[~"^lgbtq.*$"~"."](newer:"${currentDateMinusOneDay}");node[~"^gay.*$"~"."](newer:"${currentDateMinusOneDay}");node[~"^fetish.*$"~"."](newer:"${currentDateMinusOneDay}"););out meta;`
+	const last_day_changes_url = `https://overpass-api.de/api/interpreter?data=
+		[out:json][timeout:240][bbox:90,-180,-90,180];
+		(
+			node(newer:"{{date:1Day}}")[~"^community_centre.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+			node(newer:"{{date:1Day}}")[~"^social_facility.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+			node(newer:"{{date:1Day}}")[~"^lgbtq.*$"~"."];
+			node(newer:"{{date:1Day}}")[~"^gay.*$"~"."];
+			node(newer:"{{date:1Day}}")[~"^lesbian.*$"~"."];
+			node(newer:"{{date:1Day}}")[~"^fetish.*$"~"."];
 
-	// const url = `https://overpass-api.de/api/interpreter?data=[bbox:90,-180,-90,180][out:json][timeout:240];(node[~"^community_centre.*$"~"(lgbt|homosexual|gay)"];node[~"^lgbtq.*$"~"."];node[~"^gay.*$"~"."];node[~"^fetish.*$"~"."];);out meta;`
+			way(newer:"{{date:1Day}}")[~"^community_centre.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+			way(newer:"{{date:1Day}}")[~"^social_facility.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+			way(newer:"{{date:1Day}}")[~"^lgbtq.*$"~"."];
+			way(newer:"{{date:1Day}}")[~"^gay.*$"~"."];
+			way(newer:"{{date:1Day}}")[~"^lesbian.*$"~"."];
+			way(newer:"{{date:1Day}}")[~"^fetish.*$"~"."];
 
-	return fetch(encodeURI(url), {
+			relation(newer:"{{date:1Day}}")[~"^community_centre.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+			relation(newer:"{{date:1Day}}")[~"^social_facility.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+			relation(newer:"{{date:1Day}}")[~"^lgbtq.*$"~"."];
+			relation(newer:"{{date:1Day}}")[~"^gay.*$"~"."];
+			relation(newer:"{{date:1Day}}")[~"^lesbian.*$"~"."];
+			relation(newer:"{{date:1Day}}")[~"^fetish.*$"~"."];
+		);
+		(._;>;);
+		out meta;
+	`.replace(/{{date:1Day}}/g, currentDateMinusOneDay)
+
+
+	// const all_changes_url = `https://overpass-api.de/api/interpreter?data=
+	// 	[out:json][timeout:240][bbox:90,-180,-90,180];
+	// 	(
+	// 		node[~"^community_centre.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+	// 		node[~"^social_facility.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+	// 		node[~"^lgbtq.*$"~"."];
+	// 		node[~"^gay.*$"~"."];
+	// 		node[~"^lesbian.*$"~"."];
+	// 		node[~"^fetish.*$"~"."];
+	//
+	// 		way[~"^community_centre.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+	// 		way[~"^social_facility.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+	// 		way[~"^lgbtq.*$"~"."];
+	// 		way[~"^gay.*$"~"."];
+	// 		way[~"^lesbian.*$"~"."];
+	// 		way[~"^fetish.*$"~"."];
+	//
+	// 		relation[~"^community_centre.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+	// 		relation[~"^social_facility.*$"~"(lgbt|homosexual|gay|lesbian|transgender|bisexual)"];
+	// 		relation[~"^lgbtq.*$"~"."];
+	// 		relation[~"^gay.*$"~"."];
+	// 		relation[~"^lesbian.*$"~"."];
+	// 		relation[~"^fetish.*$"~"."];
+	// 	);
+	// 	(._;>;);
+	// 	out meta;
+	// `
+
+	return fetch(encodeURI(last_day_changes_url), {
 		method: 'get',
 		headers: {
 			'Content-Type': 'application/json',
@@ -309,26 +496,36 @@ function loadChanges(){
 
 	loadChangesFromOverpass().then(async changes=>{
 		if (changes.elements.length > 0) {
-			const mongodb = await getMongoDbContext()
-		
-			const placeIDsToRebuild = new Set()
-			async.each(changes.elements, (element, callback) => {
-				saveAsChangeset(mongodb, element, placeID => {
-					placeIDsToRebuild.add(placeID)
-					callback()
+			const elements = addMissingCenters(changes.elements)
+
+			if (elements.length > 0) {
+				console.log(`${elements.length} elements with tags`)
+						
+				const mongodb = await getMongoDbContext()
+			
+				const placeIDsToRebuild = new Set()
+				async.each(elements, (element, callback) => {
+					saveAsChangeset(mongodb, element, placeID => {
+						placeIDsToRebuild.add(placeID)
+						callback()
+					})
+				}, error => {
+					// console.log([...placeIDsToRebuild])
+					compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], (error,didItUpsert)=>{
+						console.log(`finished`)
+						mongodb.client.close()
+					})
 				})
-			}, error => {
-				console.log([...placeIDsToRebuild])
-				compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], (error,didItUpsert)=>{
-					console.log('finished')
-					mongodb.client.close()
-				})
-			})
+			}else{
+				console.error('no elements')
+			}
 		}
 	}, error=>{
 		console.error(error)
 	})
 }
+
+// loadChanges()
 
 const runtimeOpts = {
   timeoutSeconds: 540, // 540seconds = 9minutes
