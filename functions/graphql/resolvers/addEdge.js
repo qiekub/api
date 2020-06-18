@@ -37,18 +37,15 @@ module.exports = async (parent, args, context, info) => {
 					})
 					.then(result => {
 						if (!!result.insertedId) {
-							resolve(result.insertedId)
-
 							if (
 								// TODO: check if toID is a Changeset
-								p.edgeType === 'rejected'
-								|| p.edgeType === 'approved'
-								|| p.edgeType === 'fact_checked'
+								p.edgeType === 'approved'
 							) {
 								compileAndUpsertPlace(mongodb, [toID], (error,didItUpsert) => {
 									if (error) {
 										console.error(error)
 									}
+									resolve(result.insertedId)
 								})
 							}
 						}else{
