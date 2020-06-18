@@ -26,15 +26,20 @@ const GitHubStrategy = require('passport-github2').Strategy
 const TwitterStrategy = require('passport-twitter').Strategy
 const partials = require('express-partials')
 
-const listen_path = ''
+const listen_path = '/auth'
 const url_path = (
 	process.env.FUNCTIONS_EMULATOR
-	? '/qiekub/us-central1/account'
-	: ''
+	? '/qiekub/us-central1/api/auth'
+	: '/auth'
 )
 const callbackURL_prefix = (
 	process.env.FUNCTIONS_EMULATOR
-	? 'http://192.168.2.102:5000/qiekub/us-central1/account/'
+	? 'http://192.168.2.102:5000/qiekub/us-central1/api/'
+	: 'https://api.qiekub.org/'
+)
+const account_URL = (
+	process.env.FUNCTIONS_EMULATOR
+	? 'http://192.168.2.102:4000/'
 	: 'https://account.qiekub.org/'
 )
 
@@ -313,20 +318,21 @@ function server() {
 
 
 	app.get(listen_path+'/', function(req, res){
-		res.render('index', { user: req.user })
+		// res.render('index', { user: req.user })
+		res.redirect(account_URL)
 	})
 
-	app.get(listen_path+'/auth/github/', passport.authenticate('github', {
+	app.get(listen_path+'/github/', passport.authenticate('github', {
 		scope: ['user:email'],
 	}))
-	app.get(listen_path+'/auth/github/callback/', passport.authenticate('github', {
+	app.get(listen_path+'/github/callback/', passport.authenticate('github', {
 		failureRedirect: url_path+'/',
 	}), (req, res)=>{
 		res.redirect(url_path+'/')
 	})
 
-	app.get(listen_path+'/auth/twitter/', passport.authenticate('twitter'))
-	app.get(listen_path+'/auth/twitter/callback/', passport.authenticate('twitter', {
+	app.get(listen_path+'/twitter/', passport.authenticate('twitter'))
+	app.get(listen_path+'/twitter/callback/', passport.authenticate('twitter', {
 		failureRedirect: url_path+'/',
 	}), (req, res)=>{
 		res.redirect(url_path+'/')

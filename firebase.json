@@ -15,8 +15,8 @@
 				"function": "graphql"
 			},
 			{
-				"source": "/account/**",
-				"function": "account"
+				"source": "/auth/**",
+				"function": "auth"
 			}
 		]
 	}
