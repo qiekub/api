@@ -77,7 +77,6 @@ async function startReAnnotation(){
 
 // async function reCompileEverything(){
 // 	const mongodb = await getMongoDbContext()
-//
 // 	mongodb.Changesets_collection.find(
 // 		// {'properties.forID': new mongodb.ObjectID('5ea54682dd301aacac336f0b')}
 // 	).toArray((error,docs)=>{
@@ -90,7 +89,6 @@ async function startReAnnotation(){
 // 				)
 // 			]
 // 			.map(id => new mongodb.ObjectID(id))
-//
 // 			console.log(placeIDsToRebuild)
 // 			compileAndUpsertPlace(mongodb, placeIDsToRebuild, (error,didItUpsert)=>{
 // 				console.log('finished')
