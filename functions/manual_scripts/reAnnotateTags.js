@@ -75,28 +75,28 @@ async function startReAnnotation(){
 
 
 
-// async function reCompileEverything(){
-// 	const mongodb = await getMongoDbContext()
-// 	mongodb.Changesets_collection.find(
-// 		// {'properties.forID': new mongodb.ObjectID('5ea54682dd301aacac336f0b')}
-// 	).toArray((error,docs)=>{
-// 		if (error) {
-// 			console.error(error)
-// 		}else{
-// 			let placeIDsToRebuild = [
-// 				...new Set(
-// 					docs.map(doc => doc.properties.forID+'')
-// 				)
-// 			]
-// 			.map(id => new mongodb.ObjectID(id))
-// 			console.log(placeIDsToRebuild)
-// 			compileAndUpsertPlace(mongodb, placeIDsToRebuild, (error,didItUpsert)=>{
-// 				console.log('finished')
-// 				mongodb.client.close()
-// 			})
-// 		}
-// 	})
-// }
+async function reCompileEverything(){
+	const mongodb = await getMongoDbContext()
+	mongodb.Changesets_collection.find(
+		// {'properties.forID': new mongodb.ObjectID('5ea54682dd301aacac336f0b')}
+	).toArray((error,docs)=>{
+		if (error) {
+			console.error(error)
+		}else{
+			let placeIDsToRebuild = [
+				...new Set(
+					docs.map(doc => doc.properties.forID+'')
+				)
+			]
+			.map(id => new mongodb.ObjectID(id))
+			console.log(placeIDsToRebuild)
+			compileAndUpsertPlace(mongodb, placeIDsToRebuild, (error,didItUpsert)=>{
+				console.log('finished')
+				mongodb.client.close()
+			})
+		}
+	})
+}
 // reCompileEverything()
 
 
