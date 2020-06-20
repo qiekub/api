@@ -21,19 +21,51 @@ function getMongoDbContext(){
 					useNewUrlParser: true,
 					useUnifiedTopology: true,
 				}).then(mongodb_client => {
+					const names = {
+						dbs: {
+							Graph: 'Graph',
+							Auth: 'Auth',
+						},
+						collections: {
+							Edges: 'Edges',
+							CompiledPlaces: 'CompiledPlaces_3',
+							Changesets: 'Changesets',
+							Accounts: 'Accounts',
+							Profiles: 'Profiles',
+							Sessions: 'Sessions',
+						}
+					}
+
+					const dbs = {
+						Graph: mongodb_client.db(names.dbs.Graph),
+						Auth: mongodb_client.db(names.dbs.Auth),
+					}
+					const collections = {
+						Edges: dbs.Graph.collection(names.collections.Edges),
+
+						CompiledPlaces: dbs.Graph.collection(names.collections.CompiledPlaces),
+						Changesets: dbs.Graph.collection(names.collections.Changesets),
+
+						Accounts: dbs.Graph.collection(names.collections.Accounts),
+						Profiles: dbs.Graph.collection(names.collections.Profiles),
+						
+						Sessions: dbs.Auth.collection(names.collections.Sessions),
+					}
+
 					_ContextChache_.mongodb = {
 						client: mongodb_client,
 						ObjectID: ObjectID,
+
+						names,
+						dbs,
+						collections,
 	
-						Edges_collection: mongodb_client.db('Graph').collection('Edges'),
-
-						CompiledPlaces_collection: mongodb_client.db('Graph').collection('CompiledPlaces'),
-						Changesets_collection: mongodb_client.db('Graph').collection('Changesets'),
-
-						Accounts_collection: mongodb_client.db('Graph').collection('Accounts'),
-						Profiles_collection: mongodb_client.db('Graph').collection('Profiles'),
-						
-						Sessions_collection: mongodb_client.db('Auth').collection('Sessions'),
+						Edges_collection: collections.Edges,
+						CompiledPlaces_collection: collections.CompiledPlaces,
+						Changesets_collection: collections.Changesets,
+						Accounts_collection: collections.Accounts,
+						Profiles_collection: collections.Profiles,
+						Sessions_collection: collections.Sessions,
 					}
 	
 					resolve(_ContextChache_.mongodb)
