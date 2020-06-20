@@ -1643,6 +1643,32 @@ function addMissingCenters(all_elements){
 	return new_with_tags
 }
 
+function approveChangeset(mongodb, doc, finished_callback){
+	mongodb.Edges_collection.insertOne({
+		__typename: 'Doc',
+		properties: {
+			__typename: 'Edge',
+			edgeType: 'approved',
+			toID: doc._id,
+			fromID: new mongodb.ObjectID('5ecafac5e1a001e5cfab8e26'), // my profileID
+			tags: {},
+		},
+		metadata: {
+			created: new Date,
+			lastModified: new Date,
+			__typename: 'Metadata',
+		},
+	})
+	.then(result => {
+		if (!!result.insertedId) {
+			finished_callback(doc.properties.forID)
+		}else{
+			finished_callback(null)
+		}
+	})
+	.catch(error => finished_callback(null))
+}
+
 async function saveAsChangeset(mongodb, element, finished_callback){
 	let tags = {
 		...element.tags,
@@ -1714,5 +1740,6 @@ module.exports = {
 
 	getExistingID,
 	addMissingCenters,
+	approveChangeset,
 	saveAsChangeset,
 }
