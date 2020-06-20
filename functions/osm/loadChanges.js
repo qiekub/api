@@ -75,6 +75,10 @@ async function getExistingID(mongodb, tags){
 	.map(key => key.toLowerCase())
 	.filter(key => (
 		[
+			'ISO3166-1', // ISO3166-1 is for countries
+			'ISO3166-1:alpha2',
+			'ISO3166-1:alpha3',
+			'ISO3166-1:numeric',
 			'wikidata',
 			'iata',
 			'icao',
