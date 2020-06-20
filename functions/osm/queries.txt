@@ -78,3 +78,27 @@ out meta;
 out meta;
 // out qt;
 // out;
+
+
+
+
+
+
+
+
+
+
+[out:json][timeout:2400][bbox:90,-180,-90,180];
+relation["admin_level"="2"]["type"="boundary"]["boundary"="administrative"];
+out tags;
+// out center;
+
+
+
+[out:json][timeout:2400][bbox:90,-180,-90,180];
+relation(newer:"{{date:1Day}}")["admin_level"="2"]["type"="boundary"]["boundary"="administrative"];
+out tags;
+// out center;
+
+
+
