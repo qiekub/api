@@ -686,7 +686,7 @@ const allowed_presets = [
 	// 'aeroway',
 	'amenity',
 	'attraction',
-	// 'boundary',
+	'boundary',
 	// 'building_point',
 	// 'embankment',
 	// 'emergency',
