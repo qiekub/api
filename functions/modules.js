@@ -1692,10 +1692,8 @@ async function saveAsChangeset(mongodb, element, finished_callback){
 	tags = annotateTags(tags)
 
 
-	const forID = await getExistingID(mongodb, tags)
-
-	addChangeset(mongodb, {
-		forID,
+	const changesetDoc = {
+		forID: await getExistingID(mongodb, tags),
 		tags,
 		sources: [
 			(
@@ -1712,10 +1710,12 @@ async function saveAsChangeset(mongodb, element, finished_callback){
 		fromBot: true,
 		dataset: 'osm',
 		antiSpamUserIdentifier: (!!element.uid ? 'osm-uid-'+element.uid : 'osm'), // `https://www.openstreetmap.org/user/${element.user}`,
-	}, changesetID=>{
-		finished_callback(forID)
+	}
+
+	addChangeset(mongodb, changesetDoc, changesetID => {
+		approveChangeset(mongodb, changesetDoc, placeID => finished_callback(placeID))
 	}, ()=>{
-		finished_callback(forID)
+		finished_callback(null)
 	})
 }
 
