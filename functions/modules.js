@@ -1222,7 +1222,7 @@ key_synonyms = {
 		return key_synonyms_swapped
 	}, {}))
 }
-function annotateTags(tags){	
+function annotateTags(tags){
 	// add tag synonyms
 	const tagKeys = Object.keys(tags)
 	for (const tagKey of tagKeys) {
