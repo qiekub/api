@@ -1,0 +1,143 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.56.3 eb200aeb",
+  "osm3s": {
+    "timestamp_osm_base": "2020-04-22T22:40:02Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+{
+  "type": "node",
+  "id": 937535734,
+  "lat": 50.9419605,
+  "lon": 6.9380905,
+  "timestamp": "2020-03-10T23:45:24Z",
+  "version": 7,
+  "changeset": 82027105,
+  "user": "Thomas Rosen",
+  "uid": 2804186,
+  "tags": {
+    "addr:city": "Köln",
+    "addr:country": "DE",
+    "addr:housenumber": "14",
+    "addr:postcode": "50672",
+    "addr:street": "Kamekestraße",
+    "amenity": "cafe",
+    "community_centre": "youth_centre;lgbtq",
+    "community_centre:for": "lgbtq",
+    "cuisine": "pizza;coffee_shop",
+    "description": "Youth centre for young lesbian, gay, bi, trans* and queer people.",
+    "internet_access": "wlan",
+    "internet_access:fee": "no",
+    "name": "anyway",
+    "opening_hours": "We 16:00-22:00; Th 17:00-23:00; Fr 19:00-23:59",
+    "outdoor_seating": "no",
+    "smoking": "no",
+    "start_date": "1998",
+    "toilets:wheelchair": "yes",
+    "website": "https://www.anyway-koeln.de/",
+    "wheelchair": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 2927795611,
+  "lat": 48.8848765,
+  "lon": 2.3406197,
+  "timestamp": "2020-04-22T15:05:39Z",
+  "version": 7,
+  "changeset": 83948606,
+  "user": "s_Frantz",
+  "uid": 47355,
+  "tags": {
+    "addr:city": "Paris",
+    "addr:housenumber": "28",
+    "addr:postcode": "75018",
+    "addr:street": "Rue la Vieuville",
+    "amenity": "restaurant",
+    "contact:facebook": "https://www.facebook.com/auxtroispetitscochons.paris/",
+    "contact:instagram": "https://www.instagram.com/aux_trois_petits_cochons/",
+    "contact:twitter": "https://twitter.com/AuxCochons",
+    "email": "cochons@auxtroispetitscochons.fr",
+    "gay": "welcome",
+    "internet_access": "wlan",
+    "internet_access:fee": "no",
+    "name": "Aux Trois Petits Cochons",
+    "opening_hours": "Mo-Su 18:30-23:00",
+    "phone": "+33 1 42 33 39 69",
+    "toilets:wheelchair": "no",
+    "website": "https://www.auxtroispetitscochons.fr/",
+    "wheelchair": "no"
+  }
+},
+{
+  "type": "node",
+  "id": 4799003823,
+  "lat": 52.5001984,
+  "lon": 13.3494308,
+  "timestamp": "2020-04-22T13:12:43Z",
+  "version": 5,
+  "changeset": 83943458,
+  "user": "brightonguy",
+  "uid": 711704,
+  "tags": {
+    "addr:housenumber": "35",
+    "addr:postcode": "10787",
+    "addr:street": "Kleiststraße",
+    "air_conditioning": "yes",
+    "amenity": "bar",
+    "level": "0",
+    "lgbtq": "primary",
+    "min_age": "18",
+    "name": "Bull",
+    "opening_hours:covid19": "off",
+    "outdoor_seating": "no",
+    "smoking": "yes",
+    "wheelchair": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 4951306621,
+  "lat": 3.1478454,
+  "lon": 101.7116720,
+  "timestamp": "2020-04-22T16:22:28Z",
+  "version": 5,
+  "changeset": 83951800,
+  "user": "rene78",
+  "uid": 257555,
+  "tags": {
+    "addr:city": "Kuala Lumpur",
+    "addr:housenumber": "50",
+    "addr:postcode": "50250",
+    "addr:street": "Jalan Sultan Ismail",
+    "amenity": "bar",
+    "gay": "yes",
+    "name": "Blue Boy Bar"
+  }
+},
+{
+  "type": "node",
+  "id": 5648017162,
+  "lat": 52.5002050,
+  "lon": 13.3495286,
+  "timestamp": "2020-04-22T13:12:43Z",
+  "version": 4,
+  "changeset": 83943458,
+  "user": "brightonguy",
+  "uid": 711704,
+  "tags": {
+    "addr:housenumber": "35",
+    "addr:postcode": "10787",
+    "addr:street": "Kleiststraße",
+    "amenity": "bar",
+    "lgbtq": "primary",
+    "min_age": "18",
+    "name": "New Action",
+    "opening_hours:covid19": "off",
+    "wheelchair": "limited"
+  }
+}
+
+  ]
+}
