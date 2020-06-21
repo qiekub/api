@@ -23,13 +23,13 @@ async function loadChangesFromOverpass() {
 	`.replace(/{{date:1Day}}/g, currentDateMinusOneDay)
 
 
-	const all_changes_url = `https://overpass-api.de/api/interpreter?data=
-		[out:json][timeout:2400][bbox:90,-180,-90,180];
-		relation["admin_level"="2"]["type"="boundary"]["boundary"="administrative"];
-		out tags;
-	`
+	// const all_changes_url = `https://overpass-api.de/api/interpreter?data=
+	// 	[out:json][timeout:2400][bbox:90,-180,-90,180];
+	// 	relation["admin_level"="2"]["type"="boundary"]["boundary"="administrative"];
+	// 	out tags;
+	// `
 
-	return fetch(encodeURI(all_changes_url), {
+	return fetch(encodeURI(last_day_changes_url), {
 		method: 'get',
 		headers: {
 			'Content-Type': 'application/json',
