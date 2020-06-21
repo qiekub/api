@@ -26,6 +26,9 @@ const schema = gql`
 		changeset(_id: ID): Doc
 		changesets(forID: ID): [Doc]
 
+		country(countryCode: ID): Doc
+		countries: [Doc]
+		
 		markers: [Marker]
 		questions: [Doc]
 

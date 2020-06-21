@@ -12,6 +12,7 @@ const place = require('./resolvers/place.js')
 const changeset = require('./resolvers/changeset.js')
 const places = require('./resolvers/places.js')
 const markers = require('./resolvers/markers.js')
+const countries = require('./resolvers/countries.js')
 const search = require('./resolvers/search.js')
 const addChangeset = require('./resolvers/addChangeset.js')
 const questions = require('./resolvers/questions.js')
@@ -143,6 +144,9 @@ module.exports = {
 
 		changeset,
 		changesets,
+
+		country: countries,
+		countries,
 
 		markers,
 		questions,
