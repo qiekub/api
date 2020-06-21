@@ -977,11 +977,12 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 					text: doc.properties.tags.name,
 				})
 			}
-			if (doc.properties.tags['name:en']) {
+			const name_keys = Object.keys(doc.properties.tags).filter(key => key.startsWith('name:'))
+			for (let key of name_keys) {
 				doc.properties.name.push({
 					__typename: 'Text',
-					language: 'en',
-					text: doc.properties.tags['name:en'],
+					language: key.split(':')[1],
+					text: doc.properties.tags[key],
 				})
 			}
 
