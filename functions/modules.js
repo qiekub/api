@@ -1002,8 +1002,8 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 	})
 }
 
-function compileAndUpsertPlace(mongodb, docIDs, finished_callback) {
-	compile_places_from_changesets(mongodb, docIDs, (error,docs)=>{
+function compileAndUpsertPlace(mongodb, placeIDs, finished_callback) {
+	compile_places_from_changesets(mongodb, placeIDs, (error,docs)=>{
 		if (error) {
 			console.error(error)
 			finished_callback(error, false)
