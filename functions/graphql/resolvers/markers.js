@@ -4,7 +4,7 @@ module.exports = async (parent, args, context, info) => {
 	return new Promise((resolve,reject)=>{
 		mongodb.CompiledPlaces_collection.aggregate([
 			{$match:{
-				'properties.tags.preset': {$not: {$in:['default','boundary/administrative']}},
+				'properties.tags.preset': {$nin:['default','boundary/administrative']},
 			}},
 			{$project:{
 				_id: '$_id',
