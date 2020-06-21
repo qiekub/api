@@ -28,7 +28,7 @@ function getMongoDbContext(){
 						},
 						collections: {
 							Edges: 'Edges',
-							CompiledPlaces: 'CompiledPlaces_3',
+							CompiledPlaces: 'CompiledPlaces',
 							Changesets: 'Changesets',
 							Accounts: 'Accounts',
 							Profiles: 'Profiles',
