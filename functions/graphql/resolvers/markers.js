@@ -5,6 +5,8 @@ module.exports = async (parent, args, context, info) => {
 		mongodb.CompiledPlaces_collection.aggregate([
 			{$match:{
 				'properties.tags.preset': {$nin:['default','boundary/administrative']},
+				'properties.tags.lat': {$ne:0},
+				'properties.tags.lng': {$ne:0},
 			}},
 			{$project:{
 				_id: '$_id',
