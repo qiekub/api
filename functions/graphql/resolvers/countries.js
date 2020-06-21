@@ -25,7 +25,6 @@ module.exports = async (parent, args, context, info) => {
 				reject(error)
 			}else{
 				if (!!args.countryCode) {
-					console.log(docs[0].properties.name)
 					resolve(docs[0])
 				}else{
 					resolve(docs)
