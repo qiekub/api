@@ -79,6 +79,7 @@ async function reCompileEverything(){
 	const mongodb = await getMongoDbContext()
 	mongodb.Changesets_collection.find(
 		// {'properties.forID': new mongodb.ObjectID('5ea54682dd301aacac336f0b')}
+		// {"properties.tags.admin_level" : "2"}
 	).toArray((error,docs)=>{
 		if (error) {
 			console.error(error)
