@@ -91,7 +91,17 @@ async function reCompileEverything(){
 			]
 			.map(id => new mongodb.ObjectID(id))
 			console.log(placeIDsToRebuild)
-			compileAndUpsertPlace(mongodb, placeIDsToRebuild, (error,didItUpsert)=>{
+
+			async.each(placeIDsToRebuild, (placeID, each_callback)=>{
+				compileAndUpsertPlace(mongodb, [placeID], (error,didItUpsert)=>{
+					each_callback()
+				})
+			}, error=>{
+
+				if (error) {
+					console.error(error)
+				}
+
 				console.log('finished')
 				mongodb.client.close()
 			})
