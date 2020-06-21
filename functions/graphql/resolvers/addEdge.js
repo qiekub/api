@@ -36,17 +36,27 @@ module.exports = async (parent, args, context, info) => {
 						},
 					})
 					.then(result => {
-						if (!!result.insertedId) {
-							if (
-								// TODO: check if toID is a Changeset
-								p.edgeType === 'approved'
-							) {
-								compileAndUpsertPlace(mongodb, [toID], (error,didItUpsert) => {
-									if (error) {
-										console.error(error)
-									}
-									resolve(result.insertedId)
+						const edgeID = result.insertedId
+						if (!!edgeID) {
+							if (p.edgeType === 'approved') {
+								mongodb.Changesets_collection.findOne({
+									_id: toID,
+									'properties.__typename': 'Changeset',
 								})
+								.then(changesetDoc => {
+									compileAndUpsertPlace(mongodb, [changesetDoc.properties.forID], (error,didItUpsert) => {
+										if (error) {
+											console.error(error)
+										}
+										resolve(edgeID)
+									})
+								})
+								.catch(error=>{
+									console.error(error)
+									resolve(edgeID)
+								})
+							}else{
+								resolve(edgeID)
 							}
 						}else{
 							reject('Could not insert a new edge.')
