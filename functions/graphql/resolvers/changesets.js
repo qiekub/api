@@ -40,7 +40,7 @@ module.exports = async (parent, args, context, info) => {
 				{$sort: {
 					'metadata.lastModified': -1,
 				}},
-				{$limit: 1},
+				{$limit: 10},
 			]).toArray((error,docs)=>{
 				if (error) {
 					reject(error)
