@@ -928,6 +928,7 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 		if (!(!!docs)) {
 			docs = []
 		}
+
 		docs = docs
 		.reduce((obj,doc)=>{
 			const placeID = doc.forID
