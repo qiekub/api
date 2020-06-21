@@ -48,6 +48,11 @@ function searchCompiledPlaces(mongodb, queryString){
 		})`
 	
 		mongodb.CompiledPlaces_collection.aggregate([
+			{$match:{
+				'properties.tags.preset': {$nin:['default','boundary/administrative']},
+				'properties.tags.lat': {$ne:0},
+				'properties.tags.lng': {$ne:0},
+			}},
 			{$addFields:{
 				score: {$sum:[
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.addr:postcode"}}, 1,0]},
