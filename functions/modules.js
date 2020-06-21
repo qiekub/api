@@ -1699,7 +1699,8 @@ async function saveAsChangeset(mongodb, element, finished_callback){
 	tags = annotateTags(tags)
 
 
-	const changesetDoc = {
+	const changesetProperties = {
+		__typename: 'Changeset',
 		forID: await getExistingID(mongodb, tags),
 		tags,
 		sources: [
@@ -1719,8 +1720,15 @@ async function saveAsChangeset(mongodb, element, finished_callback){
 		antiSpamUserIdentifier: (!!element.uid ? 'osm-uid-'+element.uid : 'osm'), // `https://www.openstreetmap.org/user/${element.user}`,
 	}
 
-	addChangeset(mongodb, changesetDoc, changesetID => {
-		approveChangeset(mongodb, changesetDoc, placeID => finished_callback(placeID))
+	addChangeset(mongodb, changesetProperties, changesetID => {
+		approveChangeset(mongodb, {
+			_id: changesetID,
+			properties: {
+				forID: changesetProperties.forID,
+				__typename: 'Changeset',
+			},
+			__typename: 'Doc',
+		}, placeID => finished_callback(placeID))
 	}, ()=>{
 		finished_callback(null)
 	})
