@@ -1687,6 +1687,57 @@ function calcMissingCenters(all_elements){
 	return new_with_tags
 }
 
+function addMissingCenters(all_elements){
+	
+	if (all_elements.length === 0) {
+		return []
+	}
+	
+	const with_tags = Object.values(
+		all_elements.reduce((obj, element) => {
+			// merge related elements (tags, bbox, center)
+			const osm_id = element.type+'/'+element.id
+	
+			if (!obj.hasOwnProperty(osm_id)) {
+				obj[osm_id] = element
+			}else{
+				obj[osm_id] = {
+					...obj[osm_id],
+					...element,
+				}
+			}
+			return obj
+		}, {})
+	)
+	.filter(element => element.hasOwnProperty('tags')) // only keep the once that have tags. And aren't just sipporting the geometry.
+	.map(element => {
+		// add lat/lng, center and bbox to the tags
+
+		if (element.lat && element.lon) {
+			element.tags.lat = element.lat
+			element.tags.lng = element.lon
+		} else if (element.center) {
+			element.tags.lat = element.center.lat
+			element.tags.lng = element.center.lon
+		} 
+
+		if (element.bounds) {
+			element.tags['bounds:west'] = element.bounds.minlon
+			element.tags['bounds:south'] = element.bounds.minlat
+			element.tags['bounds:east'] = element.bounds.maxlon
+			element.tags['bounds:north'] = element.bounds.maxlat
+		}
+
+		return element
+	})
+	
+	if (with_tags.length === 0) {
+		return []
+	}
+	
+	return with_tags
+}
+
 function approveChangeset(mongodb, doc, finished_callback){
 	mongodb.Edges_collection.insertOne({
 		__typename: 'Doc',
