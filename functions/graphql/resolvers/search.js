@@ -85,6 +85,7 @@ function searchCompiledPlaces(mongodb, queryString){
 				"properties.tags.lng": true,
 				"properties.tags.lat": true,
 				"properties.name": true,
+				"properties.geometry": true,
 			}},
 		]).toArray((error,docs)=>{
 			if (error) {
@@ -105,7 +106,7 @@ function searchCompiledPlaces(mongodb, queryString){
 						preset: doc.properties.tags.preset,
 						name: doc.properties.name,
 						address: address,
-						geometry: {
+						geometry: doc.properties.geometry || {
 							__typename: 'GeoData',
 							location: {
 								__typename: 'GeoCoordinate',
