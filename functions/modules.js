@@ -1543,7 +1543,7 @@ async function getExistingID(mongodb, tags){
 	})
 }
 
-function addMissingCenters(all_elements){
+function calcMissingCenters(all_elements){
 	
 	if (all_elements.length === 0) {
 		return []
@@ -1774,6 +1774,7 @@ module.exports = {
 	add_profileID_middleware,
 
 	getExistingID,
+	calcMissingCenters,
 	addMissingCenters,
 	approveChangeset,
 	saveAsChangeset,
