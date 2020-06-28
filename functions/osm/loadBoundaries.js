@@ -19,14 +19,18 @@ async function loadChangesFromOverpass() {
 	const last_day_changes_url = `https://overpass-api.de/api/interpreter?data=
 		[out:json][timeout:2400][bbox:90,-180,-90,180];
 		relation(newer:"{{date:1Day}}")["admin_level"="2"]["type"="boundary"]["boundary"="administrative"];
-		out tags;
+		out meta qt;
+		out ids bb qt;
+		out ids center qt;
 	`.replace(/{{date:1Day}}/g, currentDateMinusOneDay)
 
 
 	// const all_changes_url = `https://overpass-api.de/api/interpreter?data=
 	// 	[out:json][timeout:2400][bbox:90,-180,-90,180];
 	// 	relation["admin_level"="2"]["type"="boundary"]["boundary"="administrative"];
-	// 	out tags;
+	// 	out meta qt;
+	// 	out ids bb qt;
+	// 	out ids center qt;
 	// `
 
 	return fetch(encodeURI(last_day_changes_url), {
@@ -52,7 +56,8 @@ function loadChanges(){
 
 	loadChangesFromOverpass().then(async changes=>{
 		if (changes.elements.length > 0) {
-			const elements = changes.elements
+			const elements = addMissingCenters(changes.elements)
+
 			if (elements.length > 0) {
 				console.log(`${elements.length} elements with tags`)
 						

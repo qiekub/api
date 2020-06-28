@@ -41,7 +41,9 @@ async function loadChangesFromOverpass() {
 			relation(newer:"{{date:1Day}}")[~"^fetish.*$"~"."];
 		);
 		(._;>;);
-		out meta;
+		out meta qt;
+		out ids bb qt;
+		out ids center qt;
 	`.replace(/{{date:1Day}}/g, currentDateMinusOneDay)
 
 
