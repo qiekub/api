@@ -16,6 +16,7 @@ const countries = require('./resolvers/countries.js')
 const search = require('./resolvers/search.js')
 const addChangeset = require('./resolvers/addChangeset.js')
 const questions = require('./resolvers/questions.js')
+const countrycode = require('./resolvers/countrycode.js')
 const sessions = require('./resolvers/sessions.js')
 const accounts = require('./resolvers/accounts.js')
 const changesets = require('./resolvers/changesets.js')
@@ -128,6 +129,7 @@ module.exports = {
 		whoami: (parent, args, context, info) => (!!context.profileID ? context.profileID+'' : null),
 
 		search,
+		countrycode,
 		placesWithUndecidedChangesets: (parent, args, context, info) => {
 			args.whatIsRequested = 'places'
 			return undecidedChangesets(parent, args, context, info)
