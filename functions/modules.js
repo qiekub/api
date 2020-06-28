@@ -994,6 +994,27 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 					lng: doc.properties.tags.lng,
 				}
 			}
+			if (
+				doc.properties.tags['bounds:east']
+				&& doc.properties.tags['bounds:north']
+				&& doc.properties.tags['bounds:west']
+				&& doc.properties.tags['bounds:south']
+			) {
+				doc.properties.geometry.boundingbox = {
+					__typename: 'Boundingbox',
+					northeast: {
+						__typename: 'GeoCoordinate',
+						lng: doc.properties.tags['bounds:east'],
+						lat: doc.properties.tags['bounds:north'],
+					},
+					southwest: {
+						__typename: 'GeoCoordinate',
+						lng: doc.properties.tags['bounds:west'],
+						lat: doc.properties.tags['bounds:south'],
+					},
+				}
+			}
+
 			return doc
 		})
 
