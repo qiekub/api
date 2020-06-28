@@ -1537,7 +1537,7 @@ async function getExistingID(mongodb, tags){
 			if (error || docs.length === 0) {
 				resolve(new mongodb.ObjectID())
 			}else{
-				resolve(docs[0]._id)
+				resolve(new mongodb.ObjectID(docs[0]._id))
 			}
 		})
 	})
