@@ -64,6 +64,7 @@ function searchCompiledPlaces(mongodb, queryString){
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.name:en"}}, 3,0]},
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.name:de"}}, 3,0]},
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.short_name"}}, 1,0]},
+					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.official_name"}}, 1,0]},
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.operator"}}, 1,0]},
 				]}
 			}},
