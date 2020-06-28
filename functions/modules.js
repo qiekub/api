@@ -1614,6 +1614,16 @@ function calcMissingCenters(all_elements){
 	
 	const nodes = with_tags
 	.filter(element => element.type === 'node')
+	.map(element => {
+		return {
+			...element,
+			tags: {
+				...element.tags,
+				lat: element.lat,
+				lng: element.lon,
+			},
+		}
+	})
 	
 	const ways = with_tags
 	.filter(element => element.type === 'way')
@@ -1628,8 +1638,11 @@ function calcMissingCenters(all_elements){
 		const center = turf.centerOfMass(poly)
 		return {
 			...element,
-			lat: center.geometry.coordinates[1],
-			lon: center.geometry.coordinates[0],
+			tags: {
+				...element.tags,
+				lat: center.geometry.coordinates[1],
+				lng: center.geometry.coordinates[0],
+			},
 		}
 	})
 	.filter(v => !!v)
@@ -1652,8 +1665,11 @@ function calcMissingCenters(all_elements){
 		const center = turf.centerOfMass(poly)
 		return {
 			...element,
-			lat: center.geometry.coordinates[1],
-			lon: center.geometry.coordinates[0],
+			tags: {
+				...element.tags,
+				lat: center.geometry.coordinates[1],
+				lng: center.geometry.coordinates[0],
+			},
 		}
 	})
 	.filter(v => !!v)
@@ -1700,8 +1716,6 @@ function approveChangeset(mongodb, doc, finished_callback){
 async function saveAsChangeset(mongodb, element, finished_callback){
 	let tags = {
 		...element.tags,
-		lat: element.lat,
-		lng: element.lon,
 		osm_id: element.type+'/'+element.id,
 	}
 
