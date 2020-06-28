@@ -1,8 +1,6 @@
 const flatten = require('flat')
 const async = require('async')
 
-const isGeoCoordinateLegalPromise = require('./modules/isGeoCoordinateLegalPromise.js')
-
 const questionsInSchema = require('./data/dist/questionsInSchema.json')
 const questionsInSchemaById = questionsInSchema.reduce((obj,question)=>{
 	obj[question._id] = question
@@ -1744,7 +1742,6 @@ module.exports = {
 	upsertOne,
 	compileAnswers,
 	compile_places_from_changesets,
-	isGeoCoordinateLegalPromise,
 	compileAndUpsertPlace,
 	getPreset,
 	getAudienceTags,

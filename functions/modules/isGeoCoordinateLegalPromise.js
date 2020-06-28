@@ -6,13 +6,13 @@ const fetch = require('node-fetch')
 const legalCountries = require('../data/dist/legalCountries.json')
 const countryCodes = legalCountries.countryCodes
 
-async function tryToFetchJson(url, mapping) {
+async function tryToFetchJson(url, callback) {
 	const result = await fetch(encodeURI(url), {
 		method: 'get',
 		headers: {
 			'Content-Type': 'application/json',
-			'Referer': 'qiekub.com',
-			'User-Agent': 'A geocoder for qiekub.com',
+			'Referer': 'qiekub.org',
+			'User-Agent': 'A geocoder for qiekub.org',
 		},
 	})
 	.then(res => res.json())
@@ -22,7 +22,7 @@ async function tryToFetchJson(url, mapping) {
 	// })
 	.catch(error => null)
 
-	return new Promise(resolve => resolve(result)).then(mapping)
+	return new Promise(resolve => resolve(result)).then(callback)
 }
 
 async function isGeoCoordinateLegalPromise(lng,lat){
