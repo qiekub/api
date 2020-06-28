@@ -111,7 +111,6 @@ function searchCompiledPlaces(mongodb, queryString){
 								lng: doc.properties.tags.lng,
 								lat: doc.properties.tags.lat,
 							},
-							boundingbox: undefined,
 						}
 						// licence: 'qiekub.org',
 					}
