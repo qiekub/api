@@ -1668,7 +1668,7 @@ function approveChangeset(mongodb, doc, finished_callback){
 	})
 	.then(result => {
 		if (!!result.insertedId) {
-			finished_callback(doc.properties.forID)
+			finished_callback(doc.properties.forID || null)
 		}else{
 			finished_callback(null)
 		}
