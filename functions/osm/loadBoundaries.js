@@ -60,7 +60,7 @@ function loadChanges(){
 
 			if (elements.length > 0) {
 				console.log(`${elements.length} elements with tags`)
-						
+
 				const mongodb = await getMongoDbContext()
 				
 				let placeIDsToRebuild = new Set()
