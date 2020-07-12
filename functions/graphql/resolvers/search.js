@@ -49,9 +49,9 @@ function searchCompiledPlaces(mongodb, queryString){
 	
 		mongodb.CompiledPlaces_collection.aggregate([
 			{$match:{
-				'properties.tags.preset': {$nin:['default','boundary/administrative']},
-				'properties.tags.lat': {$ne:0},
-				'properties.tags.lng': {$ne:0},
+				'properties.tags.preset': {$nin:['default'/*,'boundary/administrative'*/]},
+				// 'properties.tags.lat': {$ne:0},
+				// 'properties.tags.lng': {$ne:0},
 			}},
 			{$addFields:{
 				score: {$sum:[
@@ -64,6 +64,7 @@ function searchCompiledPlaces(mongodb, queryString){
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.name:en"}}, 3,0]},
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.name:de"}}, 3,0]},
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.short_name"}}, 1,0]},
+					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.official_name"}}, 1,0]},
 					{$cond:[ {$regexMatch:{regex:regexQuery, options:"i", input:"$properties.tags.operator"}}, 1,0]},
 				]}
 			}},
@@ -84,6 +85,7 @@ function searchCompiledPlaces(mongodb, queryString){
 				"properties.tags.lng": true,
 				"properties.tags.lat": true,
 				"properties.name": true,
+				"properties.geometry": true,
 			}},
 		]).toArray((error,docs)=>{
 			if (error) {
@@ -104,14 +106,13 @@ function searchCompiledPlaces(mongodb, queryString){
 						preset: doc.properties.tags.preset,
 						name: doc.properties.name,
 						address: address,
-						geometry: {
+						geometry: doc.properties.geometry || {
 							__typename: 'GeoData',
 							location: {
 								__typename: 'GeoCoordinate',
 								lng: doc.properties.tags.lng,
 								lat: doc.properties.tags.lat,
 							},
-							boundingbox: undefined,
 						}
 						// licence: 'qiekub.org',
 					}

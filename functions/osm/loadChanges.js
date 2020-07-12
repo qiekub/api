@@ -41,7 +41,9 @@ async function loadChangesFromOverpass() {
 			relation(newer:"{{date:1Day}}")[~"^fetish.*$"~"."];
 		);
 		(._;>;);
-		out meta;
+		out meta qt;
+		out ids bb qt;
+		out ids center qt;
 	`.replace(/{{date:1Day}}/g, currentDateMinusOneDay)
 
 
@@ -111,9 +113,21 @@ function loadChanges(){
 						callback()
 					})
 				}, error => {
-					// console.log([...placeIDsToRebuild])
-					compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], (error,didItUpsert)=>{
-						console.log(`finished`)
+					placeIDsToRebuild = [...placeIDsToRebuild]
+					.map(id => new mongodb.ObjectID(id))
+
+					// console.log(placeIDsToRebuild)
+		
+					async.each(placeIDsToRebuild, (placeID, each_callback)=>{
+						compileAndUpsertPlace(mongodb, [placeID], (error,didItUpsert)=>{
+							each_callback()
+						})
+					}, error=>{
+						if (error) {
+							console.error(error)
+						}
+		
+						console.log('finished')
 						mongodb.client.close()
 					})
 				})

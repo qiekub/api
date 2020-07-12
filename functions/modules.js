@@ -1,8 +1,6 @@
 const flatten = require('flat')
 const async = require('async')
 
-const isGeoCoordinateLegalPromise = require('./modules/isGeoCoordinateLegalPromise.js')
-
 const questionsInSchema = require('./data/dist/questionsInSchema.json')
 const questionsInSchemaById = questionsInSchema.reduce((obj,question)=>{
 	obj[question._id] = question
@@ -996,6 +994,27 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 					lng: doc.properties.tags.lng,
 				}
 			}
+			if (
+				doc.properties.tags['bounds:east']
+				&& doc.properties.tags['bounds:north']
+				&& doc.properties.tags['bounds:west']
+				&& doc.properties.tags['bounds:south']
+			) {
+				doc.properties.geometry.boundingbox = {
+					__typename: 'Boundingbox',
+					northeast: {
+						__typename: 'GeoCoordinate',
+						lng: doc.properties.tags['bounds:east'],
+						lat: doc.properties.tags['bounds:north'],
+					},
+					southwest: {
+						__typename: 'GeoCoordinate',
+						lng: doc.properties.tags['bounds:west'],
+						lat: doc.properties.tags['bounds:south'],
+					},
+				}
+			}
+
 			return doc
 		})
 
@@ -1518,13 +1537,13 @@ async function getExistingID(mongodb, tags){
 			if (error || docs.length === 0) {
 				resolve(new mongodb.ObjectID())
 			}else{
-				resolve(docs[0]._id)
+				resolve(new mongodb.ObjectID(docs[0]._id))
 			}
 		})
 	})
 }
 
-function addMissingCenters(all_elements){
+function calcMissingCenters(all_elements){
 	
 	if (all_elements.length === 0) {
 		return []
@@ -1595,6 +1614,16 @@ function addMissingCenters(all_elements){
 	
 	const nodes = with_tags
 	.filter(element => element.type === 'node')
+	.map(element => {
+		return {
+			...element,
+			tags: {
+				...element.tags,
+				lat: element.lat,
+				lng: element.lon,
+			},
+		}
+	})
 	
 	const ways = with_tags
 	.filter(element => element.type === 'way')
@@ -1609,8 +1638,11 @@ function addMissingCenters(all_elements){
 		const center = turf.centerOfMass(poly)
 		return {
 			...element,
-			lat: center.geometry.coordinates[1],
-			lon: center.geometry.coordinates[0],
+			tags: {
+				...element.tags,
+				lat: center.geometry.coordinates[1],
+				lng: center.geometry.coordinates[0],
+			},
 		}
 	})
 	.filter(v => !!v)
@@ -1633,8 +1665,11 @@ function addMissingCenters(all_elements){
 		const center = turf.centerOfMass(poly)
 		return {
 			...element,
-			lat: center.geometry.coordinates[1],
-			lon: center.geometry.coordinates[0],
+			tags: {
+				...element.tags,
+				lat: center.geometry.coordinates[1],
+				lng: center.geometry.coordinates[0],
+			},
 		}
 	})
 	.filter(v => !!v)
@@ -1650,6 +1685,57 @@ function addMissingCenters(all_elements){
 	}
 	
 	return new_with_tags
+}
+
+function addMissingCenters(all_elements){
+	
+	if (all_elements.length === 0) {
+		return []
+	}
+	
+	const with_tags = Object.values(
+		all_elements.reduce((obj, element) => {
+			// merge related elements (tags, bbox, center)
+			const osm_id = element.type+'/'+element.id
+	
+			if (!obj.hasOwnProperty(osm_id)) {
+				obj[osm_id] = element
+			}else{
+				obj[osm_id] = {
+					...obj[osm_id],
+					...element,
+				}
+			}
+			return obj
+		}, {})
+	)
+	.filter(element => element.hasOwnProperty('tags')) // only keep the once that have tags. And aren't just sipporting the geometry.
+	.map(element => {
+		// add lat/lng, center and bbox to the tags
+
+		if (element.lat && element.lon) {
+			element.tags.lat = element.lat
+			element.tags.lng = element.lon
+		} else if (element.center) {
+			element.tags.lat = element.center.lat
+			element.tags.lng = element.center.lon
+		} 
+
+		if (element.bounds) {
+			element.tags['bounds:west'] = element.bounds.minlon
+			element.tags['bounds:south'] = element.bounds.minlat
+			element.tags['bounds:east'] = element.bounds.maxlon
+			element.tags['bounds:north'] = element.bounds.maxlat
+		}
+
+		return element
+	})
+	
+	if (with_tags.length === 0) {
+		return []
+	}
+	
+	return with_tags
 }
 
 function approveChangeset(mongodb, doc, finished_callback){
@@ -1670,7 +1756,7 @@ function approveChangeset(mongodb, doc, finished_callback){
 	})
 	.then(result => {
 		if (!!result.insertedId) {
-			finished_callback(doc.properties.forID)
+			finished_callback(doc.properties.forID || null)
 		}else{
 			finished_callback(null)
 		}
@@ -1681,8 +1767,6 @@ function approveChangeset(mongodb, doc, finished_callback){
 async function saveAsChangeset(mongodb, element, finished_callback){
 	let tags = {
 		...element.tags,
-		lat: element.lat,
-		lng: element.lon,
 		osm_id: element.type+'/'+element.id,
 	}
 
@@ -1744,7 +1828,6 @@ module.exports = {
 	upsertOne,
 	compileAnswers,
 	compile_places_from_changesets,
-	isGeoCoordinateLegalPromise,
 	compileAndUpsertPlace,
 	getPreset,
 	getAudienceTags,
@@ -1756,6 +1839,7 @@ module.exports = {
 	add_profileID_middleware,
 
 	getExistingID,
+	calcMissingCenters,
 	addMissingCenters,
 	approveChangeset,
 	saveAsChangeset,

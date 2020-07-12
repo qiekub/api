@@ -19,14 +19,18 @@ async function loadChangesFromOverpass() {
 	const last_day_changes_url = `https://overpass-api.de/api/interpreter?data=
 		[out:json][timeout:2400][bbox:90,-180,-90,180];
 		relation(newer:"{{date:1Day}}")["admin_level"="2"]["type"="boundary"]["boundary"="administrative"];
-		out tags;
+		out meta qt;
+		out ids bb qt;
+		out ids center qt;
 	`.replace(/{{date:1Day}}/g, currentDateMinusOneDay)
 
 
 	// const all_changes_url = `https://overpass-api.de/api/interpreter?data=
 	// 	[out:json][timeout:2400][bbox:90,-180,-90,180];
 	// 	relation["admin_level"="2"]["type"="boundary"]["boundary"="administrative"];
-	// 	out tags;
+	// 	out meta qt;
+	// 	out ids bb qt;
+	// 	out ids center qt;
 	// `
 
 	return fetch(encodeURI(last_day_changes_url), {
@@ -52,22 +56,35 @@ function loadChanges(){
 
 	loadChangesFromOverpass().then(async changes=>{
 		if (changes.elements.length > 0) {
-			const elements = changes.elements
+			const elements = addMissingCenters(changes.elements)
+
 			if (elements.length > 0) {
 				console.log(`${elements.length} elements with tags`)
-						
+
 				const mongodb = await getMongoDbContext()
 				
-				const placeIDsToRebuild = new Set()
+				let placeIDsToRebuild = new Set()
 				async.each(elements, (element, callback) => {
 					saveAsChangeset(mongodb, element, placeID => {
-						placeIDsToRebuild.add(placeID)
+						placeIDsToRebuild.add(placeID+'')
 						callback()
 					})
 				}, error => {
-					// console.log([...placeIDsToRebuild])
-					compileAndUpsertPlace(mongodb, [...placeIDsToRebuild], (error,didItUpsert)=>{
-						console.log(`finished`)
+					placeIDsToRebuild = [...placeIDsToRebuild]
+					.map(id => new mongodb.ObjectID(id))
+
+					console.log(placeIDsToRebuild)
+		
+					async.each(placeIDsToRebuild, (placeID, each_callback)=>{
+						compileAndUpsertPlace(mongodb, [placeID], (error,didItUpsert)=>{
+							each_callback()
+						})
+					}, error=>{
+						if (error) {
+							console.error(error)
+						}
+		
+						console.log('finished')
 						mongodb.client.close()
 					})
 				})
