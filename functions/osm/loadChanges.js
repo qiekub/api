@@ -85,7 +85,7 @@ async function loadChangesFromOverpass() {
 	})
 	.then(res => res.json())
 	.then(data => {
-		console.log(`finished loading ${data.elements.length} elements`)
+		console.info(`finished loading ${data.elements.length} elements`)
 		return data
 	})
 	// .catch(error => null)
@@ -95,14 +95,14 @@ async function loadChangesFromOverpass() {
 
 
 function loadChanges(){
-	console.log('started loading...')
+	console.info('started loading...')
 
 	loadChangesFromOverpass().then(async changes=>{
 		if (changes.elements.length > 0) {
 			const elements = addMissingCenters(changes.elements)
 
 			if (elements.length > 0) {
-				console.log(`${elements.length} elements with tags`)
+				console.info(`${elements.length} elements with tags`)
 						
 				const mongodb = await getMongoDbContext()
 			
@@ -116,7 +116,7 @@ function loadChanges(){
 					placeIDsToRebuild = [...placeIDsToRebuild]
 					.map(id => new mongodb.ObjectID(id))
 
-					// console.log(placeIDsToRebuild)
+					// console.info('placeIDsToRebuild')
 		
 					async.each(placeIDsToRebuild, (placeID, each_callback)=>{
 						compileAndUpsertPlace(mongodb, [placeID], (error,didItUpsert)=>{
@@ -127,7 +127,7 @@ function loadChanges(){
 							console.error(error)
 						}
 		
-						console.log('finished')
+						console.info('finished')
 						mongodb.client.close()
 					})
 				})
@@ -151,7 +151,7 @@ exports = module.exports = functions
 .region('europe-west2')
 .runWith(runtimeOpts)
 .pubsub.schedule('1 0 * * *').onRun(context => {
-	// console.log('This will be run one minutes after midnight, every day!')
+	// console.info('This will be run one minutes after midnight, every day!')
 	loadChanges()
 	return null
 })
