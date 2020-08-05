@@ -1816,6 +1816,7 @@ async function saveAsChangeset(mongodb, element, finished_callback){
 			__typename: 'Doc',
 		}, placeID => finished_callback(placeID))
 	}, ()=>{
+		console.error('rejected')
 		finished_callback(null)
 	})
 }

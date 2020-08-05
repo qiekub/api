@@ -113,6 +113,10 @@ function loadChanges(){
 						callback()
 					})
 				}, error => {
+					if (error) {
+						console.error(error)
+					}
+
 					placeIDsToRebuild = [...placeIDsToRebuild]
 					.map(id => new mongodb.ObjectID(id))
 
@@ -120,6 +124,9 @@ function loadChanges(){
 		
 					async.each(placeIDsToRebuild, (placeID, each_callback)=>{
 						compileAndUpsertPlace(mongodb, [placeID], (error,didItUpsert)=>{
+							if (error) {
+								console.error(error)
+							}
 							each_callback()
 						})
 					}, error=>{
