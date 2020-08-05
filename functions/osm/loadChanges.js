@@ -108,9 +108,15 @@ function loadChanges(){
 			
 				const placeIDsToRebuild = new Set()
 				async.each(elements, (element, callback) => {
+					let already_called = false
 					saveAsChangeset(mongodb, element, placeID => {
-						placeIDsToRebuild.add(placeID)
-						callback()
+						if (!!placeID) {
+							placeIDsToRebuild.add(placeID)
+						}
+						if (!already_called) {
+							already_called = true
+							callback()
+						}
 					})
 				}, error => {
 					if (error) {

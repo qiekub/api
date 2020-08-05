@@ -1739,6 +1739,7 @@ function addMissingCenters(all_elements){
 }
 
 function approveChangeset(mongodb, doc, finished_callback){
+	let callback_got_called = false
 	mongodb.Edges_collection.insertOne({
 		__typename: 'Doc',
 		properties: {
@@ -1755,13 +1756,22 @@ function approveChangeset(mongodb, doc, finished_callback){
 		},
 	})
 	.then(result => {
-		if (!!result.insertedId) {
-			finished_callback(doc.properties.forID || null)
-		}else{
+		if (!callback_got_called) {
+			if (!!result.insertedId) {
+				callback_got_called = true
+				finished_callback(doc.properties.forID || null)
+			}else{
+				callback_got_called = true
+				finished_callback(null)
+			}
+		}
+	})
+	.catch(error => {
+		if (!callback_got_called) {
+			callback_got_called = true
 			finished_callback(null)
 		}
 	})
-	.catch(error => finished_callback(null))
 }
 
 async function saveAsChangeset(mongodb, element, finished_callback){
