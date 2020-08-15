@@ -17,6 +17,7 @@ const schema = gql`
 
 		search(query: String, languages: [String]): SearchInfo
 		countrycode(lat: Float, lng: Float): String
+		
 		placesWithUndecidedChangesets(forID: ID): [Doc]
 		undecidedChangesets(forID: ID): [Doc]
 
