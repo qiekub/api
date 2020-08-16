@@ -38,7 +38,7 @@ module.exports = async (parent, args, context, info) => {
 					.then(result => {
 						const edgeID = result.insertedId
 						if (!!edgeID) {
-							if (p.edgeType === 'approved') {
+							if (p.edgeType === 'approved' || p.edgeType === 'approvedTag') {
 								mongodb.Changesets_collection.findOne({
 									_id: toID,
 									'properties.__typename': 'Changeset',
