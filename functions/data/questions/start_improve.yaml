@@ -63,6 +63,7 @@ possibleAnswers:
       de: Dieser Ort wurde dauerhaft geschlossen, ist umgezogen oder wurde ersetzt.
     tags:
       closed: true
+      published: false
     followUpQuestions:
       - closing_date
       - opening_date
@@ -78,6 +79,7 @@ possibleAnswers:
       de: Der Ort ist fake, beleidigend oder existiert nicht.
     tags:
       spam: true
+      published: false
     followUpQuestions:
       # - spam
       - answer_more

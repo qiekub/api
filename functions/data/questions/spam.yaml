@@ -16,6 +16,7 @@ possibleAnswers:
       de: Ja, der Ort ist Spam
     tags:
       spam: true
+      published: false
   'no':
     inputtype: boolean
     icon: clear
@@ -24,4 +25,5 @@ possibleAnswers:
       de: Nein
     tags:
       spam: false
+      published: true
 ...
