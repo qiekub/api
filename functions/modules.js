@@ -165,100 +165,126 @@ function filterOutliers(numbers){
 
 
 function compile_places_from_changesets(mongodb, placeIDs, callback){
-	// TODO: This can probably be improved as it's just a modified copy of compileAnswers().
+	if (!(!!placeIDs) || placeIDs.length === 0) {
+		callback(new Error('missing placeIDs'), [])
+	}else{
 
-	mongodb.Changesets_collection
-	.aggregate([
-		...(
-			!!placeIDs
-			? [{$match:{
-				"properties.forID": {$in: placeIDs},
-			}}]
-			: []
-		),
-
-
-		// START filter for only approved changesets
-		{$lookup:{
-			from: "Edges",
-			localField: "_id",
-			foreignField: "properties.toID",
-			as: "edges",
-		}},
-		{$unwind:{
-			path: "$edges",
-			preserveNullAndEmptyArrays: false,
-		}},
+	mongodb.Changesets_collection.aggregate([
 		{$match:{
-			"edges.properties.edgeType": "approved",
+			"properties.forID": {$in: placeIDs},
 		}},
-		{$group: {
-			_id: "$_id",
-			doc: {$first: "$$ROOT"},
+		{$lookup:{
+			from: 'Edges',
+			let: {
+				changesetID: '$_id',
+			},
+			pipeline: [
+				{$match:{
+					$expr:{$and:[
+						{$in: ['$properties.edgeType', ["approved", "rejected"]] },
+						{$eq: ['$properties.toID',  '$$changesetID']},
+					]}
+				}},
+				{$sort:{
+					"metadata.lastModified": 1,
+				}},
+				{$limit: 1},
+				{$project:{
+					_id: false,
+					edgeType: '$properties.edgeType',
+				}},
+			],
+			as: 'edges_doc',
 		}},
-		{$replaceRoot:{
-			newRoot: "$doc"
-		}},
-		{$unset: "edges"},
-		// END filter for only approved changesets
-
 
 		{$set:{
-			"properties.answer": { $objectToArray: "$properties.tags" },
+			"tags": { $objectToArray: "$properties.tags" },
+			"forID": "$properties.forID",
+			"antiSpamUserIdentifier": "$properties.antiSpamUserIdentifier",
+			"lastModified": "$metadata.lastModified",
+			"edge_doc": { $arrayElemAt: [ "$edges_doc", 0 ] },
 		}},
-		{$unset:[ "properties.tags" ]},
+		{$unset: ["__typename","properties","metadata","edges_doc"]},
 
+		{$unwind: "$tags"},
+		{$set:{
+			"key": "$tags.k",
+			"value": "$tags.v",
+		}},
+		{$unset: "tags"},
+
+		{$lookup:{
+			from: 'Edges',
+			let: {
+				changesetID: '$_id',
+				tagKey: '$key',
+			},
+			pipeline: [
+				{$match:{
+					$expr:{$and:[
+						{$in: ['$properties.edgeType', ["approvedTag", "rejectedTag"]] },
+						{$eq: ['$properties.toID',  '$$changesetID']},
+						{$eq: ['$properties.tags.forTag',  '$$tagKey']},
+					]}
+				}},
+				{$sort:{
+					"metadata.lastModified": 1,
+				}},
+				{$limit: 1},
+				{$project:{
+					_id: true,
+					edgeType: '$properties.edgeType',
+				}},
+			],
+			as: 'edges_tags',
+		}},
+
+		{$set:{
+			"edge_tag": { $arrayElemAt: [ "$edges_tags", 0 ] },
+		}},
+		{$set:{
+			"doc_decision": '$edge_doc.edgeType',
+			"tag_decision": '$edge_tag.edgeType',
+		}},
+		{$set:{
+			doc_decision: { $ifNull: [ "$doc_decision", null ] },
+			tag_decision: { $ifNull: [ "$tag_decision", null ] },
+		}},
+		{$unset: ['edges_tags','edge_doc','edge_tag']},
 
 		// START restrict to the latest answer per antiSpamUserIdentifier (and place and key).
-		{$unwind: "$properties.answer"},
 		{$sort:{
-			"metadata.lastModified": -1,
-			"metadata.created": -1,
-			"_id": -1,
-			"properties.answer.k": -1,
-			"properties.answer.v": -1,
+			"lastModified": 1,
+			"_id": 1,
 		}},
 		{$group:{
 			_id: {$concat:[
-				{$toString:"$properties.antiSpamUserIdentifier"},
+				{$toString:"$antiSpamUserIdentifier"},
 				"_",
-				{$toString:"$properties.forID"},
+				{$toString:"$forID"},
 				"_",
-				{$toString:"$properties.answer.k"},
+				{$toString:"$key"},
 			]},
 			doc: {$first:"$$ROOT"},
+			changesetIDs: {$addToSet:"$$ROOT._id"},
+		}},
+		{$set:{
+			'doc.changesetIDs': "$changesetIDs",
 		}},
 		{$replaceRoot:{newRoot:"$doc"}},
+		{$unset: 'antiSpamUserIdentifier'},
 		// END restrict to the latest answer per antiSpamUserIdentifier (and place and key).
 
-
-		// START restrict to the latest answer
-		{$unwind: "$properties.answer"},
-		{$sort:{
-			"metadata.lastModified": -1,
-			"metadata.created": -1,
-			"_id": -1,
-			"properties.answer.k": -1,
-			"properties.answer.v": -1,
-		}},
-		{$group:{
-			_id: {$concat:[
-				{$toString:"$properties.forID"},
-				"_",
-				// {$toString:"$properties.questionID"},
-				// "_",
-				{$toString:"$properties.answer.k"},
-			]},
-			doc: {$first:"$$ROOT"},
-		}},
-		// END restrict to the latest answer
-
-
-		{$project:{
-			forID: '$doc.properties.forID',
-			answerKey: '$doc.properties.answer.k',
-			answerValue: '$doc.properties.answer.v',
-			// changesetID: '$doc._id',
+		// only get approved key-value pairs
+		{$match:{
+			$expr:{$and:[
+				{$ne: ['$doc_decision', 'rejected']},
+				{$ne: ['$tag_decision', 'rejectedTag']},
+				{$or:[
+					{$eq: ['$doc_decision', 'approved']},
+					{$eq: ['$tag_decision', 'approvedTag']},
+				]},
+			]}
 		}},
 	])
 	.toArray((error,docs)=>{
@@ -272,10 +298,13 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 		}
 
 		docs = docs
+		.filter(doc => doc.tag_decision !== 'rejectedTag')
+
+		docs = docs
 		.reduce((obj,doc)=>{
 			const placeID = doc.forID
-			const key = doc.answerKey
-			const value = doc.answerValue
+			const key = doc.key
+			const value = doc.value
 
 			if (!obj[placeID]) {
 				obj[placeID] = {
@@ -293,7 +322,7 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 				if (
 					!isNaN(value)
 					&& typeof value !== 'boolean'
-					&& (doc.answerKey === 'lat' || key === 'lng')
+					&& (doc.key === 'lat' || key === 'lng')
 				) {
 					obj[placeID].properties.tags[key] = value*1
 				}else{
@@ -364,6 +393,7 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 
 		callback(null,docs)
 	})
+	}
 }
 
 function compileAndUpsertPlace(mongodb, placeIDs, finished_callback) {
