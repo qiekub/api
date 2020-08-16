@@ -87,6 +87,7 @@ const categories = [
 			'historic',
 			'tourism/artwork/statue',
 			'tourism/attraction',
+			'amenity/place_of_worship',
 		],
 		color: {
 			key: 'cyan',
@@ -202,8 +203,7 @@ const categories = [
 			// 'shop/clothes',
 			// 'shop/kiosk',
 			// 'shop/massage',
-			// 'building/commercial',
-			// 'amenity/place_of_worship'
+			// 'building/commercial'
 		],
 		color: {
 			key: 'gray',
