@@ -3322,6 +3322,24 @@ passport-oauth2@1.x.x:
     uid2 "0.0.x"
     utils-merge "1.x.x"
 
+passport-oauth@0.1.x:
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/passport-oauth/-/passport-oauth-0.1.15.tgz#fb74e0afe84614bfa256c5fc716cc56bbfc8cec0"
+  integrity sha1-+3Tgr+hGFL+iVsX8cWzFa7/IzsA=
+  dependencies:
+    oauth "0.9.x"
+    passport "~0.1.1"
+    pkginfo "0.2.x"
+
+passport-openstreetmap@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/passport-openstreetmap/-/passport-openstreetmap-0.1.2.tgz#a8663a50a62e4d84c31e0825bac94a42f99753e5"
+  integrity sha1-qGY6UKYuTYTDHggluslKQvmXU+U=
+  dependencies:
+    passport-oauth "0.1.x"
+    pkginfo "0.2.x"
+    xml2js "0.1.x"
+
 passport-strategy@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
@@ -3343,6 +3361,14 @@ passport@^0.4.1:
     passport-strategy "1.x.x"
     pause "0.0.1"
 
+passport@~0.1.1:
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/passport/-/passport-0.1.18.tgz#c8264479dcb6414cadbb66752d12b37e0b6525a1"
+  integrity sha1-yCZEedy2QUytu2Z1LRKzfgtlJaE=
+  dependencies:
+    pause "0.0.1"
+    pkginfo "0.2.x"
+
 path-to-regexp@0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-0.1.7.tgz#df604178005f522f15eb4490e7247a1bfaa67f8c"
@@ -3352,6 +3378,11 @@ pause@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/pause/-/pause-0.0.1.tgz#1d408b3fdb76923b9543d96fb4c9dfd535d9cb5d"
   integrity sha1-HUCLP9t2kjuVQ9lvtMnf1TXZy10=
+
+pkginfo@0.2.x:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.2.3.tgz#7239c42a5ef6c30b8f328439d9b9ff71042490f8"
+  integrity sha1-cjnEKl72wwuPMoQ52bn/cQQkkPg=
 
 point-in-polygon@^1.0.1:
   version "1.0.1"
@@ -3548,6 +3579,11 @@ saslprep@^1.0.0:
   integrity sha512-/MY/PEMbk2SuY5sScONwhUDsV2p77Znkb/q3nSVstq/yQzYJOH/Azh29p9oJLsl3LnQwSvZDKagDGBsBwSooag==
   dependencies:
     sparse-bitfield "^3.0.3"
+
+sax@>=0.1.1:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
+  integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
 semver@^5.1.0, semver@^5.6.0:
   version "5.7.1"
@@ -3958,6 +3994,13 @@ xdg-basedir@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/xdg-basedir/-/xdg-basedir-4.0.0.tgz#4bc8d9984403696225ef83a1573cbbcb4e79db13"
   integrity sha512-PSNhEJDejZYV7h50BohL09Er9VaIefr2LMAf3OEmpCkjOi34eYyQYAXUTjEQtZJTKcF0E2UKTh+osDLsgNim9Q==
+
+xml2js@0.1.x:
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.1.14.tgz#5274e67f5a64c5f92974cd85139e0332adc6b90c"
+  integrity sha1-UnTmf1pkxfkpdM2FE54DMq3GuQw=
+  dependencies:
+    sax ">=0.1.1"
 
 xmldom@0.1.x:
   version "0.1.31"
