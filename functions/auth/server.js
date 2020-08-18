@@ -30,12 +30,12 @@ const partials = require('express-partials')
 const listen_path = '/auth'
 const url_path = (
 	process.env.FUNCTIONS_EMULATOR
-	? '/qiekub/us-central1/api/auth'
+	? '/qiekub/us-central1/auth/auth'
 	: '/auth'
 )
 const callbackURL_prefix = (
 	process.env.FUNCTIONS_EMULATOR
-	? 'http://192.168.2.102:5000/qiekub/us-central1/api/'
+	? 'http://192.168.2.102:5000/qiekub/us-central1/auth/'
 	: 'https://api.qiekub.org/'
 )
 const account_URL = (
