@@ -187,11 +187,13 @@ const schema = gql`
 		toID: ID
 		tags: JSONObject
 	}
+
+	"EdgeTypes are in past-tense."
 	enum EdgeTypes {
-		fact_checked
 		approved
+		approvedTag
 		rejected
-		skipped
+		rejectedTag
 	}
 
 	type Metadata {
