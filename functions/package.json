@@ -40,6 +40,7 @@
     "on-headers": "~1.0.2",
     "passport": "^0.4.1",
     "passport-github2": "^0.1.12",
+    "passport-openstreetmap": "^0.1.2",
     "passport-twitter": "^1.0.4",
     "safe-buffer": "5.1.2",
     "vary": "~1.1.2",
