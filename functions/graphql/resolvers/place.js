@@ -1,3 +1,51 @@
+
+
+function queryPlace(context, mongodb, docID, resolve, reject){
+	mongodb.CompiledPlaces_collection.findOne({
+		_id: docID,
+		'properties.__typename': 'Place',
+		...(
+			!(!!context.profileID) // check if logged-in
+			? {
+				'properties.tags.published': true,
+			}
+			: {}
+		),
+	})
+	.then(resultDoc => {
+		if (!!resultDoc) {
+			resolve(resultDoc)
+		}else{
+			reject(new Error('no place found'))
+		}
+	})
+	.catch(error=>{
+		reject(error)
+	})
+}
+
+function queryChangeset(context, mongodb, docID, resolve, reject){
+	if (!(!!context.profileID)) {
+		// check if logged-in
+		reject('User must be logged in.')
+	}else{
+		mongodb.Changesets_collection.findOne({
+			_id: docID,
+			'properties.__typename': 'Changeset',
+		})
+		.then(resultDoc => {
+			if (!!resultDoc) {
+				resolve(resultDoc)
+			}else{
+				reject(new Error('no changeset found'))
+			}
+		})
+		.catch(error=>{
+			reject(error)
+		})
+	}
+}
+
 module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
 	
@@ -7,13 +55,15 @@ module.exports = async (parent, args, context, info) => {
 		}else if (!mongodb.ObjectID.isValid(args._id)) {
 			reject('_id is not a correct ObjectID')
 		}else{
-			mongodb.CompiledPlaces_collection.findOne({
-				_id: new mongodb.ObjectID(args._id),
-				'properties.__typename': 'Place',
-			}).then(resultDoc => {
-				resolve(resultDoc)
-			}).catch(error=>{
-				reject(error)
+			const docID = new mongodb.ObjectID(args._id)
+
+			const _resolve = (data)=>{
+				console.log('data', data)
+				resolve(data)
+			}
+
+			queryPlace(context, mongodb, docID, _resolve, error => {
+				queryChangeset(context, mongodb, docID, _resolve, reject)
 			})
 		}
 	})

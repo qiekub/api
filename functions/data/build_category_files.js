@@ -39,22 +39,39 @@ const categories = [
 	},
 	{
 		name: {
-			en: 'Going Out',
+			en: 'Tourism',
+			de: 'Tourismus',
 		},
 		presets: [
-			'amenity/bar',
-			'amenity/pub',
-			'amenity/nightclub',
-			'leisure/dance',
-			// 'club',
+			'building/hotel',
+
+			'tourism/hotel',
+			'tourism/hostel',
+			'tourism/apartment',
+			'tourism/camp_site',
+			'tourism/camp_pitch',
+			'tourism/caravan_site',
+
+			'tourism/picnic_site',
+			'tourism/guest_house',
+			'tourism/chalet',
+			'tourism/information',
+			// 'attraction/train',
+			// 'tourism/theme_park',
+			'natural/beach',
+			'place/neighbourhood',
+			'shop/travel_agency',
+			'leisure/beach_resort',
+			'building/farm',
+			'leisure/garden',
 		],
 		color: {
-			key: 'red',
-			prideFlageMeaning: 'Life',
-			prideFlageColorName: 'Red',
-			// bg: '#B71C1C', // 900
-			bg: '#C62828', // 800
-			// bg: '#F44336', // 500
+			key: 'indigo',
+			prideFlageMeaning: 'Serenity',
+			prideFlageColorName: 'Indigo',
+			// bg: '#1A237E', // 900
+			bg: '#283593', // 800
+			// bg: '#3F51B5', // 500
 			fg: 'white',
 		},
 	},
@@ -73,6 +90,7 @@ const categories = [
 			'historic',
 			'tourism/artwork/statue',
 			'tourism/attraction',
+			'amenity/place_of_worship',
 		],
 		color: {
 			key: 'cyan',
@@ -95,12 +113,59 @@ const categories = [
 			'amenity/ice_cream',
 			'amenity/marketplace',
 			'amenity/fast_food',
+			'shop/kiosk',
+		],
+		color: {
+			key: 'yellow',
+			prideFlageMeaning: 'Sunlight',
+			prideFlageColorName: 'Yellow',
+			bg: '#F9A825', // 800
+			fg: 'black',
+		},
+	},
+	{
+		name: {
+			en: 'Health',
+		},
+		presets: [
+			'amenity/doctors',
+			'amenity/clinic',
+			'amenity/dentist',
+			'amenity/hospital',
+			'amenity/pharmacy',
+			'healthcare',
+			'amenity/social_facility/Vet Center',
+			'shop/optician',
+			'shop/shoes/Foot Solutions'
 		],
 		color: {
 			key: 'orange',
 			prideFlageMeaning: 'Healing',
 			prideFlageColorName: 'Orange',
 			bg: '#E65100', // 900
+			fg: 'white',
+		},
+	},
+	{
+		name: {
+			en: 'Going Out',
+		},
+		presets: [
+			'amenity/bar',
+			'amenity/pub',
+			'amenity/nightclub',
+			'leisure/dance',
+			'club',
+			'amenity/karaoke_box',
+			'amenity/biergarten',
+		],
+		color: {
+			key: 'red',
+			prideFlageMeaning: 'Life',
+			prideFlageColorName: 'Red',
+			// bg: '#B71C1C', // 900
+			bg: '#C62828', // 800
+			// bg: '#F44336', // 500
 			fg: 'white',
 		},
 	},
@@ -129,41 +194,6 @@ const categories = [
 	},
 	{
 		name: {
-			en: 'Tourism',
-			de: 'Tourismus',
-		},
-		presets: [
-			'building/hotel',
-
-			'tourism/hotel',
-			'tourism/hostel',
-			'tourism/apartment',
-			'tourism/camp_site',
-			'tourism/camp_pitch',
-			'tourism/caravan_site',
-
-			'tourism/picnic_site',
-			'tourism/guest_house',
-			'tourism/chalet',
-			'tourism/information',
-			// 'attraction/train',
-			// 'tourism/theme_park',
-			'natural/beach',
-			'place/neighbourhood',
-			'shop/travel_agency',
-		],
-		color: {
-			key: 'indigo',
-			prideFlageMeaning: 'Serenity',
-			prideFlageColorName: 'Indigo',
-			// bg: '#1A237E', // 900
-			bg: '#283593', // 800
-			// bg: '#3F51B5', // 500
-			fg: 'white',
-		},
-	},
-	{
-		name: {
 			en: 'Organizations',
 			de: 'Organisationen',
 		},
@@ -173,14 +203,18 @@ const categories = [
 			'office',
 			'amenity/college',
 			'amenity/school',
-			// 'shop/books',
-			// 'shop/gift',
-			// 'shop/video',
-			// 'shop/clothes',
-			// 'shop/kiosk',
-			// 'shop/massage',
-			// 'building/commercial',
-			// 'amenity/place_of_worship'
+			'building/university',
+			'shop/books',
+			'shop/gift',
+			'shop/video',
+			'shop/clothes',
+			'shop/massage',
+			'building/commercial',
+			'shop/fashion_accessories',
+			'shop/florist',
+			'shop/supermarket',
+			'shop/confectionery',
+			// 'shop',
 		],
 		color: {
 			key: 'gray',
@@ -495,6 +529,12 @@ const preset_overwrites = {
 	'natural': {
 		icon: 'nature',
 	},
+	'leisure/garden': {
+		icon: 'nature',
+	},
+	'leisure/beach_resort': {
+		icon: 'beach_access',
+	},
 	'natural/beach': {
 		icon: 'beach_access',
 	},
@@ -583,11 +623,23 @@ const preset_overwrites = {
 		icon: 'local_movies',
 	},
 
+	'amenity/college': {
+		icon: 'school',
+	},
+	'amenity/school': {
+		icon: 'school',
+	},
+	'building/university': {
+		icon: 'school',
+	},
 	'amenity/library': {
 		icon: 'local_library',
 	},
 	'healthcare': {
 		icon: 'local_hospital', // 'healing',
+	},
+	'amenity/doctors': {
+		icon: 'medical_services', // local_hospital local_pharmacy
 	},
 
 	'building': {
@@ -620,6 +672,9 @@ const preset_overwrites = {
 	},
 
 	'boundary/administrative': {
+		icon: 'map', // map place layers miscellaneous_services
+	},
+	'place/neighbourhood': {
 		icon: 'map', // map place layers miscellaneous_services
 	},
 }

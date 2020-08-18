@@ -34,7 +34,7 @@ async function tryToFetchJson(url, mapping) {
 }
 
 
-function searchCompiledPlaces(mongodb, queryString){
+function searchCompiledPlaces(context, mongodb, queryString){
 	return new Promise(async (resolve,reject) => {
 		const regexQuery = `(${
 			queryString
@@ -52,6 +52,11 @@ function searchCompiledPlaces(mongodb, queryString){
 				'properties.tags.preset': {$nin:['default'/*,'boundary/administrative'*/]},
 				// 'properties.tags.lat': {$ne:0},
 				// 'properties.tags.lng': {$ne:0},
+				...(
+					!(!!context.profileID) // check if logged-in
+					? {'properties.tags.published': true}
+					: null
+				),
 			}},
 			{$addFields:{
 				score: {$sum:[
@@ -352,7 +357,7 @@ module.exports = async (parent, args, context, info) => {
 		return new Promise((resolve,reject) => {
 			async.parallel({
 				db: callback => {
-					searchCompiledPlaces(mongodb, queryString).then(docs=>{
+					searchCompiledPlaces(context, mongodb, queryString).then(docs=>{
 						callback(null, docs)
 					}, error=>{
 						callback(null, [])

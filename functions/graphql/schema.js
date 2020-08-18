@@ -17,8 +17,9 @@ const schema = gql`
 
 		search(query: String, languages: [String]): SearchInfo
 		countrycode(lat: Float, lng: Float): String
-		placesWithUndecidedChangesets(forID: ID): [Doc]
-		undecidedChangesets(forID: ID): [Doc]
+
+		undecidedPlaces(forID: ID): [Doc]
+		undecidedTags(forID: ID): [JSONObject]
 
 		place(_id: ID): Doc
 		places: [Doc]
@@ -48,10 +49,12 @@ const schema = gql`
 
 	type Marker {
 		_id: ID
+		originalTypename: String
 		name(languages: [String]): [Text]
 		lng: Float
 		lat: Float
 		preset: String
+		status: String
 		tags: JSONObject
 	}
 
@@ -184,11 +187,13 @@ const schema = gql`
 		toID: ID
 		tags: JSONObject
 	}
+
+	"EdgeTypes are in past-tense."
 	enum EdgeTypes {
-		fact_checked
 		approved
+		approvedTag
 		rejected
-		skipped
+		rejectedTag
 	}
 
 	type Metadata {

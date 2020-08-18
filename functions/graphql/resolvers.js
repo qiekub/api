@@ -22,6 +22,7 @@ const accounts = require('./resolvers/accounts.js')
 const changesets = require('./resolvers/changesets.js')
 const addEdge = require('./resolvers/addEdge.js')
 const undecidedChangesets = require('./resolvers/undecidedChangesets.js')
+const undecidedTags = require('./resolvers/undecidedTags.js')
 
 const { negotiateLanguages } = require('@fluent/langneg')
 
@@ -130,14 +131,8 @@ module.exports = {
 
 		search,
 		countrycode,
-		placesWithUndecidedChangesets: (parent, args, context, info) => {
-			args.whatIsRequested = 'places'
-			return undecidedChangesets(parent, args, context, info)
-		},
-		undecidedChangesets: (parent, args, context, info) => {
-			args.whatIsRequested = 'changesets'
-			return undecidedChangesets(parent, args, context, info)
-		},
+		undecidedPlaces,
+		undecidedTags,
 
 		place,
 		places,

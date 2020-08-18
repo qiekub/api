@@ -24,23 +24,29 @@ const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const GitHubStrategy = require('passport-github2').Strategy
 const TwitterStrategy = require('passport-twitter').Strategy
+const OpenStreetMapStrategy = require('passport-openstreetmap').Strategy
 const partials = require('express-partials')
 
 const listen_path = '/auth'
 const url_path = (
 	process.env.FUNCTIONS_EMULATOR
-	? '/qiekub/us-central1/api/auth'
+	? '/qiekub/us-central1/auth/auth'
 	: '/auth'
 )
 const callbackURL_prefix = (
 	process.env.FUNCTIONS_EMULATOR
-	? 'http://192.168.2.102:5000/qiekub/us-central1/api/'
+	? 'http://192.168.2.102:5000/qiekub/us-central1/auth/'
 	: 'https://api.qiekub.org/'
 )
 const account_URL = (
 	process.env.FUNCTIONS_EMULATOR
 	? 'http://192.168.2.102:4000/'
 	: 'https://account.qiekub.org/'
+)
+const key_suffix = (
+	process.env.FUNCTIONS_EMULATOR
+	? '_local_dev'
+	: ''
 )
 
 
@@ -265,6 +271,15 @@ async function passport_middleware(req, res, next) {
 		.catch(error => done(error, null))
 	}))
 
+	passport.use(new OpenStreetMapStrategy({
+		consumerKey: await getSecretAsync('OPENSTREETMAP_CONSUMER_KEY'+key_suffix),
+		consumerSecret: await getSecretAsync('OPENSTREETMAP_CONSUMER_SECRET'+key_suffix),
+		callbackURL: callbackURL_prefix+'auth/openstreetmap/callback/',
+	}, (token, tokenSecret, profile, done)=>{
+		getProfileFromStrategyResult(profile, currentProfileID)
+		.then(profileDoc => done(null, profileDoc))
+		.catch(error => done(error, null))
+	}))
 
 	passport.initialize()(req, res, next)
 }
@@ -338,6 +353,12 @@ function server() {
 		res.redirect(url_path+'/')
 	})
 
+	app.get(listen_path+'/openstreetmap/', passport.authenticate('openstreetmap'))
+	app.get(listen_path+'/openstreetmap/callback/', passport.authenticate('openstreetmap', {
+		failureRedirect: url_path+'/',
+	}), (req, res)=>{
+		res.redirect(url_path+'/')
+	})
 
 	app.get(listen_path+'/logout/', function(req, res){
 		req.session.cookie.maxAge = 0 // set the maxAge to zero, to delete the cookie

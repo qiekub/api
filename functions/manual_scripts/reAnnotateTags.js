@@ -75,12 +75,13 @@ async function startReAnnotation(){
 
 
 
-async function reCompileEverything(){
+async function reCompileChangesets(){
 	const mongodb = await getMongoDbContext()
 	mongodb.Changesets_collection.find(
 		// {'properties.forID': new mongodb.ObjectID('5ea54682dd301aacac336f0b')}
 		// {"properties.tags.admin_level" : "2"}
 		// {"properties.tags.addr:city" : "Köln"}
+		// {'properties.tags.published': {$exists: false}}
 	).toArray((error,docs)=>{
 		if (error) {
 			console.error(error)
@@ -93,8 +94,21 @@ async function reCompileEverything(){
 			.map(id => new mongodb.ObjectID(id))
 			console.log(placeIDsToRebuild)
 
-			async.each(placeIDsToRebuild, (placeID, each_callback)=>{
+			let counter = placeIDsToRebuild.length
+			console.log('TODO:', counter)
+
+			async.eachLimit(placeIDsToRebuild, 1, (placeID, each_callback)=>{
+				console.log(placeID+' started')
 				compileAndUpsertPlace(mongodb, [placeID], (error,didItUpsert)=>{
+					if (didItUpsert) {
+						console.log(placeID+' done')
+					}else{
+						console.log(placeID+' NOT done')
+					}
+
+					counter -= 1
+					console.log('TODO:', counter)
+					
 					each_callback()
 				})
 			}, error=>{
@@ -109,6 +123,50 @@ async function reCompileEverything(){
 		}
 	})
 }
-// reCompileEverything()
+// reCompileChangesets()
+
+
+async function reCompilePlaces(){
+	const mongodb = await getMongoDbContext()
+	mongodb.CompiledPlaces_collection.find(
+		// {'properties.tags.published': {$exists: false}}
+	).toArray((error,docs)=>{
+		if (error) {
+			console.error(error)
+		}else{
+			let placeIDsToRebuild = docs.map(doc => new mongodb.ObjectID(doc._id))
+			console.log(placeIDsToRebuild)
+
+			let counter = placeIDsToRebuild.length
+			console.log('TODO:', counter)
+
+			async.eachLimit(placeIDsToRebuild, 1, (placeID, each_callback)=>{
+				console.log(placeID+' started')
+				compileAndUpsertPlace(mongodb, [placeID], (error,didItUpsert)=>{
+					if (didItUpsert) {
+						console.log(placeID+' done')
+					}else{
+						console.log(placeID+' NOT done')
+					}
+
+					counter -= 1
+					console.log('TODO:', counter)
+					
+					each_callback()
+				})
+			}, error=>{
+
+				if (error) {
+					console.error(error)
+				}
+
+				console.log('finished')
+				mongodb.client.close()
+			})
+		}
+	})
+}
+// reCompilePlaces()
+
 
 

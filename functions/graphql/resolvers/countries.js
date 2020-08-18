@@ -10,6 +10,11 @@ module.exports = async (parent, args, context, info) => {
 					? {'properties.tags.ISO3166-1:alpha3': args.countryCode}
 					: null
 				),
+				...(
+					!(!!context.profileID) // check if logged-in
+					? {'properties.tags.published': true}
+					: null
+				),
 			}},
 			{$project:{
 				_id: '$_id',

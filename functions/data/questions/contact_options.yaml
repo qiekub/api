@@ -21,11 +21,9 @@ possibleAnswers:
     inputtype: text
     tags:
       contact:phone: ''
-      phone: ''
   email:
     hidden: true
     inputtype: text
     tags:
       contact:email: ''
-      email: ''
 ...
