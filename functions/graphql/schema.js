@@ -49,10 +49,12 @@ const schema = gql`
 
 	type Marker {
 		_id: ID
+		originalTypename: String
 		name(languages: [String]): [Text]
 		lng: Float
 		lat: Float
 		preset: String
+		status: String
 		tags: JSONObject
 	}
 
