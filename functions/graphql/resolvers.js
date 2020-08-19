@@ -21,7 +21,7 @@ const sessions = require('./resolvers/sessions.js')
 const accounts = require('./resolvers/accounts.js')
 const changesets = require('./resolvers/changesets.js')
 const addEdge = require('./resolvers/addEdge.js')
-const undecidedChangesets = require('./resolvers/undecidedChangesets.js')
+const undecidedPlaces = require('./resolvers/undecidedPlaces.js')
 const undecidedTags = require('./resolvers/undecidedTags.js')
 
 const { negotiateLanguages } = require('@fluent/langneg')
