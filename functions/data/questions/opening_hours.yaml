@@ -6,6 +6,11 @@ question:
 in_one_word: 
   en: Opening Hours
   de: Öffnungszeiten
+description:
+  en: "More Information: https://wiki.openstreetmap.org/wiki/Key:opening_hours"
+  de: "Mehr Informationen: https://wiki.openstreetmap.org/wiki/DE:Key:opening_hours"
+  fr: "Plus d'informations: https://wiki.openstreetmap.org/wiki/FR:Key:opening_hours"
+  es: "Más información: https://wiki.openstreetmap.org/wiki/ES:Key:opening_hours"
 icon: today
 possibleAnswers:
   "opening_times":
