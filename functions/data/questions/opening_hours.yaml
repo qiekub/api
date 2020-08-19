@@ -22,11 +22,11 @@ possibleAnswers:
       de: Covid19 Öffnungszeiten
     tags:
       "opening_hours:covid19": ''
-  "opening_hours:kitchen":
-    inputtype: text
-    title: 
-      en: Opening hours of the kitchen
-      de: Öffnungszeiten der Küche
-    tags:
-      "opening_hours:kitchen": ''
+#  "opening_hours:kitchen":
+#    inputtype: text
+#    title: 
+#      en: Opening hours of the kitchen
+#      de: Öffnungszeiten der Küche
+#    tags:
+#      "opening_hours:kitchen": ''
 ...
