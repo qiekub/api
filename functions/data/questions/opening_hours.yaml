@@ -1,0 +1,32 @@
+%YAML 1.2
+---
+question:
+  en: What are the opening times?
+  de: Wie lauten die Öffnungszeiten?
+in_one_word: 
+  en: Opening Hours
+  de: Öffnungszeiten
+icon: today
+possibleAnswers:
+  "opening_times":
+    inputtype: text
+    title: 
+      en: Opening Hours
+      de: Öffnungszeiten
+    tags:
+      "opening_times": ''
+  "opening_hours:covid19":
+    inputtype: text
+    title: 
+      en: Covid19 Opening Hours
+      de: Covid19 Öffnungszeiten
+    tags:
+      "opening_hours:covid19": ''
+  "opening_hours:kitchen":
+    inputtype: text
+    title: 
+      en: Opening hours of the kitchen
+      de: Öffnungszeiten der Küche
+    tags:
+      "opening_hours:kitchen": ''
+...

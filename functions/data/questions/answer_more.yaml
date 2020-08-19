@@ -21,6 +21,7 @@ possibleAnswers:
       - wheelchair_accessible
       - age
       - audience
+      - opening_hours
       - opening_date
       - preset
       - spam

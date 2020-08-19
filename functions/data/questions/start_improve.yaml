@@ -25,6 +25,7 @@ possibleAnswers:
       - wheelchair_accessible
       - age
       - audience
+      - opening_hours
       - opening_date
       - preset
       # - answer_more # Copy everything from answer more into these followUpQuestions.
