@@ -1,4 +1,4 @@
-# Qiekub API
+# qiekub API
 
 This is the API for https://map.qiekub.com
 
