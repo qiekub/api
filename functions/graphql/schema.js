@@ -194,7 +194,7 @@ const schema = gql`
 		approvedTag
 		rejected
 		rejectedTag
-		markedAsDuplicate
+		deleted
 	}
 
 	type Metadata {

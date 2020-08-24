@@ -181,7 +181,7 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 			pipeline: [
 				{$match:{
 					$expr:{$and:[
-						{$in: ['$properties.edgeType', ["approved", "rejected","markedAsDuplicate"]] },
+						{$in: ['$properties.edgeType', ["approved", "rejected", "deleted"]] },
 						{$eq: ['$properties.toID',  '$$changesetID']},
 					]}
 				}},
@@ -278,7 +278,7 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 		// only get approved key-value pairs
 		{$match:{
 			$expr:{$and:[
-				{$ne: ['$doc_decision', 'markedAsDuplicate']},
+				{$ne: ['$doc_decision', 'deleted']},
 				{$ne: ['$doc_decision', 'rejected']},
 				{$ne: ['$tag_decision', 'rejectedTag']},
 				{$or:[

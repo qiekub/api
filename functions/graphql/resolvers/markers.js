@@ -28,7 +28,7 @@ module.exports = async (parent, args, context, info) => {
 							{$match:{
 								$expr:{$and:[
 									{$eq: ['$properties.toID',  '$$placeID']},
-									{$in: ['$properties.edgeType', ['markedAsDuplicate']] },
+									{$in: ['$properties.edgeType', ['deleted']] },
 								]}
 							}},
 							{$limit: 1},
@@ -100,7 +100,7 @@ module.exports = async (parent, args, context, info) => {
 											{$eq: ['$properties.toID',  '$$placeID']},
 											{$eq: ['$properties.toID',  '$$changesetID']},
 										]},
-										{$in: ['$properties.edgeType', ['markedAsDuplicate']] },
+										{$in: ['$properties.edgeType', ['deleted']] },
 									]}
 								}},
 								{$limit: 1},
