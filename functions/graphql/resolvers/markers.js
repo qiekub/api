@@ -17,6 +17,32 @@ module.exports = async (parent, args, context, info) => {
 							: {}
 						),
 					}},
+
+					// START remove duplicates
+					{$lookup:{
+						from: 'Edges',
+						let: {
+							placeID: '$_id',
+						},
+						pipeline: [
+							{$match:{
+								$expr:{$and:[
+									{$eq: ['$properties.toID',  '$$placeID']},
+									{$in: ['$properties.edgeType', ['markedAsDuplicate']] },
+								]}
+							}},
+							{$limit: 1},
+							{$project:{
+								_id: true,
+							}},
+						],
+						as: 'edges',
+					}},
+					{$match: {
+						'edges': {$size:0},
+					}},
+					// END remove duplicates
+
 					{$project:{
 						_id: '$_id',
 						originalTypename: '$properties.__typename',
@@ -59,7 +85,36 @@ module.exports = async (parent, args, context, info) => {
 							'lookup_result': {$size:0},
 						}},
 						// END don't include already compiled places
+
+						// START remove duplicates
+						{$lookup:{
+							from: 'Edges',
+							let: {
+								placeID: '$properties.forID',
+								changesetID: '$_id',
+							},
+							pipeline: [
+								{$match:{
+									$expr:{$and:[
+										{$or:[
+											{$eq: ['$properties.toID',  '$$placeID']},
+											{$eq: ['$properties.toID',  '$$changesetID']},
+										]},
+										{$in: ['$properties.edgeType', ['markedAsDuplicate']] },
+									]}
+								}},
+								{$limit: 1},
+								{$project:{
+									_id: true,
+								}},
+							],
+							as: 'edges',
 						}},
+						{$match: {
+							'edges': {$size:0},
+						}},
+						// END remove duplicates
+
 						{$project:{
 							_id: '$_id',
 							originalTypename: '$properties.__typename',
