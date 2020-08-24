@@ -42,6 +42,11 @@ module.exports = async (parent, args, context, info) => {
 					callback(null, [])
 				}else{
 					mongodb.Changesets_collection.aggregate([
+						{$match:{
+							'properties.tags.preset': {$nin:['default','boundary/administrative']},
+							'properties.tags.lat': {$ne:0},
+							'properties.tags.lng': {$ne:0},
+						}},
 						{$lookup:{
 							from: 'CompiledPlaces',
 							localField: 'properties.forID',
@@ -51,11 +56,6 @@ module.exports = async (parent, args, context, info) => {
 						{$match: {
 							'lookup_result': {$size:0},
 						}},
-			
-						{$match:{
-							'properties.tags.preset': {$nin:['default','boundary/administrative']},
-							'properties.tags.lat': {$ne:0},
-							'properties.tags.lng': {$ne:0},
 						}},
 						{$project:{
 							_id: '$_id',
