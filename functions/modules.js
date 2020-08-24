@@ -892,24 +892,36 @@ async function getExistingID(mongodb, tags){
 			}}
 	})
 
+	const query = [
+		{$addFields:{score:0}},
+		...scoreStages,
+		{$match:{
+			score: {$gte:6} // 6 is the score for wikidata. Which should be an exact match. (TODO: Is this number high enough?)
+		}},
+		{$sort:{
+			score: -1
+		}},
+		{$limit: 1}
+	]
+
 	return new Promise( (resolve,reject) => {
-		mongodb.CompiledPlaces_collection.aggregate([
-			{$addFields:{score:0}},
-			...scoreStages,
-			{$match:{
-				score: {$gte:6} // 6 is the score for wikidata. Which should be an exact match. (TODO: Is this number high enough?)
-			}},
-			{$sort:{
-				score: -1
-			}},
-			{$limit: 1}
-		]).toArray((error,docs) => {
+		mongodb.CompiledPlaces_collection.aggregate(query).toArray((error,docs) => {
 			if (error) {
 				console.error(error)
 			}
 
 			if (error || docs.length === 0) {
-				resolve(new mongodb.ObjectID())
+				mongodb.Changesets_collection.aggregate(query).toArray((error,docs) => {
+					if (error) {
+						console.error(error)
+					}
+		
+					if (error || docs.length === 0) {
+						resolve(new mongodb.ObjectID())
+					}else{
+						resolve(new mongodb.ObjectID(docs[0].properties.forID))
+					}
+				})
 			}else{
 				resolve(new mongodb.ObjectID(docs[0]._id))
 			}
