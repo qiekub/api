@@ -47,6 +47,8 @@ module.exports = async (parent, args, context, info) => {
 							'properties.tags.lat': {$ne:0},
 							'properties.tags.lng': {$ne:0},
 						}},
+
+						// START don't include already compiled places
 						{$lookup:{
 							from: 'CompiledPlaces',
 							localField: 'properties.forID',
@@ -56,6 +58,7 @@ module.exports = async (parent, args, context, info) => {
 						{$match: {
 							'lookup_result': {$size:0},
 						}},
+						// END don't include already compiled places
 						}},
 						{$project:{
 							_id: '$_id',
