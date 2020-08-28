@@ -24,6 +24,7 @@ possibleAnswers:
       - opening_hours
       - opening_date
       - preset
+      - address
       - spam
   'no':
     inputtype: boolean

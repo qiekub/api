@@ -28,6 +28,7 @@ possibleAnswers:
       - opening_hours
       - opening_date
       - preset
+      - address
       # - answer_more # Copy everything from answer more into these followUpQuestions.
   typo:
     inputtype: button
@@ -52,6 +53,7 @@ possibleAnswers:
       de: Der Marker ist an der falschen Stelle oder die Adresse ist falsch.
     followUpQuestions:
       - geo_pos
+      - address
       - answer_more
   closed:
     inputtype: button

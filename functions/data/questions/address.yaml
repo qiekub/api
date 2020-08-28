@@ -1,0 +1,17 @@
+%YAML 1.2
+---
+question:
+  en: Address
+  de: Adresse
+in_one_word: 
+  en: Address
+  de: Adresse
+icon: place # pin_drop # place
+possibleAnswers:
+  address:
+    inputtype: address
+    namespace: addr
+    title: 
+      en: Address
+      de: Adresse
+...
