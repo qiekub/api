@@ -93,11 +93,13 @@ function queryForUndecidedTags(mongodb, forIDs, resolve, reject){
 			}},
 			{$group:{
 				_id: {$concat:[
-					{$toString:"$antiSpamUserIdentifier"},
-					"_",
+					//{$toString:"$antiSpamUserIdentifier"},
+					//"_",
 					{$toString:"$forID"},
 					"_",
 					{$toString:"$key"},
+					"_",
+					{$toString:"$value"},
 				]},
 				doc: {$first:"$$ROOT"},
 				changesetIDs: {$addToSet:"$$ROOT._id"},
