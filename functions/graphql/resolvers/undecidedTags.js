@@ -115,8 +115,8 @@ function queryForUndecidedTags(mongodb, forIDs, resolve, reject){
 			// only get fully undecided key-value pairs
 			{$match:{
 				$expr:{$and:[
-					{$eq: ['$doc_decision',  null]},
-					{$eq: ['$tag_decision',  null]},
+					{$eq: ['$doc_decision', null]},
+					{$eq: ['$tag_decision', null]},
 				]}
 			}},
 	
@@ -124,12 +124,12 @@ function queryForUndecidedTags(mongodb, forIDs, resolve, reject){
 			// {$match:{
 			// 	$expr:{$or:[
 			// 		{$and:[
-			// 			{$eq: ['$doc_decision',  null]},
-			// 			{$eq: ['$tag_decision',  null]},
+			// 			{$eq: ['$doc_decision', null]},
+			// 			{$eq: ['$tag_decision', null]},
 			// 		]},
 			// 		{$and:[
-			// 			{$ne: ['$doc_decision',  null]},
-			// 			{$eq: ['$tag_decision',  null]},
+			// 			{$ne: ['$doc_decision', null]},
+			// 			{$eq: ['$tag_decision', null]},
 			// 		]},
 			// 	]}
 			// }},
