@@ -23,6 +23,7 @@ const changesets = require('./resolvers/changesets.js')
 const addEdge = require('./resolvers/addEdge.js')
 const undecidedPlaces = require('./resolvers/undecidedPlaces.js')
 const undecidedTags = require('./resolvers/undecidedTags.js')
+const recompile = require('./resolvers/recompile.js')
 
 const { negotiateLanguages } = require('@fluent/langneg')
 
@@ -152,6 +153,7 @@ module.exports = {
 	Mutation: {
 		addChangeset,
 		addEdge,
+		recompile,
 	},
 
 	Edge: {
