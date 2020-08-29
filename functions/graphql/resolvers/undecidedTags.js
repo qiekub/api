@@ -86,9 +86,21 @@ function queryForUndecidedTags(mongodb, forIDs, resolve, reject){
 			}},
 			{$unset: ['edges_tags','edge_doc','edge_tag']},
 	
+
+
+			// only get fully undecided key-value pairs
+			{$match:{
+				$expr:{$and:[
+					{$eq: ['$doc_decision', null]},
+					{$eq: ['$tag_decision', null]},
+				]}
+			}},
+
+
+
 			// START restrict to the latest answer per antiSpamUserIdentifier (and place and key).
 			{$sort:{
-				"lastModified": 1,
+				"lastModified": -1,
 				"_id": 1,
 			}},
 			{$group:{
@@ -110,17 +122,8 @@ function queryForUndecidedTags(mongodb, forIDs, resolve, reject){
 			{$replaceRoot:{newRoot:"$doc"}},
 			{$unset: 'antiSpamUserIdentifier'},
 			// END restrict to the latest answer per antiSpamUserIdentifier (and place and key).
-	
-	
-	
-	
-			// only get fully undecided key-value pairs
-			{$match:{
-				$expr:{$and:[
-					{$eq: ['$doc_decision', null]},
-					{$eq: ['$tag_decision', null]},
-				]}
-			}},
+			
+			
 	
 			// // only get key-value pairs without a tag-decision
 			// {$match:{
