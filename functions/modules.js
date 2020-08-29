@@ -252,28 +252,6 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 		}},
 		{$unset: ['edges_tags','edge_doc','edge_tag']},
 
-		// START restrict to the latest answer per antiSpamUserIdentifier (and place and key).
-		{$sort:{
-			"lastModified": 1,
-			"_id": 1,
-		}},
-		{$group:{
-			_id: {$concat:[
-				{$toString:"$antiSpamUserIdentifier"},
-				"_",
-				{$toString:"$forID"},
-				"_",
-				{$toString:"$key"},
-			]},
-			doc: {$first:"$$ROOT"},
-			changesetIDs: {$addToSet:"$$ROOT._id"},
-		}},
-		{$set:{
-			'doc.changesetIDs': "$changesetIDs",
-		}},
-		{$replaceRoot:{newRoot:"$doc"}},
-		{$unset: 'antiSpamUserIdentifier'},
-		// END restrict to the latest answer per antiSpamUserIdentifier (and place and key).
 
 		// only get approved key-value pairs
 		{$match:{
@@ -287,6 +265,24 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 				]},
 			]}
 		}},
+
+
+		// START restrict to the latest answer per antiSpamUserIdentifier (and place and key).
+		{$sort:{
+			"lastModified": -1,
+			"_id": 1,
+		}},
+		{$group:{
+			_id: {$concat:[
+				{$toString:"$forID"},
+				"_",
+				{$toString:"$key"},
+			]},
+			doc: {$first:"$$ROOT"},
+		}},
+		{$replaceRoot:{newRoot:"$doc"}},
+		{$unset: 'antiSpamUserIdentifier'},
+		// END restrict to the latest answer per antiSpamUserIdentifier (and place and key).
 	])
 	.toArray((error,docs)=>{
 
@@ -314,7 +310,6 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 					properties: {
 						__typename: 'Place',
 						tags: {},
-						// changesetIDs: {},
 					}
 				}
 			}
@@ -329,8 +324,6 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 				}else{
 					obj[placeID].properties.tags[key] = value
 				}
-
-				// obj[placeID].properties.changesetIDs[key] = doc.changesetID || null
 			}
 
 			return obj
