@@ -1,0 +1,21 @@
+%YAML 1.2
+---
+question:
+  en: What's the place about?
+  de: Worüber ist der Ort?
+in_one_word:
+  en: Description
+  de: Beschreibung
+icon: short_text
+possibleAnswers:
+  description:
+    inputtype: text
+    inputOptions:
+      multiline: true
+      format: plain/text
+    title: 
+      en: Description
+      de: Beschreibung
+    tags:
+      description: ''
+...

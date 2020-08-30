@@ -27,6 +27,7 @@ possibleAnswers:
       - audience
       - opening_hours
       - opening_date
+      - description
       - preset
       - address
       # - answer_more # Copy everything from answer more into these followUpQuestions.
@@ -37,10 +38,11 @@ possibleAnswers:
       en: Typo
       de: Tippfehler
     description:
-      en: There's a typo in the name. # There's a typo in the name but it's otherwise correct.
-      de: Da ist ein Tippfehler im Namen.
+      en: There's a typo in the name or description. # There's a typo in the name but it's otherwise correct.
+      de: Da ist ein Tippfehler im Namen oder Beschreibung.
     followUpQuestions:
       - name
+      - description
       - answer_more
   wrong_location:
     inputtype: button
