@@ -148,6 +148,7 @@ const schema = gql`
 	}
 	type Answer {
 		inputtype: String
+		inputOptions: JSONObject
 		namespace: String
 		parsers: [String]
 		key: String
