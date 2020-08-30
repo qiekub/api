@@ -1,4 +1,4 @@
-
+const { annotateDoc } = require('../../modules.js')
 
 function queryPlace(context, mongodb, docID, resolve, reject){
 	mongodb.CompiledPlaces_collection.findOne({
@@ -14,7 +14,7 @@ function queryPlace(context, mongodb, docID, resolve, reject){
 	})
 	.then(resultDoc => {
 		if (!!resultDoc) {
-			resolve(resultDoc)
+			resolve(annotateDoc(resultDoc))
 		}else{
 			reject(new Error('no place found'))
 		}
@@ -35,7 +35,7 @@ function queryChangeset(context, mongodb, docID, resolve, reject){
 		})
 		.then(resultDoc => {
 			if (!!resultDoc) {
-				resolve(resultDoc)
+				resolve(annotateDoc(resultDoc))
 			}else{
 				reject(new Error('no changeset found'))
 			}

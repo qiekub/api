@@ -1,4 +1,5 @@
 const async = require('async')
+const { annotateDoc } = require('../../modules.js')
 
 module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
@@ -43,20 +44,10 @@ module.exports = async (parent, args, context, info) => {
 					}},
 					// END remove duplicates
 
-					{$project:{
-						_id: '$_id',
-						originalTypename: '$properties.__typename',
-						name: '$properties.name',
-						lng: '$properties.geometry.location.lng',
-						lat: '$properties.geometry.location.lat',
-						preset: '$properties.tags.preset',
-						tags: {
-							min_age: '$properties.tags.min_age',
-							max_age: '$properties.tags.max_age',
-							audience_queer: '$properties.tags.audience:queer',
-							published: '$properties.tags.published',
-						},
-					}},
+					// {$project:{
+					// 	_id: 1,
+					// 	properties: 1,
+					// }},
 					{$addFields:{
 						status: 'compiled',
 					}},
@@ -115,30 +106,20 @@ module.exports = async (parent, args, context, info) => {
 						}},
 						// END remove duplicates
 
-						{$project:{
-							_id: '$_id',
-							originalTypename: '$properties.__typename',
-							forID: '$properties.forID',
-							name: '$properties.tags.name',
-							lng: '$properties.tags.lng',
-							lat: '$properties.tags.lat',
-							preset: '$properties.tags.preset',
-							tags: {
-								min_age: '$properties.tags.min_age',
-								max_age: '$properties.tags.max_age',
-								audience_queer: '$properties.tags.audience:queer',
-							},
-						}},
+						// {$project:{
+						// 	_id: 1,
+						// 	properties: 1,
+						// }},
 						{$addFields:{
 							status: 'undecided',
-							name: [ 
-								{
-									__typename: 'Text',
-									language: null,
-									text: '$name',
-								}
-							],
-							'tags.published': false,
+							// name: [
+							// 	{
+							// 		__typename: 'Text',
+							// 		language: null,
+							// 		text: '$name',
+							// 	}
+							// ],
+							// 'tags.published': false,
 						}},
 					]).toArray(callback)
 				}
@@ -149,10 +130,34 @@ module.exports = async (parent, args, context, info) => {
 			}else{
 				const placeIDs = results.CompiledPlaces.map(doc => doc._id)
 
-				resolve([
+				const docs = [
 					...results.CompiledPlaces,
 					...results.Changesets.filter(doc => !placeIDs.includes(doc.forID)),
-				])
+				]
+				.map(doc => {
+					const tags = doc.properties.tags
+					const annotatedDoc = annotateDoc(doc)
+
+					return {
+						_id: doc._id,
+						forID: doc.properties.forID || null,
+						originalTypename: doc.properties.__typename,
+
+						name: annotatedDoc.properties.name,
+						lng: tags.lng,
+						lat: tags.lat,
+						preset: tags.preset,
+						tags: {
+							min_age: tags.min_age,
+							max_age: tags.max_age,
+							audience_queer: tags['audience:queer'],
+							published: tags.published,
+						},
+						status: doc.status,
+					}
+				})
+
+				resolve(docs)
 			}
 		})
 	})

@@ -1,3 +1,5 @@
+// const { annotateDoc } = require('../../modules.js')
+
 module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
 
@@ -21,7 +23,7 @@ module.exports = async (parent, args, context, info) => {
 				__typename: 'Doc',
 				properties: {
 					__typename: 'Place',
-					name: '$properties.name',
+					// name: '$properties.name',
 					tags: '$properties.tags'
 				}
 			}},
@@ -31,8 +33,10 @@ module.exports = async (parent, args, context, info) => {
 			}else{
 				if (!!args.countryCode) {
 					resolve(docs[0])
+					// resolve(annotateDoc(docs[0]))
 				}else{
 					resolve(docs)
+					// resolve(docs.map(doc => annotateDoc(doc)))
 				}
 			}
 		})

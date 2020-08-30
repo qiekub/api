@@ -331,59 +331,59 @@ function compile_places_from_changesets(mongodb, placeIDs, callback){
 
 
 		docs = Object.values(docs)
-		.map(doc => {
-			// Add name and geometry properties.
-
-			doc.properties.name = []
-			if (doc.properties.tags.name) {
-				doc.properties.name.push({
-					__typename: 'Text',
-					language: null,
-					text: doc.properties.tags.name,
-				})
-			}
-			const name_keys = Object.keys(doc.properties.tags).filter(key => key.startsWith('name:'))
-			for (let key of name_keys) {
-				doc.properties.name.push({
-					__typename: 'Text',
-					language: key.split(':')[1],
-					text: doc.properties.tags[key],
-				})
-			}
-
-			doc.properties.geometry = {
-				__typename: 'GeoData',
-			}
-			if (doc.properties.tags.lat && doc.properties.tags.lng) {
-				doc.properties.geometry.location = {
-					__typename: 'GeoCoordinate',
-					lat: doc.properties.tags.lat,
-					lng: doc.properties.tags.lng,
-				}
-			}
-			if (
-				doc.properties.tags['bounds:east']
-				&& doc.properties.tags['bounds:north']
-				&& doc.properties.tags['bounds:west']
-				&& doc.properties.tags['bounds:south']
-			) {
-				doc.properties.geometry.boundingbox = {
-					__typename: 'Boundingbox',
-					northeast: {
-						__typename: 'GeoCoordinate',
-						lng: doc.properties.tags['bounds:east'],
-						lat: doc.properties.tags['bounds:north'],
-					},
-					southwest: {
-						__typename: 'GeoCoordinate',
-						lng: doc.properties.tags['bounds:west'],
-						lat: doc.properties.tags['bounds:south'],
-					},
-				}
-			}
-
-			return doc
-		})
+		// .map(doc => {
+		// 	// Add name and geometry properties.
+		//
+		// 	doc.properties.name = []
+		// 	if (doc.properties.tags.name) {
+		// 		doc.properties.name.push({
+		// 			__typename: 'Text',
+		// 			language: null,
+		// 			text: doc.properties.tags.name,
+		// 		})
+		// 	}
+		// 	const name_keys = Object.keys(doc.properties.tags).filter(key => key.startsWith('name:'))
+		// 	for (let key of name_keys) {
+		// 		doc.properties.name.push({
+		// 			__typename: 'Text',
+		// 			language: key.split(':')[1],
+		// 			text: doc.properties.tags[key],
+		// 		})
+		// 	}
+		//
+		// 	doc.properties.geometry = {
+		// 		__typename: 'GeoData',
+		// 	}
+		// 	if (doc.properties.tags.lat && doc.properties.tags.lng) {
+		// 		doc.properties.geometry.location = {
+		// 			__typename: 'GeoCoordinate',
+		// 			lat: doc.properties.tags.lat,
+		// 			lng: doc.properties.tags.lng,
+		// 		}
+		// 	}
+		// 	if (
+		// 		doc.properties.tags['bounds:east']
+		// 		&& doc.properties.tags['bounds:north']
+		// 		&& doc.properties.tags['bounds:west']
+		// 		&& doc.properties.tags['bounds:south']
+		// 	) {
+		// 		doc.properties.geometry.boundingbox = {
+		// 			__typename: 'Boundingbox',
+		// 			northeast: {
+		// 				__typename: 'GeoCoordinate',
+		// 				lng: doc.properties.tags['bounds:east'],
+		// 				lat: doc.properties.tags['bounds:north'],
+		// 			},
+		// 			southwest: {
+		// 				__typename: 'GeoCoordinate',
+		// 				lng: doc.properties.tags['bounds:west'],
+		// 				lat: doc.properties.tags['bounds:south'],
+		// 			},
+		// 		}
+		// 	}
+		//
+		// 	return doc
+		// })
 
 		callback(null,docs)
 	})
@@ -644,6 +644,64 @@ function annotateTags(tags){
 	}
 }
 
+function annotateDoc(doc){
+	const tags = doc.properties.tags
+
+	doc.properties.name = Object.entries(tags)
+	.filter(([key, value]) => key === 'name' || key.startsWith('name:'))
+	.map(([key, value]) => {
+		const parts = key.split(':')
+		return {
+			__typename: 'Text',
+			text: value,
+			language: parts.length > 1 ? parts[1] : null,
+		}
+	})
+
+	doc.properties.description = Object.entries(tags)
+	.filter(([key, value]) => key === 'description' || key.startsWith('description:'))
+	.map(([key, value]) => {
+		const parts = key.split(':')
+		return {
+			__typename: 'Text',
+			text: value,
+			language: parts.length > 1 ? parts[1] : null,
+		}
+	})
+
+	doc.properties.geometry = {
+		__typename: 'GeoData',
+	}
+	if (tags.lng && tags.lng) {
+		doc.properties.geometry.location = {
+			__typename: 'GeoCoordinate',
+			lng: tags.lng,
+			lat: tags.lat,
+		}
+	}
+	if (
+		tags['bounds:north']
+		&& tags['bounds:south']
+		&& tags['bounds:east']
+		&& tags['bounds:west']
+	) {
+		doc.properties.geometry.boundingbox = {
+			__typename: 'GeoCoordinate',
+			northeast: {
+				__typename: 'GeoCoordinate',
+				lng: tags['bounds:north'],
+				lat: tags['bounds:east'],
+			},
+			southwest: {
+				__typename: 'GeoCoordinate',
+				lng: tags['bounds:south'],
+				lat: tags['bounds:west'],
+			},
+		}
+	}
+
+	return doc
+}
 
 
 async function session_middleware(req, res, next) {
@@ -1223,6 +1281,7 @@ module.exports = {
 	getAudienceTags,
 	getDateTags,
 	annotateTags,
+	annotateDoc,
 	key_synonyms,
 
 	session_middleware,

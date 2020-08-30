@@ -1,3 +1,5 @@
+const { annotateDoc } = require('../../modules.js')
+
 module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
 	
@@ -14,7 +16,7 @@ module.exports = async (parent, args, context, info) => {
 				_id: new mongodb.ObjectID(args._id),
 				'properties.__typename': 'Changeset',
 			}).then(resultDoc => {
-				resolve(resultDoc)
+				resolve(annotateDoc(resultDoc))
 			}).catch(error=>{
 				reject(error)
 			})
