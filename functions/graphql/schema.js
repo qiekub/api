@@ -96,6 +96,7 @@ const schema = gql`
 	"""
 	type Place {
 		name(languages: [String]): [Text]
+		description(languages: [String]): [Text]
 
 		geometry: GeoData
 

@@ -162,6 +162,7 @@ module.exports = {
 
 	Place: {
 		name: getFilterByLanguageFunction('name'),
+		description: getFilterByLanguageFunction('description'),
 
 		tags: getFilterByKeysFunction('tags'),
 		// confidences: getFilterByKeysFunction('confidences'),
