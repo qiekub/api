@@ -57,13 +57,8 @@ module.exports = async (parent, args, context, info) => {
 		}else{
 			const docID = new mongodb.ObjectID(args._id)
 
-			const _resolve = (data)=>{
-				console.log('data', data)
-				resolve(data)
-			}
-
-			queryPlace(context, mongodb, docID, _resolve, error => {
-				queryChangeset(context, mongodb, docID, _resolve, reject)
+			queryPlace(context, mongodb, docID, resolve, error => {
+				queryChangeset(context, mongodb, docID, resolve, reject)
 			})
 		}
 	})
