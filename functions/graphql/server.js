@@ -58,8 +58,8 @@ function gqlServer() {
 }
 
 const runtimeOpts = {
-  timeoutSeconds: 20, // 20seconds
-  memory: '512MB',
+  timeoutSeconds: 540, // 20seconds // 540
+  memory: '2GB', // 512MB // 2GB
 }
 
 
