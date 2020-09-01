@@ -1,4 +1,4 @@
-// const { annotateDoc } = require('../../modules.js')
+const { annotateDoc } = require('../../modules.js')
 
 module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
@@ -32,11 +32,11 @@ module.exports = async (parent, args, context, info) => {
 				reject(error)
 			}else{
 				if (!!args.countryCode) {
-					resolve(docs[0])
-					// resolve(annotateDoc(docs[0]))
+					// resolve(docs[0])
+					resolve(annotateDoc(docs[0]))
 				}else{
-					resolve(docs)
-					// resolve(docs.map(doc => annotateDoc(doc)))
+					// resolve(docs)
+					resolve(docs.map(doc => annotateDoc(doc)))
 				}
 			}
 		})
