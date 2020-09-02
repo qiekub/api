@@ -28,7 +28,7 @@ function gqlServer() {
 		resolvers,
 		// Enable graphiql gui
 		introspection: true, // (process.env.FUNCTIONS_EMULATOR ? true : false),
-		tracing: (process.env.FUNCTIONS_EMULATOR ? true : false),
+		tracing: true, // (process.env.FUNCTIONS_EMULATOR ? true : false),
 		playground: {
 			settings: {
 				'request.credentials': 'same-origin',
