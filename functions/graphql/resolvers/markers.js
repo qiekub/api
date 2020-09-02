@@ -1,10 +1,27 @@
 const async = require('async')
 const { annotateDoc } = require('../../modules.js')
 
+const { 
+	cacheKeyFromObjectSync,
+	isCachedSync,
+	setCacheSync,
+	getCacheSync,
+} = require('../cache.js')
+
 module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
 
 	return new Promise((resolve,reject)=>{
+		const cacheKey = cacheKeyFromObjectSync({
+			query: 'markers',
+			args,
+			context,
+		})
+
+		if (isCachedSync(cacheKey)) {
+			resolve(getCacheSync(cacheKey))
+		}
+
 		async.parallel({
 			CompiledPlaces: callback=>{
 				mongodb.CompiledPlaces_collection.aggregate([
@@ -156,6 +173,8 @@ module.exports = async (parent, args, context, info) => {
 						status: doc.status,
 					}
 				})
+
+				setCacheSync(cacheKey, docs)
 
 				resolve(docs)
 			}

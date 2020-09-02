@@ -1,9 +1,26 @@
 const { annotateDoc } = require('../../modules.js')
 
+const { 
+	cacheKeyFromObjectSync,
+	isCachedSync,
+	setCacheSync,
+	getCacheSync,
+} = require('../cache.js')
+
 module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
 
 	return new Promise((resolve,reject)=>{
+		const cacheKey = cacheKeyFromObjectSync({
+			query: 'countries',
+			args,
+			context,
+		})
+
+		if (isCachedSync(cacheKey)) {
+			resolve(getCacheSync(cacheKey))
+		}
+
 		mongodb.CompiledPlaces_collection.aggregate([
 			{$match:{
 				'properties.tags.preset': 'boundary/administrative',
@@ -31,13 +48,17 @@ module.exports = async (parent, args, context, info) => {
 			if (error) {
 				reject(error)
 			}else{
+				let toReturn = null
+
 				if (!!args.countryCode) {
-					// resolve(docs[0])
-					resolve(annotateDoc(docs[0]))
+					toReturn = annotateDoc(docs[0])
 				}else{
-					// resolve(docs)
-					resolve(docs.map(doc => annotateDoc(doc)))
+					toReturn = docs.map(doc => annotateDoc(doc))
 				}
+
+				setCacheSync(cacheKey, toReturn)
+
+				resolve(toReturn)
 			}
 		})
 	})
