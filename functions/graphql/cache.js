@@ -55,6 +55,8 @@ function capCacheFileSize(callback){
 				callback()
 			}
 		})
+	}else{
+		callback()
 	}
 }
 
