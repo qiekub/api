@@ -31,7 +31,7 @@ function getStringBinarySize(string) {
 }
 
 function capCacheFileSize(callback){
-	const filesizeLimit = 50 // MB
+	const filesizeLimit = 100 // MB
 
 	const currentSize = getFilesizeInBytes(cacheFilePath)
 	if (currentSize > filesizeLimit) {
