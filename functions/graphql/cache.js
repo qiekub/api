@@ -17,6 +17,9 @@ if (fs.existsSync(cacheFilePath)) {
 }
 
 function getFilesizeInBytes(filepath) {
+	if (!fs.existsSync(filepath)) {
+		return 0
+	}
 	const stats = fs.statSync(filepath)
 	const fileSizeInBytes = stats.size
 	const fileSizeInMegabytes = fileSizeInBytes * 0.000001
