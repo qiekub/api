@@ -72,7 +72,6 @@ module.exports = async (parent, args, context, info) => {
 			},
 			Changesets: callback=>{
 				if (!(!!context.profileID)) {
-					console.error('User must be logged in.')
 					callback(null, [])
 				}else{
 					mongodb.Changesets_collection.aggregate([
