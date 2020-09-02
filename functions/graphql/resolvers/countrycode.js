@@ -90,10 +90,6 @@ async function tryToFetchJson(url, callback) {
 		},
 	})
 	.then(res => res.json())
-	// .then(data => {
-	// 	console.log(data)
-	// 	return data
-	// })
 	.catch(error => null)
 
 	return new Promise(resolve => resolve(result)).then(callback)

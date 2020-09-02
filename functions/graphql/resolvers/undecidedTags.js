@@ -139,7 +139,6 @@ function queryForUndecidedTags(mongodb, forIDs, resolve, reject){
 			// 	]}
 			// }},
 		]).toArray((error,docs)=>{
-			console.log('docs', JSON.stringify(docs,null,4));
 			if (error) {
 				reject(error)
 			}else{

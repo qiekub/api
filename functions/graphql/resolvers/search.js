@@ -24,10 +24,6 @@ async function tryToFetchJson(url, mapping) {
 		},
 	})
 	.then(res => res.json())
-	// .then(data => {
-	// 	console.log(data)
-	// 	return data
-	// })
 	.catch(error => null)
 
 	return new Promise(resolve => resolve(result)).then(mapping)
