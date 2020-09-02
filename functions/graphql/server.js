@@ -16,8 +16,8 @@ function gqlServer() {
 
 	app.use((req, res, next) => {
 		res.set({
-			'Vary': 'Origin',
-			'Access-Control-Allow-Origin': req.headers.origin, // Also set via: uberspace web header set / "Access-Control-Allow-Origin" "qiekub.org"
+			'vary': 'Origin',
+			'access-control-allow-origin': req.headers.origin, // Also set via: uberspace web header set / "Access-Control-Allow-Origin" "qiekub.org"
 			// 'Access-Control-Allow-Methods': '*',
 			// 'Access-Control-Allow-Headers': '*',
 		})
