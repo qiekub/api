@@ -106,11 +106,10 @@ module.exports = {
 		// changesetIDs: getFilterByKeysFunction('changesetIDs'),
 	},
 
-	// Marker: {
-	// 	name: getFilterByLanguageFunction('name'),
-
-	// 	// tags: getFilterByKeysFunction('tags'),
-	// },
+	Marker: {
+		name: getFilterByLanguageFunction('name'),
+		// tags: getFilterByKeysFunction('tags'),
+	},
 
 	Question: {
 		question: getFilterByLanguageFunction('question'),
