@@ -7,8 +7,7 @@ const compression = require('../github.com-patrickmichalina-compression/index.js
 // const shrinkRay = require('shrink-ray')
 
 const ApolloServer = require('apollo-server-express').ApolloServer
-const schema = require('./schema')
-const resolvers = require('./resolvers')
+const executableSchema = require('./executableSchema.js')
 
 
 
@@ -24,8 +23,7 @@ function gqlServer() {
 	app.use(add_profileID_middleware)
 
 	const apolloServer = new ApolloServer({
-		typeDefs: schema,
-		resolvers,
+		schema: executableSchema,
 		// Enable graphiql gui
 		introspection: true, // (process.env.FUNCTIONS_EMULATOR ? true : false),
 		tracing: (process.env.FUNCTIONS_EMULATOR ? true : false),
