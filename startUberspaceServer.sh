@@ -1,1 +1,0 @@
-node /home/qiekub/servers/api/functions/graphql/UberspaceServer.js
