@@ -1,4 +1,11 @@
 
+const { 
+	cacheKeyFromObjectSync,
+	isCachedSync,
+	setCacheSync,
+	getCacheSync,
+} = require('../cache.js')
+
 function queryForUndecidedPlaces(mongodb, placeIDs, resolve, reject){
 	mongodb.CompiledPlaces_collection.aggregate([
 		// START get answers
@@ -92,18 +99,33 @@ module.exports = async (parent, args, context, info) => {
 	const mongodb = context.mongodb
 	
 	return new Promise((resolve,reject)=>{
+		const cacheKey = cacheKeyFromObjectSync({
+			query: 'undecidedPlaces',
+			args,
+			context,
+		})
+
+		if (isCachedSync(cacheKey)) {
+			resolve(getCacheSync(cacheKey))
+		}
+
 		if (!(!!context.profileID)) {
 			// check if logged-in
 			reject('User must be logged in.')
 		} else {
+			function saveAndResolve(data){
+				setCacheSync(cacheKey, data)
+				resolve(data)
+			}
+
 			if (args.forID) {
 				if (!mongodb.ObjectID.isValid(args.forID)) {
 					reject('forID is not a correct ObjectID')
 				}else{
-					queryForUndecidedPlaces(mongodb, [new mongodb.ObjectID(args.forID)], resolve, reject)
+					queryForUndecidedPlaces(mongodb, [new mongodb.ObjectID(args.forID)], saveAndResolve, reject)
 				}
 			}else{
-				queryForUndecidedPlaces(mongodb, null, resolve, reject)
+				queryForUndecidedPlaces(mongodb, null, saveAndResolve, reject)
 			}
 		}
 	})
