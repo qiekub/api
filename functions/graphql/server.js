@@ -14,6 +14,15 @@ const executableSchema = require('./executableSchema.js')
 function gqlServer() {
 	const app = express() // this seams faster in a function
 
+	app.use((req, res, next) => {
+		res.set({
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Methods': '*',
+			'Access-Control-Allow-Headers': '*',
+		})
+		next()
+	})
+
 	app.use(compression({brotli:{enabled:true,zlib:{}}}))
 	// app.use(shrinkRay({brotli:{enabled:true,zlib:{}}}))
 	// app.use(shrinkRay({ brotli: { quality: 4 }}))
