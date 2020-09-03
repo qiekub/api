@@ -7,7 +7,7 @@ jobs:
     steps:
     - name: pull master and restart
       uses: appleboy/ssh-action@master
-      env:
+      with:
         script: whoami
         username: ${{ secrets.USER }}
         host: ${{ secrets.HOST }}
