@@ -8,10 +8,10 @@ jobs:
     - name: pull master and restart
       uses: appleboy/ssh-action@master
       with:
-        script: whoami
+        script: cd ~/servers/api/; git pull; supervisorctl restart api2_daemon
         username: ${{ secrets.USER }}
         host: ${{ secrets.HOST }}
         key: ${{ secrets.PRIVATE_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         # fingerprint: ${{ secrets.FINGERPRINT }}
-        debug: true
+        debug: false
