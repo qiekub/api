@@ -1,20 +1,14 @@
 name: Deploy to Uberspace
-
-on:
-  push:
-    branches: [ master ]
-
+on: [push]
+ 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: pull master and restart
-        uses: JimCronqvist/action-ssh@master
-        with:
-          command: ls -a # cd ~/servers/api/; git pull; supervisorctl restart api2_daemon
-          hosts: ${{ secrets.USER }}@${{ secrets.HOST }}
-          #username: ${{ secrets.USER }}
-          #passphrase: ${{ secrets.PASSPHRASE }}
-          privateKey: ${{ secrets.PRIVATE_KEY }}
-          debug: true
+    - name: pull master and restart
+      uses: appleboy/ssh-action@master
+      env:
+        USERNAME: ${{ secrets.USER }}
+        HOST: ${{ secrets.HOST }}
+        SCRIPT: ls -a
+        KEY: ${{ secrets.PRIVATE_KEY }}
