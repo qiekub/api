@@ -12,7 +12,7 @@ jobs:
       - name: pull master and restart
         uses: JimCronqvist/action-ssh@master
         with:
-          command: cd ~/servers/api/; git pull; supervisorctl restart api2_daemon
+          command: ls -a # cd ~/servers/api/; git pull; supervisorctl restart api2_daemon
           hosts: ${{ secrets.USER }}@${{ secrets.HOST }}
           #username: ${{ secrets.USER }}
           #passphrase: ${{ secrets.PASSPHRASE }}
