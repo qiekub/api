@@ -13,5 +13,5 @@ jobs:
         host: ${{ secrets.HOST }}
         key: ${{ secrets.PRIVATE_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
-        fingerprint: ${{ secrets.FINGERPRINT }}
+        # fingerprint: ${{ secrets.FINGERPRINT }}
         debug: true
