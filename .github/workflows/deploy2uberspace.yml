@@ -14,3 +14,4 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         fingerprint: ${{ secrets.FINGERPRINT }}
+        debug: true
