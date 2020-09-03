@@ -17,3 +17,4 @@ jobs:
           #username: ${{ secrets.USER }}
           #passphrase: ${{ secrets.PASSPHRASE }}
           privateKey: ${{ secrets.PRIVATE_KEY }}
+          debug: true
