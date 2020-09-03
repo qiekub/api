@@ -8,7 +8,9 @@ jobs:
     - name: pull master and restart
       uses: appleboy/ssh-action@master
       env:
-        USERNAME: ${{ secrets.USER }}
-        HOST: ${{ secrets.HOST }}
-        SCRIPT: ls -a
-        KEY: ${{ secrets.PRIVATE_KEY }}
+        script: whoami
+        username: ${{ secrets.USER }}
+        host: ${{ secrets.HOST }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        fingerprint: ${{ secrets.FINGERPRINT }}
