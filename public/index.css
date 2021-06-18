@@ -58,7 +58,7 @@ h1 {
   font-size: calc(var(--font-add) + var(--basis_x4));
   line-height: 0.9;
   /* margin: 0 0 var(--basis) 0; */
-  margin: var(--basis_x4) 0 var(--basis) 0;
+  margin: 0 0 var(--basis_x4) 0;
   text-decoration: inherit;
 }
 
