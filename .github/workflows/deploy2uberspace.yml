@@ -25,6 +25,6 @@ jobs:
         with:
           command: |
             cd ~/servers/api/ && git pull && supervisorctl restart api2_daemon;
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          password: ${{ secrets.PASSPHRASE }}
+          host: giclas.uberspace.de
+          username: qiekub
+          password: ${{ secrets.UBERSPACE_PASSWORD_QIEKUB }}
