@@ -29,7 +29,7 @@ const schema = gql`
 
 		country(countryCode: ID): Doc
 		countries: [Doc]
-		
+
 		markers: [Marker]
 		questions: [Doc]
 
@@ -74,7 +74,7 @@ const schema = gql`
 		boundingbox: Boundingbox
 		_viewport: Boundingbox
 	}
-	
+
 	type SearchInfo {
 		query: String
 		results: [GeoSearchResult]
@@ -114,7 +114,7 @@ const schema = gql`
 
 		"Links and any other reference"
 		sources: String
-		
+
 		fromBot: Boolean
 
 		"osm / qiekub"
@@ -129,7 +129,7 @@ const schema = gql`
 
 		"Links and any other reference"
 		sources: String
-		
+
 		fromBot: Boolean
 
 		"osm / qiekub"
