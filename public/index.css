@@ -1,3 +1,20 @@
+:root {
+  --alpha-more: 0.8;
+  --alpha-less: 0.12;
+
+  --basis: 0.4rem;
+  --basis_x0_2: calc(0.2 * var(--basis));
+  --basis_x0_5: calc(0.5 * var(--basis));
+  --basis_x2: calc(2 * var(--basis));
+  --basis_x4: calc(4 * var(--basis));
+  --basis_x8: calc(8 * var(--basis));
+  --basis_x16: calc(16 * var(--basis));
+  --basis_x32: calc(32 * var(--basis));
+  --basis_x64: calc(64 * var(--basis));
+
+  --font-add: 1rem;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -21,32 +38,61 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html[lang="ar"] { /* for arabic */
+  letter-spacing: 0 !important;
+}
+
 body {
 	padding: 32px;
+
+  --body-font-size: calc(var(--font-add) + var(--basis));
+  --body2-font-size: calc(var(--font-add) + var(--basis_x0_5));
+  font-size: var(--body-font-size);
 }
 
 code, h1, h2, h3, h4, h5, h6 {
   font-family: 'Ubuntu Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-h1{
-	margin-bottom: 32px;
+h1 {
+  font-size: calc(var(--font-add) + var(--basis_x4));
+  line-height: 0.9;
+  /* margin: 0 0 var(--basis) 0; */
+  margin: var(--basis_x4) 0 var(--basis) 0;
+  text-decoration: inherit;
 }
-h2,
-h3{
-	margin-top: 16px;
-	margin-bottom: 8px;
+
+h2 {
+  font-size: calc(var(--font-add) + var(--basis_x2));
+  margin: var(--basis_x8) 0 var(--basis) 0;
+  text-decoration: inherit;
 }
+
+h3 {
+  font-size: calc(var(--font-add) + var(--basis));
+  margin: var(--basis_x4) 0 var(--basis) 0;
+  text-decoration: inherit;
+}
+
 p {
-	margin-bottom: 32px;
+  /* width: calc(var(--basis_x16) + var(--basis_x8)); */
+  max-width: 100%;
+  margin: var(--basis) 0;
+  text-decoration: inherit;
 }
+
+ul {
+  margin-inline-start: var(--basis_x4);
+  max-width: calc(100% - var(--basis_x4));
+}
+
 li {
 	margin-bottom: 4px;
 }
 
 hr {
-	border: none;
+  border: none;
 	background: black;
-	height: 1px;
-	margin: 32px 0;
+  height: var(--basis_x0_2);
+  margin: var(--basis_x4) 0;
 }
