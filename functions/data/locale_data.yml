@@ -1,0 +1,237 @@
+data:
+- title:
+    en: Queering the Map
+  link: https://www.queeringthemap.com/
+  description:
+    en: |
+      Is for personal experiences only.
+  internal: |
+      (Können die einen Link zu map.qiekub.org darstellen.)
+
+- title:
+    en: OpenQueerMap
+  link: https://wiki.openstreetmap.org/wiki/OpenQueerMap
+  description:
+    en: Does not exist anymore. And was only in German.
+
+- title:
+    en: Queer places in Friesland-Wilhelmshaven-Wittmund, Germany
+  link: http://www.queerstroemung.de/queermap-2/
+  links:
+    - [google_map, https://www.google.com/maps/d/u/0/viewer?mid=1zlXT6xH1eKda6nCreTYu7qAhIMo&ll=53.39108694600867%2C7.711015650000036&z=9]
+
+- title:
+    en: Queer places in Hessen, Germany
+  link: https://www.gjh.de/frog/queer-in-hessen/
+  links:
+    - [google_map, https://www.google.com/maps/d/u/0/viewer?mid=1_Isnz2GAAavOqkkgFVB-nyAMIZI&ll=50.603440945088664%2C8.953811299999984&z=8]
+
+- title:
+    en: Queer places in Dortmund, Germany
+  link: http://map.slado.de/ (Stand de Karte 22.01.2015)
+
+- title:
+    en: Historic queer places in Los Angeles (1)
+  link: https://queermaps.org/
+
+- title:
+    en: Historic queer places in Los Angeles (2)
+  link: https://www.disguisedruins.com/
+
+- title:
+    en: Queer places in Edinburgh
+  link: https://www.lgbthealth.org.uk/queering-the-map-of-edinburgh/
+  links:
+    - [PDF, https://www.lgbthealth.org.uk/wp-content/uploads/2019/04/Queering-the-Map-of-Edinburgh.pdf]
+    - [Interactive, https://www.arcgis.com/apps/Shortlist/index.html?appid=d36c05e8a49d4df6b9bd38244853a03f]
+
+- title:
+    en: LGBT youth groups in Scotland
+  link: https://www.lgbtyouth.org.uk/groups-and-support/find-local-youth-groups/
+
+- title:
+    en: Data of historic gay-guides
+  link: http://www.mappingthegayguides.org
+  links:
+    - [datasets, https://github.com/MappingtheGayGuides]
+
+- title:
+    en: Queer places in St. Lois, USA
+  link: https://library.wustl.edu/mapping-lgbtq-st-louis-online/
+  links:
+    - [arcgis_map, https://wustl.maps.arcgis.com/apps/MapSeries/index.html?appid=19fbb02a5c2f40eebfacc794aa3372dd]
+
+- title:
+    en: Multiple maps of the US and New York
+  link: https://www.allwevegot.org/research/maps-maps-all-the-queer-maps/
+
+- title:
+    en: Popular places but not neccessary primary queer places
+  link: https://travelsofadam.com/gay-travel/
+
+- title:
+    en: Historic queer places in Montreal
+  link: https://storymaps.arcgis.com/stories/fa26398f934c4f7484f8eedc2dac3b03
+  links:
+    - [google_map, https://www.google.com/maps/d/u/0/embed?mid=1SS77K0liNuThK_kfkQ5408nZ_UuG5XXF&ll=45.51422448809261%2C-73.5853932&z=14]
+
+- title:
+    en: History queer places in New York
+  link: https://www.nyclgbtsites.org/
+
+- title:
+    en: Map of LGBTQ resources at US-Universities
+  link: https://www.lgbtcampus.org/lgbt-map
+  links:
+    - [google_map, https://www.google.com/maps/d/u/0/viewer?mid=1uYlF3milN1euuDcLS_iXLncpsHQ&ll=39.22637344002685%2C-61.28580020000004&z=2]
+
+- title:
+    en: Queere Jugendgruppen in Niedersachsen
+  link: https://www.queerejugend-nds.de/netzwerk/
+  links:
+    - [google_map, https://www.google.com/maps/d/u/0/viewer?mid=1cFqlhsNLpoK-ia1zR1Q3ASMxDgLOhpFx&ll=52.33275722782431%2C9.452727791969892&z=8]
+
+- title:
+    en: Queer places in Rheinlandpfalz, Germany
+  link: https://www.queernet-rlp.de/regionen
+  links:
+    - [Mainz, https://www.queernet-rlp.de/regionen/mainz]
+    - [Pfalz, https://www.queernet-rlp.de/regionen/pfalz]
+    - [Koblenz, https://www.queernet-rlp.de/regionen/koblenz]
+    - [Trier, https://www.queernet-rlp.de/regionen/trier]
+    - [Überregional, https://www.queernet-rlp.de/regionen/uberregional] # -> https://www.queernet-rlp.de/wp-content/uploads/flyer_landesweit1.pdf
+
+- title:
+    en: LSBTTIQ youthgroups in Baden-Württemberg, Germany
+  link: https://www.netzwerk-lsbttiq.net/index.php/jugend/jugendgruppen
+
+- title:
+    en: Queer groups in Heidelberg, Germany
+  link: http://www.queeres-netzwerk-hd.de/lesbisch-schwul-transsexuell-heidelberg/gruppen-im-queeren-netzwerk/
+
+- title:
+    en: Five places in Sitzerland
+  link: https://www.mycheckpoint.ch/de/standorte
+
+- title:
+    en: Queer places in Stockholm, Sweden
+  link: https://www.visitstockholm.com/the-lgbt-guide-to-stockholm/
+
+- title:
+    en: Queer places in Gothenburg, Sweden
+  link: https://www.goteborg.com/en/lgbt-gothenburg/
+
+- title:
+    en: Atlas nienawiści (Atlas of Hate)
+  description:
+    en: A map of LGBT-free-zones in Poland.
+  link: https://atlasnienawisci.pl/
+
+- title:
+    en: LGBT Safe Spaces in the Philippines
+  description:
+    en: Collected by MapBeks
+  link: http://umap.openstreetmap.fr/en/map/lgbt-safe-spaces-in-the-philippines_447363
+
+- title:
+    en: HIV-Facilities in the Philippines
+  description:
+    en: Collected by MapBeks
+  link: https://www.mapcontrib.xyz/t/8839cf-HIV_Testing_and_Counselling_Centers_in_the_Philippines
+
+- title:
+    en: LGBTQI Spaces in the Philippines
+  link: https://www.mapcontrib.xyz/t/0e23d7-LGBTQI_Spaces_in_the_Philippines
+
+- title:
+    en: Trans and genderqueer friendly accommodations
+  description:
+    en: A blog with a few information.
+  link: https://queer-traveling.tumblr.com/
+
+- title:
+    en: Queer Country Stories
+  link: https://instagram.com/countryqueers
+
+- title:
+    en: Queer places in Munich, Germany
+  link: https://queermap.wixsite.com/home
+  links:
+    - [google_map, https://www.google.com/maps/d/u/0/viewer?mid=1V-eYnbD-7U_rxH_Srf-DZrFkuIA7A3Q-]
+
+- title:
+    en: Old network of places in Germany
+  link: https://de.wikipedia.org/wiki/Gay-web
+
+- title:
+    en: Map of A\*spec groups in Germany
+  link: https://umap.openstreetmap.de/de/map/aspec-treffen_4104
+
+- title:
+    en: List of A\*spec groups in Germany
+  link: http://asex-web.de/
+
+- title:
+    en: Queer Zone — LGBTQ venues in Hanoi city, Vietnam
+  link: https://queer.vn/queer-zone/
+  links:
+    - [google_map, https://www.google.com/maps/d/u/0/viewer?mid=1ko63vpJ92huklAnmIW6e9bgVGsk&ll=21.01265925992041%2C105.82000659999999&z=13]
+
+- title:
+    en: Refuge restrooms
+  description:
+    en: Safe restroom locations for trans, intersex, and gender nonconforming individuals.
+  link: https://www.refugerestrooms.org/
+
+- title:
+    en: City Guides all over the world (commercial oriented)
+  description:
+    en: „Your gay travel guide — Find LGBTQ friendly businesses and community events around the world”
+  link: https://www.gaycities.com/
+
+- title:
+    en: Directory of LGBTQ/SGM health professionals in America
+  link: https://glmaimpak.networkats.com/members_online_new/members/dir_provider.asp
+
+
+
+
+
+
+
+
+- title:
+    en: DBNA
+  description:
+    de: "Du bist nicht allein"
+  link: https://www.dbna.com/
+  tags:
+    - network
+
+- title:
+    en: junx.app
+  link: https://junx.app/
+  tags:
+    - network
+
+
+
+
+
+
+
+- title:
+    en: smarticular.net
+  description:
+    de: Shop für Anleitungen und Tipps rund um ein einfaches und nachhaltiges Leben.
+  link: https://smarticular.shop/
+  tags:
+    - off_topic
+
+- title:
+    en: Mental Health Help (MHA)
+  link: https://www.mhanational.org/self-help-tools
+  tags:
+    - off_topic
+
+
