@@ -7,12 +7,22 @@ data:
       Is for personal experiences only.
   internal: |
       (Können die einen Link zu map.qiekub.org darstellen.)
+  bbox:
+    north: 90 # latitude
+    west: -180 # longitude
+    south: -90 # latitude
+    east: 180 # longitude
 
 - title:
     en: OpenQueerMap
   link: https://wiki.openstreetmap.org/wiki/OpenQueerMap
   description:
     en: Does not exist anymore. And was only in German.
+  bbox:
+    north: 55.435
+    west: 5.098
+    south: 47.510
+    east: 15.798
 
 - title:
     en: Queer places in Friesland-Wilhelmshaven-Wittmund, Germany
@@ -176,6 +186,11 @@ data:
   link: https://queer.vn/queer-zone/
   links:
     - [google_map, https://www.google.com/maps/d/u/0/viewer?mid=1ko63vpJ92huklAnmIW6e9bgVGsk&ll=21.01265925992041%2C105.82000659999999&z=13]
+  bbox:
+    north: 21.097007588633407
+    west: 105.74837568794268
+    south: 20.95871539699129
+    east: 105.9299326739163
 
 - title:
     en: Refuge restrooms
