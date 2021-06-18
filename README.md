@@ -1,8 +1,8 @@
 # qiekub API
 
-This is the API for https://map.qiekub.com
+This is the API for https://map.qiekub.org
 
-The graphQL API can be accessed under api.qiekub.com and api2.qiekub.com
+The graphQL API can be accessed under api.qiekub.com and api.qiekub.org
 
 A map of community centers and other helpful information for queer (LGBTQ) people.
 
