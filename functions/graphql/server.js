@@ -14,6 +14,8 @@ const executableSchema = require('./executableSchema.js')
 function gqlServer() {
 	const app = express() // this seams faster in a function
 
+	app.use(express.static('../../public'))
+
 	app.use((req, res, next) => {
 		res.set({
 			'vary': 'Origin',
