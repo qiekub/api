@@ -982,52 +982,52 @@ async function getExistingID(mongodb, tags){
 }
 
 function calcMissingCenters(all_elements){
-	
+
 	if (all_elements.length === 0) {
 		return []
 	}
-	
+
 	const elements_by_id = all_elements.reduce((obj, element) => {
 		obj[element.type + '/' + element.id] = element
 		return obj
 	}, {})
-	
+
 	const with_tags = all_elements.filter(element => element.hasOwnProperty('tags'))
-	
+
 	if (with_tags.length === 0) {
 		return []
 	}
-	
-	
+
+
 	function node2geo(element) {
 		if (!(!!element)) {
 			return null
 		}
-	
+
 		return [element.lon,element.lat]
 	}
 	function way2geo(element) {
 		if (!(!!element)) {
 			return null
 		}
-	
+
 		let nodes = element.nodes.map(id => node2geo(elements_by_id['node/' + id]))
-	
+
 		nodes = nodes.filter(v => !!v)
-	
+
 		if (nodes.length === 0) {
 			return null
 		}
-	
+
 		return nodes
 	}
 	function relation2geo(element) {
 		if (!(!!element)) {
 			return null
 		}
-	
+
 		let ways = []
-	
+
 		for (const member of element.members) {
 			if (member.type === 'way') {
 				ways.push(
@@ -1040,16 +1040,16 @@ function calcMissingCenters(all_elements){
 				]
 			}
 		}
-	
+
 		ways = ways.filter(v => !!v)
-	
+
 		if (ways.length === 0) {
 			return null
 		}
-	
+
 		return ways
 	}
-	
+
 	const nodes = with_tags
 	.filter(element => element.type === 'node')
 	.map(element => {
@@ -1062,7 +1062,7 @@ function calcMissingCenters(all_elements){
 			},
 		}
 	})
-	
+
 	const ways = with_tags
 	.filter(element => element.type === 'way')
 	.map(element => {
@@ -1070,7 +1070,7 @@ function calcMissingCenters(all_elements){
 		if (!(!!way)) {
 			return null
 		}
-	
+
 		const line = turf.lineString(way)
 		const poly = turf.lineToPolygon(line)
 		const center = turf.centerOfMass(poly)
@@ -1084,7 +1084,7 @@ function calcMissingCenters(all_elements){
 		}
 	})
 	.filter(v => !!v)
-	
+
 	const relations = with_tags
 	.filter(element => element.type === 'relation')
 	.map(element => {
@@ -1092,7 +1092,7 @@ function calcMissingCenters(all_elements){
 		if (!(!!ways)) {
 			return null
 		}
-	
+
 		const poly = turf.multiPolygon([
 			ways.map(way => {
 				const line = turf.lineString(way)
@@ -1111,31 +1111,31 @@ function calcMissingCenters(all_elements){
 		}
 	})
 	.filter(v => !!v)
-	
+
 	const new_with_tags = [
 		...nodes,
 		...ways,
 		...relations,
 	]
-	
+
 	if (new_with_tags.length === 0) {
 		return []
 	}
-	
+
 	return new_with_tags
 }
 
 function addMissingCenters(all_elements){
-	
+
 	if (all_elements.length === 0) {
 		return []
 	}
-	
+
 	const with_tags = Object.values(
 		all_elements.reduce((obj, element) => {
 			// merge related elements (tags, bbox, center)
 			const osm_id = element.type+'/'+element.id
-	
+
 			if (!obj.hasOwnProperty(osm_id)) {
 				obj[osm_id] = element
 			}else{
@@ -1157,7 +1157,7 @@ function addMissingCenters(all_elements){
 		} else if (element.center) {
 			element.tags.lat = element.center.lat
 			element.tags.lng = element.center.lon
-		} 
+		}
 
 		if (element.bounds) {
 			element.tags['bounds:west'] = element.bounds.minlon
@@ -1168,11 +1168,11 @@ function addMissingCenters(all_elements){
 
 		return element
 	})
-	
+
 	if (with_tags.length === 0) {
 		return []
 	}
-	
+
 	return with_tags
 }
 
