@@ -1,0 +1,52 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Ubuntu', 'Noto Kufi Arabic', 'Geeza Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  /*
+    Ubuntu = Volt (It includes latin and arabic characters.)
+
+    Noto Kufi Arabic = A Noto font from Google (maybe it's installed)
+    Geeza Pro = macOS Arabic Default
+
+    -apple-system, BlinkMacSystemFont = macOS Default
+    Helvetica Neue = Old macOS Default
+    Segoe UI = Windows Default
+    Roboto = Android Default
+    Fira Sans = Firefox OS Default
+    Oxygen, Cantarell, Droid Sans = Linux
+
+    sans-serif = Fallback
+  */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+	padding: 32px;
+}
+
+code, h1, h2, h3, h4, h5, h6 {
+  font-family: 'Ubuntu Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+h1{
+	margin-bottom: 32px;
+}
+h2,
+h3{
+	margin-top: 16px;
+	margin-bottom: 8px;
+}
+p {
+	margin-bottom: 32px;
+}
+li {
+	margin-bottom: 4px;
+}
+
+hr {
+	border: none;
+	background: black;
+	height: 1px;
+	margin: 32px 0;
+}
