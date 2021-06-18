@@ -5,5 +5,5 @@ const host = '0.0.0.0'
 const urlpath = '/graphql/v1'
 
 app.listen(port, host, () => {
-	console.info(`App listening at http://${host}:${port}${urlpath}`)
+	console.info(`App listening at http://${host}:${port}`)
 })
