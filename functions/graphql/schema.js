@@ -35,6 +35,8 @@ const schema = gql`
 
 		sessions: [Doc]
 		accounts: [Doc]
+
+		similarProjects: JSONObject
 	}
 
 	type Mutation {

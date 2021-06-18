@@ -24,6 +24,7 @@ const addEdge = require('./resolvers/addEdge.js')
 const undecidedPlaces = require('./resolvers/undecidedPlaces.js')
 const undecidedTags = require('./resolvers/undecidedTags.js')
 const recompile = require('./resolvers/recompile.js')
+const similarProjects = require('./resolvers/similarProjects.js')
 
 const { getFilterByKeysFunction, getFilterByLanguageFunction } = require('./functions.js')
 
@@ -86,6 +87,8 @@ module.exports = {
 
 		sessions,
 		accounts,
+
+		similarProjects,
 	},
 	Mutation: {
 		addChangeset,
