@@ -82,12 +82,12 @@ p {
 }
 
 ul {
-  margin-inline-start: var(--basis_x4);
+  margin-block-start: var(--basis_x4);
   max-width: calc(100% - var(--basis_x4));
 }
 
 li {
-	margin-bottom: 4px;
+	margin-bottom: var(--basis);
 }
 
 hr {
