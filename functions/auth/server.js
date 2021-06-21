@@ -330,30 +330,30 @@ function authMiddleware(app) {
 		res.redirect(account_URL)
 	})
 
-	app.get(`${listen_path}/github}/`, passport.authenticate('github', {
+	app.get(`${listen_path}/github/`, passport.authenticate('github', {
 		scope: ['user:email'],
 	}))
-	app.get(`${listen_path}/github/callback}/`, passport.authenticate('github', {
+	app.get(`${listen_path}/github/callback/`, passport.authenticate('github', {
 		failureRedirect: url_path+'/',
 	}), (req, res)=>{
 		res.redirect(url_path+'/')
 	})
 
-	app.get(`${listen_path}/twitter}/`, passport.authenticate('twitter'))
-	app.get(`${listen_path}/twitter/callback}/`, passport.authenticate('twitter', {
+	app.get(`${listen_path}/twitter/`, passport.authenticate('twitter'))
+	app.get(`${listen_path}/twitter/callback/`, passport.authenticate('twitter', {
 		failureRedirect: url_path+'/',
 	}), (req, res)=>{
 		res.redirect(url_path+'/')
 	})
 
-	app.get(`${listen_path}/openstreetmap}/`, passport.authenticate('openstreetmap'))
-	app.get(`${listen_path}/openstreetmap/callback}/`, passport.authenticate('openstreetmap', {
+	app.get(`${listen_path}/openstreetmap/`, passport.authenticate('openstreetmap'))
+	app.get(`${listen_path}/openstreetmap/callback/`, passport.authenticate('openstreetmap', {
 		failureRedirect: url_path+'/',
 	}), (req, res)=>{
 		res.redirect(url_path+'/')
 	})
 
-	app.get(`${listen_path}/logout}/`, function(req, res){
+	app.get(`${listen_path}/logout/`, function(req, res){
 		req.session.cookie.maxAge = 0 // set the maxAge to zero, to delete the cookie
 		req.logout() // also forget the login-state
 		req.session.save(error=>{ // save the above setting
