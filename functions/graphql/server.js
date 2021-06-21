@@ -14,8 +14,6 @@ const executableSchema = require('./executableSchema.js')
 function gqlServer() {
 	const app = express() // this seams faster in a function
 
-	app.use(express.static('../../public'))
-
 	app.use((req, res, next) => {
 		res.set({
 			'vary': 'Origin',
@@ -30,6 +28,8 @@ function gqlServer() {
 	// app.use(shrinkRay({brotli:{enabled:true,zlib:{}}}))
 	// app.use(shrinkRay({ brotli: { quality: 4 }}))
 	// app.use(shrinkRay())
+
+	app.use(express.static('../../public'))
 
 	app.use(session_middleware)
 	app.use(add_profileID_middleware)
