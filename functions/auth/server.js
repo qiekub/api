@@ -302,65 +302,58 @@ async function session_metadata_middleware(req, res, next) {
 }
 
 
-
-
-function server() {
-
-
-	const app = express()
-
-
+function authMiddleware(app) {
 	// configure Express
-	app.set('views', __dirname + '/views')
-	app.set('view engine', 'ejs')
+	// app.set(`${listen_path}/views`, __dirname + '/views')
+	// app.set('view engine', 'ejs')
 
-	app.use(compression({brotli:{enabled:true,zlib:{}}}))
+	// app.use(`${listen_path}`, compression({brotli:{enabled:true,zlib:{}}}))
 
-	app.use(partials())
-	app.use(bodyParser.urlencoded({ extended: true }))
-	app.use(bodyParser.json())
-	app.use(methodOverride())
+	app.use(`${listen_path}`, partials())
+	app.use(`${listen_path}`, bodyParser.urlencoded({ extended: true }))
+	app.use(`${listen_path}`, bodyParser.json())
+	app.use(`${listen_path}`, methodOverride())
 
-	app.use(session_middleware)
-	app.use(add_profileID_middleware)
+	app.use(`${listen_path}`, session_middleware)
+	app.use(`${listen_path}`, add_profileID_middleware)
 
-	app.use(passport_middleware)
-	app.use(passport.session())
+	app.use(`${listen_path}`, passport_middleware)
+	app.use(`${listen_path}`, passport.session())
 
-	app.use(session_metadata_middleware)
+	app.use(`${listen_path}`, session_metadata_middleware)
 
-	// app.use(express.static(__dirname + '/public'))
+	// app.use(`${listen_path}`, express.static(__dirname + '/public'))
 
 
-	app.get(listen_path+'/', function(req, res){
+	app.get(`${listen_path}/`, function(req, res){
 		// res.render('index', { user: req.user })
 		res.redirect(account_URL)
 	})
 
-	app.get(listen_path+'/github/', passport.authenticate('github', {
+	app.get(`${listen_path}/github}/`, passport.authenticate('github', {
 		scope: ['user:email'],
 	}))
-	app.get(listen_path+'/github/callback/', passport.authenticate('github', {
+	app.get(`${listen_path}/github/callback}/`, passport.authenticate('github', {
 		failureRedirect: url_path+'/',
 	}), (req, res)=>{
 		res.redirect(url_path+'/')
 	})
 
-	app.get(listen_path+'/twitter/', passport.authenticate('twitter'))
-	app.get(listen_path+'/twitter/callback/', passport.authenticate('twitter', {
+	app.get(`${listen_path}/twitter}/`, passport.authenticate('twitter'))
+	app.get(`${listen_path}/twitter/callback}/`, passport.authenticate('twitter', {
 		failureRedirect: url_path+'/',
 	}), (req, res)=>{
 		res.redirect(url_path+'/')
 	})
 
-	app.get(listen_path+'/openstreetmap/', passport.authenticate('openstreetmap'))
-	app.get(listen_path+'/openstreetmap/callback/', passport.authenticate('openstreetmap', {
+	app.get(`${listen_path}/openstreetmap}/`, passport.authenticate('openstreetmap'))
+	app.get(`${listen_path}/openstreetmap/callback}/`, passport.authenticate('openstreetmap', {
 		failureRedirect: url_path+'/',
 	}), (req, res)=>{
 		res.redirect(url_path+'/')
 	})
 
-	app.get(listen_path+'/logout/', function(req, res){
+	app.get(`${listen_path}/logout}/`, function(req, res){
 		req.session.cookie.maxAge = 0 // set the maxAge to zero, to delete the cookie
 		req.logout() // also forget the login-state
 		req.session.save(error=>{ // save the above setting
@@ -383,18 +376,20 @@ function server() {
 
 
 
-const runtimeOpts = {
-	timeoutSeconds: 20, // 20seconds
-	memory: '512MB',
+// const runtimeOpts = {
+// 	timeoutSeconds: 20, // 20seconds
+// 	memory: '512MB',
+// }
+//
+// exports = module.exports = functions
+// // .region('europe-west3')
+// .region('us-central1')
+// // "Important: Firebase Hosting supports Cloud Functions in us-central1 only."
+// // source: https://firebase.google.com/docs/hosting/full-config#rewrites
+// .runWith(runtimeOpts)
+// .https
+// .onRequest(server())
+
+module.exports = {
+	authMiddleware
 }
-
-exports = module.exports = functions
-// .region('europe-west3')
-.region('us-central1')
-// "Important: Firebase Hosting supports Cloud Functions in us-central1 only."
-// source: https://firebase.google.com/docs/hosting/full-config#rewrites
-.runWith(runtimeOpts)
-.https
-.onRequest(server())
-
-

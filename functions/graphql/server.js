@@ -9,10 +9,11 @@ const compression = require('../github.com-patrickmichalina-compression/index.js
 const ApolloServer = require('apollo-server-express').ApolloServer
 const executableSchema = require('./executableSchema.js')
 
+const { authMiddleware } = require('../auth/server.js')
 
 
 function gqlServer() {
-	const app = express() // this seams faster in a function
+	let app = express() // this seams faster in a function
 
 	app.use((req, res, next) => {
 		res.set({
@@ -28,6 +29,8 @@ function gqlServer() {
 	// app.use(shrinkRay({brotli:{enabled:true,zlib:{}}}))
 	// app.use(shrinkRay({ brotli: { quality: 4 }}))
 	// app.use(shrinkRay())
+
+	app = authMiddleware(app)
 
 	app.use(express.static('../../public'))
 
