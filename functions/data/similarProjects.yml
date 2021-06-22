@@ -208,10 +208,19 @@ data:
     en: Directory of LGBTQ/SGM health professionals in America
   link: https://glmaimpak.networkats.com/members_online_new/members/dir_provider.asp
 
+- title:
+    de: Gay Szene Deutschland
+    en: Gay Scene Germany
+  description:
+    de: Deutschlandweite Karte mit Ort bei denen queere Menschen willkommen sind. Queere Orte sind nicht von nicht-queeren Orten zu unterscheiden.
+    en: Germany-wide map with places where queer people are welcome. Queer places are indistinguishable from non-queer places.
+  link: https://www.inqueery.de/guide/deutschland/szene
 
-
-
-
+- title:
+    en: Locating Queer Memories
+  description:
+    en: A Digital Map of LGBTQ History in Barcelona, 1970-1980
+  link: https://storymaps.arcgis.com/stories/512dbf55af5647fba8ef7ea629d353cd
 
 
 
