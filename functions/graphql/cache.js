@@ -12,7 +12,15 @@ if (!fs.existsSync(cacheFolderPath)) {
 }
 if (fs.existsSync(cacheFilePath)) {
 	fs.readFile(cacheFilePath, 'utf8', (error, data) => {
-		cache = JSON.parse(data)
+		try {
+			if (error) {
+				console.error('error while reading cache file:', error)
+			} else {
+				cache = JSON.parse(data || '{}') || {}
+			}
+		} catch (error) {
+			console.error(error)
+		}
 	})
 }
 
