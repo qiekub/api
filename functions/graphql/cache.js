@@ -11,7 +11,7 @@ if (!fs.existsSync(cacheFolderPath)) {
 	fs.mkdirSync(cacheFolderPath)
 }
 if (fs.existsSync(cacheFilePath)) {
-	fs.readFile(cacheFilePath, 'utf8', (error, data)=>{
+	fs.readFile(cacheFilePath, 'utf8', (error, data) => {
 		cache = JSON.parse(data)
 	})
 }
