@@ -1,3 +1,5 @@
+const isDevEnvironment = process.env.environment === 'dev' || false
+
 const secretManager = require('./secretManager.js')
 const getSecretAsync = secretManager.getSecretAsync
 
@@ -12,7 +14,7 @@ function getMongoDbContext(){
 		if (_ContextChache_.mongodb) {
 			resolve(_ContextChache_.mongodb)
 		}else{
-			let mongodb_uri = encodeURI(`mongodb+srv://${await getSecretAsync('mongodb_username')}:${await getSecretAsync('mongodb_password')}@${await getSecretAsync('mongodb_server_domain')}/`) // test?retryWrites=true&w=majority
+			const mongodb_uri = encodeURI(isDevEnvironment ? process.env.mongodb_uri_dev : process.env.mongodb_uri_prod) // test?retryWrites=true&w=majority
 
 			if (!mongodb_uri) {
 				reject('probably no mongodb rights')
