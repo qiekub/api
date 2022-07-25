@@ -7,7 +7,12 @@ module.exports = () => new Promise((resolve, reject) => {
     if (error) {
       reject(error)
     } else {
-      resolve(YAML.parse(data))
+      let parsed_data = YAML.parse(data)
+      parsed_data.data = parsed_data.data.map(entry => {
+        delete entry.internal
+        return entry
+      })
+      resolve(parsed_data)
     }
   })
 })
