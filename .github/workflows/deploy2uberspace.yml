@@ -29,7 +29,7 @@ jobs:
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: |
-            cd ~/servers/api/ && git pull && supervisorctl restart api2_daemon;
+            cd ~/servers/api/ && git pull && yarn && supervisorctl restart api2_daemon;
           host: giclas.uberspace.de
           username: qiekub
           password: ${{ secrets.UBERSPACE_PASSWORD_QIEKUB }}
