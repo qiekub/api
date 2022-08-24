@@ -258,4 +258,14 @@ data:
   tags:
     - off_topic
 
+- title:
+    de: Aspec Treffen — Karte
+  link: https://aspec-treffen.github.io/map/
+  tags: map
+  geo:
+    bbox:
+    north: 55.479 # latitude
+    west: 3.647 # longitude
+    south: 45.737 # latitude
+    east: 18.062 # longitude
 
