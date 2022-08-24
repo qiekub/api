@@ -260,6 +260,8 @@ data:
 
 - title:
     de: Aspec Treffen — Karte
+  description:
+    de: Infos zu Aspec-Treffen im deutschsprachigen Raum.
   link: https://aspec-treffen.github.io/map/
   tags:
     - map
