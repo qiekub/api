@@ -35,7 +35,7 @@
     "yaml": "^1.8.3"
   },
   "engines": {
-    "node": "12"
+    "node": "16"
   },
   "scripts": {
     "buildData": "cd ./functions/data/; node ./build_question.js; node ./build_category_files.js; cd ../../;",
