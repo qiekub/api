@@ -28,7 +28,7 @@
     "express-session": "^1.17.1",
     "firebase-admin": "^8.10.0",
     "firebase-functions": "^3.6.1",
-    "flat": "^5.0.0",
+    "flat": "^5.0.1",
     "graphql": "^14.6.0",
     "graphql-iso-date": "^3.6.1",
     "graphql-type-json": "^0.3.1",
